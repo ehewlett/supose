@@ -65,22 +65,6 @@ import com.soebes.supose.utility.FileName;
  *
  */
 public class ScanRepository {
-	static {
-        /*
-         * For using over http:// and https://
-         */
-        DAVRepositoryFactory.setup();
-        /*
-         * For using over svn:// and svn+xxx://
-         */
-        SVNRepositoryFactoryImpl.setup();
-        
-        /*
-         * For using over file:///
-         */
-        FSRepositoryFactory.setup();
-	}
-
 	private static Logger LOGGER = Logger.getLogger(ScanRepository.class);
 
 	/**
@@ -108,6 +92,21 @@ public class ScanRepository {
 		setUsername(null);
 		setPassword(null);
 		setCreateIndex(false);
+
+		/*
+         * For using over http:// and https://
+         */
+        DAVRepositoryFactory.setup();
+        /*
+         * For using over svn:// and svn+xxx://
+         */
+        SVNRepositoryFactoryImpl.setup();
+        
+        /*
+         * For using over file:///
+         */
+        FSRepositoryFactory.setup();
+
 	}
 
 	/**
