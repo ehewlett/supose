@@ -66,9 +66,8 @@ public class ConfigurationRepositoriesTest {
 		RepositoryConfiguration rconfig = confRepos.getRepositoryConfiguration(repositoryName);
 		assertEquals(rconfig.getUrl(), "http://svn.traveler/jagosi", "We had expected to get an URL");
 		assertEquals(rconfig.getIndexUsername(), "kama", "We had expected to get the username 'kama'");
-		assertEquals(rconfig.getIndexPassword(), "ka4m", "We had expected to get the username 'kama'");
+		assertEquals(rconfig.getIndexPassword(), "kama", "We had expected to get the username 'kama'");
 		assertEquals(rconfig.getFromRev(), "1", "We had expected to get the revision 1");
-		assertEquals(rconfig.getToRev(), "HEAD", "We had expected to get the revision HEAD");
 		assertEquals(rconfig.getToRev(), "HEAD", "We had expected to get the revision HEAD");
 		assertEquals(rconfig.getCron(), "0 * * ? * *", "We had expected to get the cron expression '0 * * ? * *'");
 	}
