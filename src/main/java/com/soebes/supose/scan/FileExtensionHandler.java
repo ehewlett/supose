@@ -26,7 +26,6 @@
 package com.soebes.supose.scan;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -71,7 +70,7 @@ public class FileExtensionHandler {
 					dh.setDocument(doc);
 					dh.indexDocument(repository, path, revision);
 				} catch (ClassNotFoundException e) {
-					LOGGER.error("Cannot create instacne of : " + className + " " + e);
+					LOGGER.error("Cannot create instance of : " + className + " " + e);
 				} catch (InstantiationException e) {
 					LOGGER.error("Cannot create an instance of : " + className + " " + e);
 				} catch (IllegalAccessException e) {

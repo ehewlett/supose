@@ -44,8 +44,6 @@ public class Repository {
 	private static Logger LOGGER = Logger.getLogger(Repository.class);
 
 	private String url = null;
-	private SVNURL svnUrl = null;
-
 	private SVNRepository repository = null;
 	private ISVNAuthenticationManager authManager = null; 
 	
@@ -113,7 +111,7 @@ public class Repository {
         } catch (SVNException svne) {
         	//This can only happen if we use a protocol wich is not registered.
         	//Missing initialization of the library.
-        	LOGGER.error("Error while creationg SVNRepository for location '" + getSvnUrl() + "' " + svne);
+        	LOGGER.error("Error while creationg SVNRepository for location '" + getUrl() + "' " + svne);
         }
 	}
 
@@ -129,40 +127,23 @@ public class Repository {
 
 	public void setAuthenticationManager(ISVNAuthenticationManager authManager) {
 		this.authManager = authManager;
-//		if (repository != null && validURL() && validRepos()) {
-//			repository.setAuthenticationManager(authManager);
-//		}
 	}
 	
 	public String getUrl() {
 		return url;
 	}
 
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
 
 	public SVNRepository getRepository() {
 		return repository;
 	}
 
-
 	public void setRepository(SVNRepository repository) {
 		this.repository = repository;
 	}
-
-
-	public SVNURL getSvnUrl() {
-		return svnUrl;
-	}
-
-
-	public void setSvnUrl(SVNURL svnUrl) {
-		this.svnUrl = svnUrl;
-	}
-
 
 	public ISVNAuthenticationManager getAuthManager() {
 		return authManager;
