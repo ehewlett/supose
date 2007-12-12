@@ -1,4 +1,4 @@
-package com.soebes.supose.ini;
+package com.soebes.supose.repository;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
