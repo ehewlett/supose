@@ -47,9 +47,12 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
+import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
+import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import com.soebes.supose.FieldNames;
 import com.soebes.supose.scan.Index;
+import com.soebes.supose.scan.Repository;
 import com.soebes.supose.scan.ScanRepository;
 
 /**
@@ -102,6 +105,8 @@ public class SuposeCLI {
 		long toRev = scanCommand.getToRev(commandLine);
 		String indexDirectory = scanCommand.getIndexDir(commandLine);
 		boolean create = scanCommand.getCreate(commandLine);
+		String username = scanCommand.getUsername(commandLine);
+		String password = scanCommand.getPassword(commandLine);
 
 		Index index = new Index ();
 		//We will create a new one if --create is given on command line
@@ -109,7 +114,13 @@ public class SuposeCLI {
 		index.setCreate(create);
 		IndexWriter indexWriter = index.createIndexWriter(indexDirectory);
 
-		scanRepository.setRepositoryURL(url);
+		ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(
+			username, 
+			password
+		);
+		Repository repository = new Repository(url, authManager);
+
+		scanRepository.setRepository(repository);
 
 		//We start with the revision which is given on the command line.
 		//If it is not given we will start with revision 1.

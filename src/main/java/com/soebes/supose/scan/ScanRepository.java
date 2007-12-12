@@ -44,14 +44,6 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperty;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
-import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
-import org.tmatesoft.svn.core.io.SVNRepository;
-import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import com.soebes.supose.FieldNames;
 import com.soebes.supose.utility.FileName;
@@ -71,70 +63,25 @@ public class ScanRepository {
 	 * This defines the revision to which we will scan the given repository. 
 	 */
 	private long endRevision;
-	private String repositoryURL;
-	private String username;
-	private String password;
 	
-	private SVNRepository repository = null;
+	private Repository repository = null;
 
 	public ScanRepository() {
 		setStartRevision(0);
 		setEndRevision(0);
-		setRepositoryURL(null);
-		setUsername(null);
-		setPassword(null);
-
-		/*
-         * For using over http:// and https://
-         */
-        DAVRepositoryFactory.setup();
-        /*
-         * For using over svn:// and svn+xxx://
-         */
-        SVNRepositoryFactoryImpl.setup();
-        
-        /*
-         * For using over file:///
-         */
-        FSRepositoryFactory.setup();
-
-	}
-
-	/**
-	 * This will initialize the repository access, based on the given 
-	 * <code>repositoryURL</code>.
-	 */
-	public void initRepository () {
-        try {
-            /*
-             * Creates an instance of SVNRepository to work with the repository.
-             * All user's requests to the repository are relative to the
-             * repository location used to create this SVNRepository.
-             * SVNURL is a wrapper for URL strings that refer to repository locations.
-             */
-            repository = SVNRepositoryFactory.create(SVNURL.parseURIEncoded(repositoryURL));
-        } catch (SVNException svne) {
-            /*
-             * Perhaps a mailformed URL is the cause of this exception.
-             */
-        	LOGGER.error("Error while creating SVNRepository for location '" + getRepositoryURL() + "' " + svne);
-        }
+		setRepository(null);
 	}
 
 	public void scan(IndexWriter writer) {
-		initRepository();
-
-		ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(username, password);
-        repository.setAuthenticationManager(authManager);
 
         System.out.println("Repositories latest Revision: " + endRevision);
         Collection logEntries = null;
         try {
-            logEntries = repository.log(new String[] {""}, null, startRevision, endRevision, true, true);
+            logEntries = repository.getRepository().log(new String[] {""}, null, startRevision, endRevision, true, true);
 
         } catch (SVNException svne) {
             System.out.println("error while collecting log information for '"
-                    + repositoryURL + "': " + svne.getMessage());
+                    + repository.getUrl() + "': " + svne.getMessage());
             System.exit(1);
         }
 
@@ -161,11 +108,11 @@ public class ScanRepository {
             	LOGGER.debug("No changed paths found!");
             }
         }
-		repository.closeSession();
+		repository.close();
 	}
 
 
-	private void workOnChangeSet(IndexWriter indexWriter, SVNRepository repository, SVNLogEntry logEntry) {
+	private void workOnChangeSet(IndexWriter indexWriter, Repository repository, SVNLogEntry logEntry) {
 		Set changedPathsSet = logEntry.getChangedPaths().keySet();
 
 		int count = 0;
@@ -232,11 +179,11 @@ public class ScanRepository {
 		doc.add(new Field(fieldName,  value.toString(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
-	private void indexFile(IndexWriter indexWriter, SVNRepository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
+	private void indexFile(IndexWriter indexWriter, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
 		throws SVNException, IOException {
 			Map fileProperties  = new HashMap();
 
-			SVNNodeKind nodeKind = repository.checkPath(entryPath.getPath(), logEntry.getRevision());
+			SVNNodeKind nodeKind = repository.getRepository().checkPath(entryPath.getPath(), logEntry.getRevision());
 
 			Document doc = new Document();
 			addUnTokenizedField(doc, FieldNames.REVISION, logEntry.getRevision());
@@ -272,7 +219,7 @@ public class ScanRepository {
 			addUnTokenizedField(doc, FieldNames.KIND, entryPath.getType());
 
 //TODO: May be don't need this if we use repositoryname?
-			addUnTokenizedField(doc, FieldNames.REPOSITORY, repository.getRepositoryUUID(false));
+			addUnTokenizedField(doc, FieldNames.REPOSITORY, repository.getRepository().getRepositoryUUID(false));
 			
 //TODO: Should be filled with an usable name to distinguish different repositories..
 			addUnTokenizedField(doc, FieldNames.REPOSITORYNAME, "TESTREPOS");
@@ -284,7 +231,7 @@ public class ScanRepository {
 				LOGGER.debug("The " + entryPath.getPath() + " is a directory.");
 				//Here we need to call getDir to get directory properties.
 				Collection dirEntries = null;
-				repository.getDir(entryPath.getPath(), logEntry.getRevision(), fileProperties, dirEntries);
+				repository.getRepository().getDir(entryPath.getPath(), logEntry.getRevision(), fileProperties, dirEntries);
 				indexProperties(fileProperties, doc);
 
 			} else if (nodeKind == SVNNodeKind.FILE) {
@@ -294,7 +241,7 @@ public class ScanRepository {
 				//This means we will get every file from the repository....
 				
 				//Get only the properties of the file
-				repository.getFile(entryPath.getPath(), logEntry.getRevision(), fileProperties, null);
+				repository.getRepository().getFile(entryPath.getPath(), logEntry.getRevision(), fileProperties, null);
 				indexProperties(fileProperties, doc);
 
 
@@ -303,7 +250,7 @@ public class ScanRepository {
 				FileExtensionHandler feh = new FileExtensionHandler();
 				feh.setFileProperties(fileProperties);
 				feh.setDoc(doc);
-				feh.execute(repository, entryPath.getPath(), logEntry.getRevision());
+				feh.execute(repository.getRepository(), entryPath.getPath(), logEntry.getRevision());
 			}
 
 			indexWriter.addDocument(doc);
@@ -323,11 +270,11 @@ public class ScanRepository {
 	}
 
 	
-	private SVNDirEntry getInformationAboutEntry(SVNRepository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) {
+	private SVNDirEntry getInformationAboutEntry(Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) {
 		SVNDirEntry dirEntry = null;
 		try {
 			LOGGER.debug("getInformationAboutEntry() name:" + entryPath.getPath() + " rev:" + logEntry.getRevision());
-			dirEntry = repository.info(entryPath.getPath(), logEntry.getRevision());
+			dirEntry = repository.getRepository().info(entryPath.getPath(), logEntry.getRevision());
 		} catch (SVNException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -351,28 +298,12 @@ public class ScanRepository {
 		this.endRevision = endRevision;
 	}
 
-	public String getRepositoryURL() {
-		return repositoryURL;
+	public Repository getRepository() {
+		return repository;
 	}
 
-	public void setRepositoryURL(String repositoryURL) {
-		this.repositoryURL = repositoryURL;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+	public void setRepository(Repository repository) {
+		this.repository = repository;
 	}
 
 }
