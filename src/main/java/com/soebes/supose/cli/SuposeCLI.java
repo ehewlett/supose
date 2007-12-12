@@ -41,6 +41,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
@@ -48,6 +49,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
 
 import com.soebes.supose.FieldNames;
+import com.soebes.supose.scan.Index;
 import com.soebes.supose.scan.ScanRepository;
 
 /**
@@ -101,6 +103,12 @@ public class SuposeCLI {
 		String indexDirectory = scanCommand.getIndexDir(commandLine);
 		boolean create = scanCommand.getCreate(commandLine);
 
+		Index index = new Index ();
+		//We will create a new one if --create is given on command line
+		//otherwise we will append to the existing index.
+		index.setCreate(create);
+		IndexWriter indexWriter = index.createIndexWriter(indexDirectory);
+
 		scanRepository.setRepositoryURL(url);
 
 		//We start with the revision which is given on the command line.
@@ -108,16 +116,24 @@ public class SuposeCLI {
 		scanRepository.setStartRevision(fromRev); 
 		//We will scan the repository to the current HEAD of the repository.
 		scanRepository.setEndRevision(toRev);
-		//This will define the indexDirectory
-		scanRepository.setIndexDirectory(indexDirectory);
-		//This will define if we use an existing index or create an new one.
-		scanRepository.setCreateIndex(create);
 
 		LOGGER.info("Scanning started.");
-		scanRepository.scan();
+		scanRepository.scan(indexWriter);
 		LOGGER.info("Scanning ready.");
+
+		try {
+			indexWriter.optimize();
+			indexWriter.close();
+		} catch (CorruptIndexException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	private static void runSearch(SearchCommand searchCommand) {
 		LOGGER.info("Searching started...");
 		String indexDirectory = searchCommand.getIndexDir(commandLine);
@@ -182,8 +198,6 @@ public class SuposeCLI {
 				System.err.println("Error: IOException during close(): " + e);
 			}
 		}
-
-
 	}
 
 }
