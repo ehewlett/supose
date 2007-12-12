@@ -1,4 +1,4 @@
-package com.soebes.supose.config;
+package com.soebes.supose.config.ini;
 
 import java.io.IOException;
 import java.util.Iterator;
