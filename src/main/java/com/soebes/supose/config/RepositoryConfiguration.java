@@ -23,9 +23,11 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.jobs;
+package com.soebes.supose.config;
 
 import org.ini4j.Ini.Section;
+
+import com.soebes.supose.config.ini.IniFileEntryNames;
 
 /**
  * @author Karl Heinz Marbaise

@@ -23,13 +23,14 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.jobs;
+package com.soebes.supose.config;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
 import org.ini4j.InvalidIniFormatException;
+
 
 /**
  * @author Karl Heinz Marbaise

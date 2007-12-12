@@ -1,10 +1,10 @@
-package com.soebes.supose.jobs;
+package com.soebes.supose.config;
 
 import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
-import com.soebes.supose.scan.Repository;
+import com.soebes.supose.repository.Repository;
 
 public class RepositoryFactory {
 	private static Logger LOGGER = Logger.getLogger(RepositoryFactory.class);

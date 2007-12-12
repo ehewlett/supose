@@ -23,7 +23,7 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.jobs;
+package com.soebes.supose.config.ini;
 
 /**
  * @author Karl Heinz Marbaise

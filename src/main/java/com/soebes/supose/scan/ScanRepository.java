@@ -46,6 +46,7 @@ import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperty;
 
 import com.soebes.supose.FieldNames;
+import com.soebes.supose.repository.Repository;
 import com.soebes.supose.utility.FileName;
 
 /**

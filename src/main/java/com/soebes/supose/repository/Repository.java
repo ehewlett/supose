@@ -24,7 +24,7 @@
  *
  */
 // SupoSE
-package com.soebes.supose.scan;
+package com.soebes.supose.repository;
 
 import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.SVNException;

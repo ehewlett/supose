@@ -32,7 +32,10 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
-import com.soebes.supose.scan.Repository;
+import com.soebes.supose.config.ConfigurationRepositories;
+import com.soebes.supose.config.RepositoryConfiguration;
+import com.soebes.supose.config.RepositoryFactory;
+import com.soebes.supose.repository.Repository;
 
 /**
  * @author Karl Heinz Marbaise

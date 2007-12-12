@@ -50,8 +50,8 @@ import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import com.soebes.supose.FieldNames;
+import com.soebes.supose.repository.Repository;
 import com.soebes.supose.scan.Index;
-import com.soebes.supose.scan.Repository;
 import com.soebes.supose.scan.ScanRepository;
 
 /**

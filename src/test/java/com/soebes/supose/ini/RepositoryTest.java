@@ -6,10 +6,10 @@ import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.soebes.supose.jobs.ConfigurationRepositories;
-import com.soebes.supose.jobs.RepositoryConfiguration;
-import com.soebes.supose.jobs.RepositoryFactory;
-import com.soebes.supose.scan.Repository;
+import com.soebes.supose.config.ConfigurationRepositories;
+import com.soebes.supose.config.RepositoryConfiguration;
+import com.soebes.supose.config.RepositoryFactory;
+import com.soebes.supose.repository.Repository;
 
 @Test
 public class RepositoryTest {

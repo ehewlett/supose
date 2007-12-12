@@ -32,7 +32,7 @@ import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
 import org.tmatesoft.svn.core.SVNException;
 
-import com.soebes.supose.scan.Repository;
+import com.soebes.supose.repository.Repository;
 import com.soebes.supose.scan.ScanRepository;
 
 public class RepositoryScanJob implements StatefulJob {
