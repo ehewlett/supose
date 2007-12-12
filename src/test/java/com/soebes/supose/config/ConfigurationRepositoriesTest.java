@@ -23,7 +23,7 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.ini;
+package com.soebes.supose.config;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
