@@ -31,6 +31,7 @@ import java.util.Map;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNProperty;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
@@ -56,7 +57,7 @@ public abstract class AScanDocument {
 		setDocument(null);
 	}
 
-	abstract void indexDocument (SVNRepository repository, String path, long revision);
+	abstract void indexDocument (SVNRepository repository, SVNDirEntry dirEntry, String path, long revision);
 
 	void setDocument(Document doc) {
 		this.doc = doc;

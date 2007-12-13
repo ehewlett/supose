@@ -38,6 +38,7 @@ import org.pdfbox.exceptions.InvalidPasswordException;
 import org.pdfbox.pdmodel.PDDocument;
 import org.pdfbox.pdmodel.PDDocumentInformation;
 import org.pdfbox.util.PDFTextStripper;
+import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
@@ -54,7 +55,7 @@ public class ScanPDFDocument extends AScanDocument {
 	}
 
 	@Override
-	public void indexDocument(SVNRepository repository, String path, long revision) {
+	public void indexDocument(SVNRepository repository, SVNDirEntry dirEntry, String path, long revision) {
 		LOGGER.info("Scanning document");
 		
 		try {

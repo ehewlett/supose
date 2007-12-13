@@ -30,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hslf.extractor.PowerPointExtractor;
+import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
@@ -46,7 +47,7 @@ public class ScanPowerPointDocument extends AScanDocument {
 	}
 
 	@Override
-	public void indexDocument(SVNRepository repository, String path, long revision) {
+	public void indexDocument(SVNRepository repository, SVNDirEntry dirEntry, String path, long revision) {
 		LOGGER.info("Scanning document");
 
 

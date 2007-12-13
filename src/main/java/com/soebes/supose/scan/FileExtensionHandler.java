@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
+import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
 import com.soebes.supose.utility.FileExtensionProperty;
@@ -45,7 +46,7 @@ public class FileExtensionHandler {
 
 	private static Logger LOGGER = Logger.getLogger(FileExtensionProperty.class);
 
-	public void execute(SVNRepository repository, String path, long revision) {
+	public void execute(SVNRepository repository, SVNDirEntry dirEntry, String path, long revision) {
 
 		FileName fn = new FileName(path);
 		//Check if we have an extension...
@@ -57,7 +58,7 @@ public class FileExtensionHandler {
 					AScanDocument dh = (AScanDocument) handlerClass.newInstance();
 					dh.setProperties(getFileProperties());
 					dh.setDocument(doc);
-					dh.indexDocument(repository, path, revision);
+					dh.indexDocument(repository, dirEntry, path, revision);
 				} catch (ClassNotFoundException e) {
 					LOGGER.error("Cannot create instacne of : " + className + " " + e);
 				} catch (InstantiationException e) {
@@ -72,7 +73,7 @@ public class FileExtensionHandler {
 				AScanDocument dh = new ScanDefaultDocument();
 				dh.setProperties(getFileProperties());
 				dh.setDocument(doc);
-				dh.indexDocument(repository, path, revision);
+				dh.indexDocument(repository, dirEntry, path, revision);
 			}
 		} else {
 			LOGGER.info("We have no file extension found for the file '" + path + "'");

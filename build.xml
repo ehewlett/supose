@@ -25,7 +25,7 @@
 	<property file="${basedir}/directory.properties"/>
 	<property file="${basedir}/release.properties"/>
 
-	<property name="version" value="${software.major}.${software.minor}.${software.patch}"/>
+	<property name="version" value="${software.major}.${software.minor}.${software.patch}.${software.bugfix}"/>
 
 	<path id="classpath">
 		<fileset dir="${dir.lib}">
