@@ -25,8 +25,9 @@
  */
 package com.soebes.supose.config;
 
+import static org.testng.Assert.assertNotNull;
+
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
 
 @Test
 public class FileConfigurationPropertyTest {

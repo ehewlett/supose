@@ -44,6 +44,7 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperty;
+import org.tmatesoft.svn.core.io.SVNRepository;
 
 import com.soebes.supose.FieldNames;
 import com.soebes.supose.repository.Repository;
@@ -135,23 +136,23 @@ public class ScanRepository {
 				if (SVNLogEntryPath.TYPE_ADDED == entryPath.getType()) {
 					LOGGER.debug("File " + entryPath.getPath() + " added...");
 					//get All file content and index it.
-					indexFile(indexWriter, repository, logEntry, entryPath);
+					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
 				}
 				if (SVNLogEntryPath.TYPE_MODIFIED == entryPath.getType()) {
 					//Get all file content and index it...
 					LOGGER.debug("Modified file...");
 					//get All file content and index it.
-					indexFile(indexWriter, repository, logEntry, entryPath);
+					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
 				}
 				if (SVNLogEntryPath.TYPE_REPLACED == entryPath.getType()) {
 					//Get all file content and index it...
 					LOGGER.debug("Replaced file...");
 					//get All file content and index it.
-					indexFile(indexWriter, repository, logEntry, entryPath);
+					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
 				}
 				if (SVNLogEntryPath.TYPE_DELETED == entryPath.getType()) {
 					LOGGER.debug("The file '" + entryPath.getPath() + "' has been deleted.");
-					indexFile(indexWriter, repository, logEntry, entryPath);
+					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
 					if (dirEntry != null
 							&& dirEntry.getKind().equals(SVNNodeKind.DIR)) {
 					} else {
@@ -183,7 +184,7 @@ public class ScanRepository {
 		doc.add(new Field(fieldName,  value.toString(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
-	private void indexFile(IndexWriter indexWriter, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
+	private void indexFile(IndexWriter indexWriter, SVNDirEntry dirEntry, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
 		throws SVNException, IOException {
 			Map fileProperties  = new HashMap();
 
@@ -254,7 +255,7 @@ public class ScanRepository {
 				FileExtensionHandler feh = new FileExtensionHandler();
 				feh.setFileProperties(fileProperties);
 				feh.setDoc(doc);
-				feh.execute(repository.getRepository(), entryPath.getPath(), logEntry.getRevision());
+				feh.execute(repository, dirEntry, entryPath.getPath(), logEntry.getRevision());
 			}
 
 			indexWriter.addDocument(doc);
