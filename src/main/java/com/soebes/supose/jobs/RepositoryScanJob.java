@@ -25,6 +25,8 @@
  */
 package com.soebes.supose.jobs;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -32,6 +34,8 @@ import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
 import org.tmatesoft.svn.core.SVNException;
 
+import com.soebes.supose.config.RepositoryConfiguration;
+import com.soebes.supose.config.RepositoryJobConfiguration;
 import com.soebes.supose.repository.Repository;
 import com.soebes.supose.scan.ScanRepository;
 
@@ -39,13 +43,14 @@ public class RepositoryScanJob implements StatefulJob {
 	private static Logger LOGGER = Logger.getLogger(RepositoryScanJob.class);
 
 	private ScanRepository scanRepos = null;
+	private RepositoryJobConfiguration jobConfig = null;
 
 	public RepositoryScanJob () {
-		LOGGER.info("RepositoryScanJob: ctor called.");
+		LOGGER.debug("RepositoryScanJob: ctor called.");
 		scanRepos = new ScanRepository();
 	}
 
-	public void execute(JobExecutionContext context) throws JobExecutionException {
+	private void subexecute (JobExecutionContext context) throws Exception {
 		LOGGER.info(
 				"["
 			+	context.getJobDetail().getName() + "/"
@@ -55,30 +60,47 @@ public class RepositoryScanJob implements StatefulJob {
 		JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
 
 		Repository repos = (Repository) jobDataMap.get(JobDataNames.REPOSITORY);
+		RepositoryConfiguration reposConfig = (RepositoryConfiguration) jobDataMap.get(JobDataNames.REPOSITORYCONFIGURATION);
 
-		LOGGER.info("URL: " + repos.getUrl());
-		try {
-			LOGGER.info("URL: " + repos.getRepository().getRepositoryUUID(true));
-		} catch (SVNException e) {
-			LOGGER.error("Faild during getRepositoryUUID(false) " + e);
-		}
 
 		String indexDirectory = (String) jobDataMap.get(JobDataNames.INDEX);
 		
-		for(int i=0; i<10; i++) {
-			try {
-				//Simulate to do many things...
-				Thread.sleep(1000);
-			} catch (Exception e) {
-				LOGGER.error("Thread.sleep() has failed. " + e);
-			}
-			LOGGER.info("Working: " + (i+1));
+		String configDir = (String) jobDataMap.get(JobDataNames.CONFIGDIR);
+		
+		LOGGER.info("configDir:" + configDir);
+		LOGGER.info("URL: " + repos.getUrl());
+		LOGGER.info("Name: " + reposConfig.getRepositoryName());
+		jobConfig = new RepositoryJobConfiguration(configDir + File.separator + reposConfig.getRepositoryName(), reposConfig);
+
+		if (repos.getRepository().getLatestRevision() > reposConfig.getFromRev()) {
+
+			long startRev = reposConfig.getFromRev() + 1;
+			long endRev = repos.getRepository().getLatestRevision();
+			scanRepos.setRepository(repos);
+			scanRepos.setStartRevision(startRev);
+			scanRepos.setEndRevision(endRev);
+
+//			scanRepos.scan(writer);
+			//New revision existing till the last scanning...
+			//scann the content
+			
+			//save the configuration file with the new revision numbers.
+			reposConfig.setFromRev(endRev);
+			//store the changed configuration items.
+			jobConfig.save();
+		} else {
+			LOGGER.info("Nothing to do, cause no changes had been made at the repository.");
+			//Nothing to do, cause no new revision are existing...
 		}
-
-//		scanRepos.scan();
-
-		repos.close();
 		LOGGER.info("RepositoryScanJob: scanning repository done...");
+	}
+
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		try {
+			subexecute(context);
+		} catch (Exception e) {
+			LOGGER.error("We had an unexpected Exception: " + e);
+		}
 	}
 	
 }

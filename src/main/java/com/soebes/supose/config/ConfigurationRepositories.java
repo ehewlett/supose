@@ -62,7 +62,8 @@ public class ConfigurationRepositories {
 	}
 	
 	public RepositoryConfiguration getRepositoryConfiguration(String name) {
-		return new RepositoryConfiguration(iniFile.get(name));
+		LOGGER.debug("getRepositoryConfiguration(" + name + ")");
+		return new RepositoryConfiguration(iniFile.get(name), name);
 	}
 
 	public String getConfigFile() {

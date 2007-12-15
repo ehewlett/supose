@@ -48,9 +48,11 @@ public class SuposeCommandLine extends CLIBase {
     //All available commands
     private Command scanCommand = null;
     private Command searchCommand = null;
+    private Command mergeCommand = null;
 
     private SearchCommand cliSearchCommand = null;
     private ScanCommand cliScanCommand = null;
+    private MergeCommand cliMergeCommand = null;
 
     private void initGlobalOptions() {
     	globalOptionH = obuilder
@@ -62,6 +64,7 @@ public class SuposeCommandLine extends CLIBase {
     private void initCommands() {
     	scanCommand = cliScanCommand.getCommand();
     	searchCommand = cliSearchCommand.getCommand();
+    	mergeCommand = cliMergeCommand.getCommand();
     }
 
     public ScanCommand getScliScanCommand() {
@@ -72,6 +75,9 @@ public class SuposeCommandLine extends CLIBase {
     	return cliSearchCommand;
     }
 
+    public MergeCommand getScliMergeCommand() {
+    	return cliMergeCommand;
+    }
     public void init() {
 	    initCommands();
 		initGlobalOptions();
@@ -80,6 +86,7 @@ public class SuposeCommandLine extends CLIBase {
 			.withName("commands")
 				.withOption(scanCommand)
 				.withOption(searchCommand)
+				.withOption(mergeCommand)
 	            .create();
 	
 	    suposeOptions = gbuilder
@@ -93,6 +100,7 @@ public class SuposeCommandLine extends CLIBase {
 	public SuposeCommandLine () {
 		cliSearchCommand = new SearchCommand();
 		cliScanCommand = new ScanCommand();
+		cliMergeCommand = new MergeCommand();
 		init();
 	}
 
@@ -108,6 +116,9 @@ public class SuposeCommandLine extends CLIBase {
 
 	public Command getSearchCommand() {
 		return searchCommand;
+	}
+	public Command getMergeCommand() {
+		return mergeCommand;
 	}
 
 	public Option getGlobalOptionH() {

@@ -74,7 +74,11 @@ public class QuartzTest {
             	}
             	LOGGER.info("The repository " + repositoryName + " is ready for scanning.");
             	JobDetail jobDetail = new JobDetail(repositoryName, null, RepositoryScanJob.class);
+            	
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORY, repository);
+            	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORYCONFIGURATION, reposConfig);
+            	//HACK: Remove hard coded path => Put it into a configuration file.
+            	jobDetail.getJobDataMap().put(JobDataNames.CONFIGDIR, "/home/kama/supose/repositories/");
 
             	CronTrigger cronTrigger1 = null;
             	String cronExpression = "";
@@ -87,7 +91,7 @@ public class QuartzTest {
             	}
             	try {
             		cronTrigger1 = new CronTrigger(
-            				"myCron" + repositoryName,
+            				"SupoSE." + repositoryName,
             				Scheduler.DEFAULT_GROUP,
             				cronExpression
             		);

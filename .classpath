@@ -23,6 +23,6 @@
 	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/quartz-all-1.6.0.jar" sourcepath="lib/quartz-1.6.0.zip"/>
 	<classpathentry kind="lib" path="lib/jbossall-client.jar"/>
-	<classpathentry kind="lib" path="lib/ini4j.jar" sourcepath="lib/ini4j-src-0.2.6.zip"/>
+	<classpathentry kind="lib" path="lib/ini4j-0.2.6.jar" sourcepath="lib/ini4j-src-0.2.6.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

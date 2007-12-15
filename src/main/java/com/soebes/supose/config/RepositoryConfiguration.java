@@ -36,8 +36,11 @@ import com.soebes.supose.config.ini.IniFileEntryNames;
 public class RepositoryConfiguration {
 
 	private Section section;
+	
+	private String repositoryName;
 
-	public RepositoryConfiguration(Section section) {
+	public RepositoryConfiguration(Section section, String repositoryName) {
+		setRepositoryName(repositoryName);
 		setSection(section);
 	}
 
@@ -75,21 +78,26 @@ public class RepositoryConfiguration {
 		section.put(IniFileEntryNames.INDEXPASSWORD, password);
 	}
 
-	public String getFromRev() {
+	private String getFromRevStr () {
 		return section.get(IniFileEntryNames.FROMREV);
 	}
 
+	public long getFromRev() {
+		return Long.parseLong(getFromRevStr());
+	}
+
 	public boolean existFromRev() {
-		if (	getFromRev() == null 
-			||	getFromRev().trim().length() == 0) {
+		if (getFromRevStr() == null) {
+			return false;
+		} else if (getFromRevStr().trim().length() == 0) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-	public void setFromRev(String rev) {
-		section.put(IniFileEntryNames.FROMREV, rev);
+	public void setFromRev(long rev) {
+		section.put(IniFileEntryNames.FROMREV, Long.toString(rev));
 	}
 
 	public String getToRev() {
@@ -150,4 +158,13 @@ public class RepositoryConfiguration {
 	public void setCron(String cron) {
 		section.put(IniFileEntryNames.CRON, cron);
 	}
+
+	public String getRepositoryName() {
+		return repositoryName;
+	}
+
+	public void setRepositoryName(String repositoryName) {
+		this.repositoryName = repositoryName;
+	}
+
 }

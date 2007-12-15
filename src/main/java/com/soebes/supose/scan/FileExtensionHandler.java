@@ -25,12 +25,10 @@
  */
 package com.soebes.supose.scan;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
-import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
 import com.soebes.supose.utility.FileExtensionProperty;
@@ -50,15 +48,6 @@ public class FileExtensionHandler {
 	public void execute(SVNRepository repository, String path, long revision) {
 		FileName fn = new FileName(path);
 
-		ArrayList<SVNDirEntry> dirEntries = new ArrayList<SVNDirEntry>();
-		try {
-			repository.getDir(fn.getBaseName(), revision, null, dirEntries);
-		} catch (Exception e) {
-			LOGGER.error("Error during getDir() " + e);
-		}
-		int index = dirEntries.indexOf(fn.getFileName());
-		LOGGER.debug("Entry: " + dirEntries.get(index).getName() + " " + dirEntries.get(index).getSize());
-		
 		//Check if we have an extension...
 		if (fn.getExt().length() > 0) {
 			try {

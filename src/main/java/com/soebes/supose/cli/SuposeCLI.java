@@ -46,6 +46,7 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
+import org.apache.lucene.store.FSDirectory;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
@@ -87,6 +88,8 @@ public class SuposeCLI {
 			runScan(suposecli.getScliScanCommand());
 		} else if (commandLine.hasOption(suposecli.getSearchCommand())) {
 			runSearch(suposecli.getScliSearchCommand());
+		} else if (commandLine.hasOption(suposecli.getMergeCommand())) {
+			runMerge(suposecli.getScliMergeCommand());
 		} else {
 			System.err.println("Error: You should define either scan or search as command or the -H option to get help.");
 			System.exit(1);
@@ -142,6 +145,32 @@ public class SuposeCLI {
 			e.printStackTrace();
 		}
 
+	}
+
+	private static void runMerge(MergeCommand mergeCommand) {
+		List<String> indexList = mergeCommand.getIndex(commandLine);
+		String destination = mergeCommand.getDestination(commandLine);
+
+		for(int i=0; i<indexList.size(); i++) {
+			System.out.print("Index[" + i + "]=" + indexList.get(i) + " ");
+		}
+		System.out.println("");
+		System.out.println("Destination: " + destination);
+
+		Index index = new Index ();
+		//We assume an existing index...
+		IndexWriter indexWriter = index.createIndexWriter(destination);
+
+		try {
+			FSDirectory [] fsDirs = new FSDirectory[indexList.size()];
+			for (int i = 0; i < indexList.size(); i++) {
+				fsDirs[i] = FSDirectory.getDirectory(indexList.get(i));
+			}
+			indexWriter.addIndexes(fsDirs);
+			indexWriter.close();
+		} catch (Exception e) {
+			System.err.println("Something had gone wrong: " + e);
+		}
 	}
 
 	private static void runSearch(SearchCommand searchCommand) {

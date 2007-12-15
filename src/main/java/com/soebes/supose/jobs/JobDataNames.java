@@ -25,7 +25,9 @@
  */
 package com.soebes.supose.jobs;
 
-public enum JobDataNames {
-	REPOSITORY,
-	INDEX
+public final class JobDataNames {
+	public final static String REPOSITORY = "repository";
+	public final static String REPOSITORYCONFIGURATION = "repositoryConfiguraion";
+	public final static String INDEX = "index";
+	public final static String CONFIGDIR = "configDir";
 }

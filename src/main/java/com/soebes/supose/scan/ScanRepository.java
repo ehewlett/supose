@@ -79,7 +79,6 @@ public class ScanRepository {
         Collection logEntries = null;
         try {
             logEntries = repository.getRepository().log(new String[] {""}, null, startRevision, endRevision, true, true);
-
         } catch (SVNException svne) {
             System.out.println("error while collecting log information for '"
                     + repository.getUrl() + "': " + svne.getMessage());
@@ -158,9 +157,13 @@ public class ScanRepository {
 					} else {
 					}
 				}
+			} catch (IOException e) {
+				LOGGER.error("IOExcepiton: " + e);
+			} catch (SVNException e) {
+				LOGGER.error("SVNExcepiton: " + e);
 			} catch (Exception e) {
-				LOGGER.error("something wrong: " + e.getMessage());
-			}		     
+				LOGGER.error("something wrong: " + e);
+			}
 		}
 	}
 
@@ -276,9 +279,8 @@ public class ScanRepository {
 		try {
 			LOGGER.debug("getInformationAboutEntry() name:" + entryPath.getPath() + " rev:" + logEntry.getRevision());
 			dirEntry = repository.getRepository().info(entryPath.getPath(), logEntry.getRevision());
-		} catch (SVNException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (SVNException e) {
+			LOGGER.error("Unexpected Exception: " + e);
 		}
 		return dirEntry;
 	}

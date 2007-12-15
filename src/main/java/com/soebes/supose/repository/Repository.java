@@ -45,8 +45,10 @@ public class Repository {
 
 	private String url = null;
 	private SVNRepository repository = null;
-	private ISVNAuthenticationManager authManager = null; 
-	
+	private ISVNAuthenticationManager authManager = null;
+
+	private String uuid = null;
+
 	/**
 	 * This will initialize the SVNKit library.
 	 * @param url The url of the repository we would 
@@ -86,6 +88,7 @@ public class Repository {
 		LOGGER.debug("Trying to make a connection to the repository.");
 		try {
 			repository.testConnection();
+			setUuid(repository.getRepositoryUUID(false));
 		} catch (SVNException e) {
 			LOGGER.error("Connection to the repository has failed. URL or username/password is not correct. " + e.getMessage());
 			return false;
@@ -147,6 +150,16 @@ public class Repository {
 
 	public ISVNAuthenticationManager getAuthManager() {
 		return authManager;
+	}
+
+
+	public String getUuid() {
+		return uuid;
+	}
+
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 }
