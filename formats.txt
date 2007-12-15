@@ -36,3 +36,6 @@ http://www.internetworld.de/article/Preisgruppe2/05-03-84_Java_5.pdf
 
 #http://jdiff.org
 
+HTML Extractor:
+http://htmlparser.sourceforge.net
+
