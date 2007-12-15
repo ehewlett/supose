@@ -6,6 +6,8 @@
 	</properties>
 	<body>
 		<release version="0.3.0 (Earth)" date="2007-XX-YY" description="Milestone">
+			<action dev="Karl Heinz Marbaise" type="add" issue="26">- Added merge command for CLI to merge indexes.</action>
+			<action dev="Karl Heinz Marbaise" type="add" issue="25">- Partially scanning via Quartz.</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="24">- update changes file.</action>
 			<action dev="Karl Heinz Marbaise" type="add" issue="23">- Maven2 build.</action>
 		</release>
