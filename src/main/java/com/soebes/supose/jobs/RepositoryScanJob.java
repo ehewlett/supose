@@ -89,6 +89,7 @@ public class RepositoryScanJob implements StatefulJob {
 			scanRepos.setRepository(repos);
 			scanRepos.setStartRevision(startRev);
 			scanRepos.setEndRevision(endRev);
+			scanRepos.setName(reposConfig.getRepositoryName());
 
 			//New revision existing till the last scanning...
 			//scann the content

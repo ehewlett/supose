@@ -44,7 +44,6 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperty;
-import org.tmatesoft.svn.core.io.SVNRepository;
 
 import com.soebes.supose.FieldNames;
 import com.soebes.supose.repository.Repository;
@@ -57,6 +56,8 @@ import com.soebes.supose.utility.FileName;
 public class ScanRepository {
 	private static Logger LOGGER = Logger.getLogger(ScanRepository.class);
 
+	private String name;
+	
 	/**
 	 * This defines the revision from where we start to scan the given repository.
 	 */
@@ -72,6 +73,7 @@ public class ScanRepository {
 		setStartRevision(0);
 		setEndRevision(0);
 		setRepository(null);
+		setName("");
 	}
 
 	public void scan(IndexWriter writer) {
@@ -226,8 +228,7 @@ public class ScanRepository {
 //TODO: May be don't need this if we use repositoryname?
 			addUnTokenizedField(doc, FieldNames.REPOSITORY, repository.getRepository().getRepositoryUUID(false));
 			
-//TODO: Should be filled with an usable name to distinguish different repositories..
-			addUnTokenizedField(doc, FieldNames.REPOSITORYNAME, "TESTREPOS");
+			addUnTokenizedField(doc, FieldNames.REPOSITORYNAME, getName());
 
 			if (nodeKind == SVNNodeKind.NONE) {
 				LOGGER.debug("The " + entryPath.getPath() + " is a NONE entry.");
@@ -308,6 +309,14 @@ public class ScanRepository {
 
 	public void setRepository(Repository repository) {
 		this.repository = repository;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
