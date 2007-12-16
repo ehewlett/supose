@@ -26,17 +26,23 @@
 package com.soebes.supose.jobs;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
-import org.tmatesoft.svn.core.SVNException;
 
 import com.soebes.supose.config.RepositoryConfiguration;
 import com.soebes.supose.config.RepositoryJobConfiguration;
 import com.soebes.supose.repository.Repository;
+import com.soebes.supose.scan.Index;
 import com.soebes.supose.scan.ScanRepository;
 
 public class RepositoryScanJob implements StatefulJob {
@@ -62,16 +68,20 @@ public class RepositoryScanJob implements StatefulJob {
 		Repository repos = (Repository) jobDataMap.get(JobDataNames.REPOSITORY);
 		RepositoryConfiguration reposConfig = (RepositoryConfiguration) jobDataMap.get(JobDataNames.REPOSITORYCONFIGURATION);
 
+//		String indexDirectory = (String) jobDataMap.get(JobDataNames.INDEX);
 
-		String indexDirectory = (String) jobDataMap.get(JobDataNames.INDEX);
-		
 		String configDir = (String) jobDataMap.get(JobDataNames.CONFIGDIR);
+
+		LOGGER.info("configDir:" + configDir + " URL: " + repos.getUrl() + " Name: " + reposConfig.getRepositoryName());
 		
-		LOGGER.info("configDir:" + configDir);
-		LOGGER.info("URL: " + repos.getUrl());
-		LOGGER.info("Name: " + reposConfig.getRepositoryName());
 		jobConfig = new RepositoryJobConfiguration(configDir + File.separator + reposConfig.getRepositoryName(), reposConfig);
 
+		Index index = new Index ();
+		//We will allways create a new index.
+		index.setCreate(true);
+		IndexWriter indexWriter = index.createIndexWriter(configDir+ File.separator + "index." + reposConfig.getRepositoryName());
+
+		LOGGER.info("Revision: " + repos.getRepository().getLatestRevision() + " FromRev:" + reposConfig.getFromRev());
 		if (repos.getRepository().getLatestRevision() > reposConfig.getFromRev()) {
 
 			long startRev = reposConfig.getFromRev() + 1;
@@ -80,10 +90,21 @@ public class RepositoryScanJob implements StatefulJob {
 			scanRepos.setStartRevision(startRev);
 			scanRepos.setEndRevision(endRev);
 
-//			scanRepos.scan(writer);
 			//New revision existing till the last scanning...
 			//scann the content
-			
+			scanRepos.scan(indexWriter);
+
+			try {
+				indexWriter.optimize();
+				indexWriter.close();
+			} catch (CorruptIndexException e) {
+				LOGGER.error("Corrupted index: " + e);
+			} catch (IOException e) {
+				LOGGER.error("IOException during closing of index: " + e);
+			}
+
+			//Merge the created index into the existing one...
+			mergeIndex(configDir+ File.separator + "index." + reposConfig.getResult(), configDir+ File.separator + "index." + reposConfig.getRepositoryName());
 			//save the configuration file with the new revision numbers.
 			reposConfig.setFromRev(endRev);
 			//store the changed configuration items.
@@ -93,6 +114,40 @@ public class RepositoryScanJob implements StatefulJob {
 			//Nothing to do, cause no new revision are existing...
 		}
 		LOGGER.info("RepositoryScanJob: scanning repository done...");
+	}
+
+	
+	private void mergeIndex(String destination, String source) {
+		ArrayList<String> sourceList = new ArrayList<String>();
+		sourceList.add(source);
+		mergeIndex(destination, sourceList);
+	}
+	/**
+	 * Merge all given indexes together to a single index.
+	 * @param destination This will define the destination directory
+	 *   of the index where all other indexes will be merged to.
+	 * @param indexList This is the list of indexes which are
+	 *   merged into the destination index.
+	 */
+	private void mergeIndex (String destination, List<String> indexList) {
+		LOGGER.debug("We are trying to merge indexes to the destination: " + destination);
+		Index index = new Index ();
+		//We assume an existing index...
+		index.setCreate(false);
+		IndexWriter indexWriter = index.createIndexWriter(destination);
+
+		try {
+			LOGGER.info("Merging of indexes started.");
+			FSDirectory [] fsDirs = new FSDirectory[indexList.size()];
+			for (int i = 0; i < indexList.size(); i++) {
+				fsDirs[i] = FSDirectory.getDirectory(indexList.get(i));
+			}
+			indexWriter.addIndexes(fsDirs);
+			indexWriter.close();
+			LOGGER.info("Merging of indexes succesfull.");
+		} catch (Exception e) {
+			LOGGER.error("Something wrong during merging of index: " + e);
+		}
 	}
 
 	public void execute(JobExecutionContext context) throws JobExecutionException {

@@ -25,6 +25,7 @@
  */
 package com.soebes.supose.config;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
@@ -45,7 +46,7 @@ public class ConfigurationRepositories {
 	public ConfigurationRepositories(String configFile) {
 		setConfigFile(configFile);
 		try {
-			iniFile = new Ini(ConfigurationRepositories.class.getResourceAsStream(configFile));
+			iniFile = new Ini(new FileInputStream(configFile));
 		} catch (InvalidIniFormatException e) {
 			LOGGER.error("The format of the given INI is not correct. " + e);
 		} catch (IOException e) {

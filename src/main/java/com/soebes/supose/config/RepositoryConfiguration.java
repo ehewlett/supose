@@ -159,6 +159,23 @@ public class RepositoryConfiguration {
 		section.put(IniFileEntryNames.CRON, cron);
 	}
 
+	public String getResult() {
+		return section.get(IniFileEntryNames.RESULT);
+	}
+
+	public boolean existResult() {
+		if (	getResult() == null 
+			||	getResult().trim().length() == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public void setResult (String result) {
+		section.put(IniFileEntryNames.RESULT, result);
+	}
+	
 	public String getRepositoryName() {
 		return repositoryName;
 	}

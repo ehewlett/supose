@@ -39,4 +39,5 @@ public final class IniFileEntryNames {
 	public static final String TOREV = "torev";
 	public static final String CRON = "cron";
 	public static final String URL = "url";
+	public static final String RESULT = "result";
 }

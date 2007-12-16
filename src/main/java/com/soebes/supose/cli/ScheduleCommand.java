@@ -36,63 +36,46 @@ import org.apache.commons.cli2.option.Command;
  * @author Karl Heinz Marbaise
  *
  *
- * supose merge --index anton berta egon --destination result
+ * supose schedule --configuration repository.ini
  */
-public class MergeCommand extends CLIBase {
+public class ScheduleCommand extends CLIBase {
 
-    private Option optionDestination = null;
-    private Option optionIndex = null;
+    private Option optionConfiguration = null;
 
-	public MergeCommand() {
+	public ScheduleCommand() {
 		setCommand(createCommand());
 	}
 
 	private Command createCommand() {
-    	optionDestination = obuilder
-	    	.withLongName("destination")
-	    	.withRequired(true)
-	    	.withArgument(abuilder.withName("destination").create())
-	    	.withDescription("Define the destination directory of the merged index.")
-	    	.create();
-
-    	optionIndex = obuilder
-			.withShortName("I")
-			.withLongName("index")
-			.withArgument(abuilder.withName("index").create())
-			.withDescription("Define the index directory where the created index will be stored.")
+    	optionConfiguration = obuilder
+			.withShortName("C")
+			.withLongName("configuration")
+			.withRequired(true)
+			.withArgument(abuilder.withName("configuration").create())
+			.withDescription("Define where to find the repository.ini file.")
 			.create();
 
     	Group scanOptionIndex = gbuilder
-    		.withOption(optionIndex)
-    		.withOption(optionDestination)
+    		.withOption(optionConfiguration)
     		.create();
     	
     	return cbuilder
-	    	.withName("merge")
-	    	.withName("mg")
-	    	.withDescription("Merge existing lucene index together.")
+	    	.withName("schedule")
+	    	.withDescription("Schedule scanning for later running")
 	    	.withChildren(scanOptionIndex)
 	    	.create();
 	}
 
-	public Option getOptionIndex() {
-		return optionIndex;
-	}
-	public Option getOptionDestination() {
-		return optionDestination;
+	public Option getOptionConfiguration() {
+		return optionConfiguration;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<String> getIndex (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionIndex()));
-		return list;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public String getDestination (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionDestination()));
+	public String getConfiguration (CommandLine cline) {
+		List<String> list = cline.getValues((getOptionConfiguration()));
 		if (list == null || list.size() == 0) {
-			return "destination.Dir";
+			//This should never happen, cause the option is required.
+			return "Default";
 		} else {
 			return list.get(0);
 		}

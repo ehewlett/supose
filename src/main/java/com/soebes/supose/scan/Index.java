@@ -50,7 +50,7 @@ public class Index {
 	private int mergeFactor = 10;
 	private int maxBufferedDocs = 10;
 	private boolean useCompoundFile = false;
-	private boolean create = true;
+	private boolean create = false;
 	
 	public Index () {
 		setIndexDirectory(null);
@@ -61,11 +61,23 @@ public class Index {
 	}
 	
 	public IndexWriter createIndexWriter (String indexDirectory) {
+		LOGGER.debug("createIndexWriter('" + indexDirectory + "')");
 		setIndexDirectory(indexDirectory);
 		File indexDir = new File(getIndexDirectory());
 		IndexWriter writer = null;
 		try {
-			writer = new IndexWriter(indexDir, getAnalyzer(), isCreate());
+			LOGGER.debug("Trying to create a new Index");
+			if (isCreate()) {
+				LOGGER.debug("Trying to create a new index (overwrite an exsting)");
+				//This will create a new index. Independent if one existed before.
+				writer = new IndexWriter(indexDir, getAnalyzer(), true);
+			} else {
+				LOGGER.debug("Trying to create a new index (using an exsting)");
+				//This will use an existing index or will create one if 
+				//no existed before.
+				writer = new IndexWriter(indexDir, getAnalyzer());
+			}
+			LOGGER.debug("Created new index.");
 			writer.setUseCompoundFile(isUseCompoundFile());
 			writer.setMergeFactor(getMergeFactor());
 			writer.setMaxBufferedDocs(getMaxBufferedDocs());
