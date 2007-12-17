@@ -31,20 +31,19 @@ import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.soebes.supose.config.ConfigurationRepositories;
-import com.soebes.supose.config.RepositoryConfiguration;
+import com.soebes.supose.TestBase;
 
 /**
  * @author Karl Heinz Marbaise
  *
  */
 @Test
-public class ConfigurationRepositoriesTest {
+public class ConfigurationRepositoriesTest extends TestBase {
 	private ConfigurationRepositories confRepos = null; 
 	
 	@BeforeClass
 	public void beforeClass() {
-		confRepos = new ConfigurationRepositories("/repositories-test.ini");		
+		confRepos = new ConfigurationRepositories(getFileResource("repositories-test.ini"));		
 		assertNotNull(confRepos, "We had expected to get an instance");
 	}
 

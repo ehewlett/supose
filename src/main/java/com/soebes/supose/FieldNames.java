@@ -27,8 +27,8 @@ package com.soebes.supose;
 
 
 /**
- * This class defines all available fieldnames.
- * Only the fields which will be automaticially created
+ * This class defines all available field names.
+ * Only the fields which will be automaticaially created
  * for every property can't be defined here.
  * 
  * @author Karl Heinz Marbaise
@@ -48,7 +48,7 @@ public final class FieldNames {
 	public final static String FROM = "from";
 	public final static String FROMREV = "fromrev";
 	public final static String REPOSITORY = "repository";
-	public final static String REPOSITORYNAME = "repositoryname";
+	public final static String REPOSITORYUUID = "repositoryuuid";
 	public final static String SIZE = "size";
 
 	public final static String XLSSHEETS = "xlssheets";

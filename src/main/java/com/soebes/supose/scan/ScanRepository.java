@@ -23,7 +23,6 @@
  * just write an email to license@soebes.de
  *
  */
-// SupoSE
 package com.soebes.supose.scan;
 
 import java.io.IOException;
@@ -78,17 +77,17 @@ public class ScanRepository {
 
 	public void scan(IndexWriter writer) {
 
-        System.out.println("Repositories latest Revision: " + endRevision);
+       LOGGER.debug("Repositories latest Revision: " + endRevision);
         Collection logEntries = null;
         try {
             logEntries = repository.getRepository().log(new String[] {""}, null, startRevision, endRevision, true, true);
         } catch (SVNException svne) {
-            System.out.println("error while collecting log information for '"
+            LOGGER.error("error while collecting log information for '"
                     + repository.getUrl() + "': " + svne.getMessage());
             System.exit(1);
         }
 
-        System.out.println("LogEntries: " + logEntries.size());
+        LOGGER.debug("LogEntries: " + logEntries.size());
         for (Iterator entries = logEntries.iterator(); entries.hasNext();) {
             SVNLogEntry logEntry = (SVNLogEntry) entries.next();
 
@@ -97,15 +96,15 @@ public class ScanRepository {
             LOGGER.debug("author: " + logEntry.getAuthor());
             LOGGER.debug("date: " + logEntry.getDate());
             LOGGER.debug("log message: " + logEntry.getMessage());
-            System.out.printf("\r%7d", logEntry.getRevision());
-            System.out.print(" Date: " + logEntry.getDate());
+//            System.out.printf("\r%7d", logEntry.getRevision());
+//            System.out.print(" Date: " + logEntry.getDate());
 
             if (logEntry.getChangedPaths().size() > 0) {
             	LOGGER.debug("changed paths:");
 				try {
 					workOnChangeSet(writer, repository, logEntry);
 				} catch (Exception e) {
-	            	LOGGER.debug("ERROR:" + e.getMessage());
+	            	LOGGER.error("Error during workOnChangeSet() " + e);
 				}                
             } else {
             	LOGGER.debug("No changed paths found!");
@@ -226,9 +225,9 @@ public class ScanRepository {
 			addUnTokenizedField(doc, FieldNames.KIND, entryPath.getType());
 
 //TODO: May be don't need this if we use repositoryname?
-			addUnTokenizedField(doc, FieldNames.REPOSITORY, repository.getRepository().getRepositoryUUID(false));
+			addUnTokenizedField(doc, FieldNames.REPOSITORYUUID, repository.getRepository().getRepositoryUUID(false));
 			
-			addUnTokenizedField(doc, FieldNames.REPOSITORYNAME, getName());
+			addUnTokenizedField(doc, FieldNames.REPOSITORY, getName());
 
 			if (nodeKind == SVNNodeKind.NONE) {
 				LOGGER.debug("The " + entryPath.getPath() + " is a NONE entry.");

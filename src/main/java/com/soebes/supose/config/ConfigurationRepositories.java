@@ -59,7 +59,8 @@ public class ConfigurationRepositories {
 	 * @return Array of all available repositories.
 	 */
 	public String[] getNames() {
-		return (String[]) iniFile.keySet().toArray(new String[iniFile.keySet().size()]);
+		int size = iniFile.keySet().size();
+		return (String[]) iniFile.keySet().toArray(new String[size]);
 	}
 	
 	public RepositoryConfiguration getRepositoryConfiguration(String name) {
