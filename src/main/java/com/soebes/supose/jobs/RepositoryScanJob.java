@@ -84,7 +84,14 @@ public class RepositoryScanJob implements StatefulJob {
 		LOGGER.info("Revision: " + repos.getRepository().getLatestRevision() + " FromRev:" + reposConfig.getFromRev());
 		if (repos.getRepository().getLatestRevision() > reposConfig.getFromRev()) {
 
-			long startRev = reposConfig.getFromRev() + 1;
+			long startRev = 1;
+			if (jobConfig.isNewCreated()) {
+				LOGGER.info("This is the first time we scan the repository.");
+				startRev = reposConfig.getFromRev();
+			} else {
+				LOGGER.info("This is NOT the first time we scan the repository.");
+				startRev += reposConfig.getFromRev();
+			}
 			long endRev = repos.getRepository().getLatestRevision();
 			scanRepos.setRepository(repos);
 			scanRepos.setStartRevision(startRev);

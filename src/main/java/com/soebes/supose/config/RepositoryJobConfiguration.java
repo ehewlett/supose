@@ -47,12 +47,13 @@ public class RepositoryJobConfiguration {
 
 	private String configFile;
 	private Ini iniFile;
-	private boolean exists;
+	private boolean newCreated;
 
 	public RepositoryJobConfiguration(String configFile, RepositoryConfiguration reposConfig) throws Exception {
 		setConfigFile(configFile);
 		File f = new File(configFile);
 		if (f.exists()) {
+			setNewCreated(false);
 			try {
 				FileInputStream fin = new FileInputStream(f);
 				iniFile = new Ini(fin);
@@ -64,6 +65,7 @@ public class RepositoryJobConfiguration {
 				throw e;
 			}
 		} else {
+			setNewCreated(true);
 			//The first time. We will create a new configuration file.
 			iniFile = new Ini();
 			iniFile.add("repositoryJobConfiguration");
@@ -102,12 +104,13 @@ public class RepositoryJobConfiguration {
 		this.configFile = configFile;
 	}
 
-	public boolean isExists() {
-		return exists;
+	public boolean isNewCreated() {
+		return newCreated;
 	}
-	
-	public void setExists(boolean exists) {
-		this.exists = exists;
+
+	public void setNewCreated(boolean newCreated) {
+		this.newCreated = newCreated;
 	}
+
 }
 
