@@ -81,7 +81,7 @@
 			<manifest>
 				<attribute name="Built-By" value="SoftwareEntwicklung Beratung Schulung" />
 				<attribute name="Specification-Title" value="${software.name}" />
-				<attribute name="Specification-Version" value="${software.major}.${software.minor}.${software.patch}" />
+				<attribute name="Specification-Version" value="${version}" />
 				<attribute name="Specification-Vendor" value="SoftwareEntwicklung Beratung Schulung" />
 				<attribute name="Implementation-Title" value="${software.shortname}" />
 				<attribute name="Implementation-Vendor" value="SoftwareEntwicklung Beratung Schulung" />
