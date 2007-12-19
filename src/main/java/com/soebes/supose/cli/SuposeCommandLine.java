@@ -59,6 +59,7 @@ public class SuposeCommandLine extends CLIBase {
     private void initGlobalOptions() {
     	globalOptionH = obuilder
 	    	.withShortName("H")
+	    	.withLongName("help")
 	    	.withDescription("Displays usage information for command.")
 	    	.create();
     }
