@@ -159,21 +159,21 @@ public class RepositoryConfiguration {
 		section.put(IniFileEntryNames.CRON, cron);
 	}
 
-	public String getResult() {
-		return section.get(IniFileEntryNames.RESULT);
+	public String getResultIndex() {
+		return section.get(IniFileEntryNames.RESULTINDEX);
 	}
 
-	public boolean existResult() {
-		if (	getResult() == null 
-			||	getResult().trim().length() == 0) {
+	public boolean existResultIndex() {
+		if (	getResultIndex() == null 
+			||	getResultIndex().trim().length() == 0) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	public void setResult (String result) {
-		section.put(IniFileEntryNames.RESULT, result);
+	public void setResultIndex (String result) {
+		section.put(IniFileEntryNames.RESULTINDEX, result);
 	}
 	
 	public String getRepositoryName() {

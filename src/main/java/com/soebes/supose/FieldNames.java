@@ -28,8 +28,9 @@ package com.soebes.supose;
 
 /**
  * This class defines all available field names.
- * Only the fields which will be automaticaially created
- * for every property can't be defined here.
+ * Only the fields which will be automatically created.
+ * For every property will be created an entry too, but
+ * this can't be defined here.
  * 
  * @author Karl Heinz Marbaise
  *

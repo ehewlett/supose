@@ -41,6 +41,7 @@ import org.apache.commons.cli2.option.Command;
 public class ScheduleCommand extends CLIBase {
 
     private Option optionConfiguration = null;
+    private Option optionConfigurationDirectory = null;
 
 	public ScheduleCommand() {
 		setCommand(createCommand());

@@ -27,13 +27,10 @@ package com.soebes.supose.jobs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.store.FSDirectory;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -63,23 +60,22 @@ public class RepositoryScanJob implements StatefulJob {
 			+	context.getJobDetail().getFullName()
 			+	"]"
 		);
+		//Ok we get the JobConfiguration information.
 		JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
 
+		//Get the Repository object which has been initialized in SuposeCLI (runSchedule)
 		Repository repos = (Repository) jobDataMap.get(JobDataNames.REPOSITORY);
 		RepositoryConfiguration reposConfig = (RepositoryConfiguration) jobDataMap.get(JobDataNames.REPOSITORYCONFIGURATION);
 
-//		String indexDirectory = (String) jobDataMap.get(JobDataNames.INDEX);
+		String baseDir = (String) jobDataMap.get(JobDataNames.BASEDIR);
 
-		String configDir = (String) jobDataMap.get(JobDataNames.CONFIGDIR);
+		LOGGER.info("baseDir:" + baseDir + " URL: " + repos.getUrl() + " Name: " + reposConfig.getRepositoryName());
 
-		LOGGER.info("configDir:" + configDir + " URL: " + repos.getUrl() + " Name: " + reposConfig.getRepositoryName());
-		
-		jobConfig = new RepositoryJobConfiguration(configDir + File.separator + reposConfig.getRepositoryName(), reposConfig);
+		//Read the job configuration, create it if it hasn't existed before...
+		jobConfig = new RepositoryJobConfiguration(baseDir + File.separator + reposConfig.getRepositoryName() + ".ini", reposConfig);
 
-		Index index = new Index ();
-		//We will allways create a new index.
-		index.setCreate(true);
-		IndexWriter indexWriter = index.createIndexWriter(configDir+ File.separator + "index." + reposConfig.getRepositoryName());
+		String jobIndexName = baseDir + File.separator + "index." + reposConfig.getRepositoryName();
+		String resultIndexName = baseDir + File.separator + "index." + reposConfig.getResultIndex();
 
 		LOGGER.info("Revision: " + repos.getRepository().getLatestRevision() + " FromRev:" + reposConfig.getFromRev());
 		if (repos.getRepository().getLatestRevision() > reposConfig.getFromRev()) {
@@ -89,7 +85,7 @@ public class RepositoryScanJob implements StatefulJob {
 				LOGGER.info("This is the first time we scan the repository.");
 				startRev = reposConfig.getFromRev();
 			} else {
-				LOGGER.info("This is NOT the first time we scan the repository.");
+				LOGGER.info("This is n'th time we scan the repository.");
 				startRev += reposConfig.getFromRev();
 			}
 			long endRev = repos.getRepository().getLatestRevision();
@@ -98,10 +94,16 @@ public class RepositoryScanJob implements StatefulJob {
 			scanRepos.setEndRevision(endRev);
 			scanRepos.setName(reposConfig.getRepositoryName());
 
-			//New revision existing till the last scanning...
-			//scann the content
+			Index index = new Index ();
+			//We will allways create a new index.
+			index.setCreate(true);
+			IndexWriter indexWriter = index.createIndexWriter(jobIndexName);
+			
+			//New revision exist 'till the last scanning...
+			//scan the content
 			scanRepos.scan(indexWriter);
 
+			//The last step after scanning will be to optimize this index and close it.
 			try {
 				indexWriter.optimize();
 				indexWriter.close();
@@ -111,8 +113,9 @@ public class RepositoryScanJob implements StatefulJob {
 				LOGGER.error("IOException during closing of index: " + e);
 			}
 
-			//Merge the created index into the existing one...
-			mergeIndex(configDir+ File.separator + "index." + reposConfig.getResult(), configDir+ File.separator + "index." + reposConfig.getRepositoryName());
+			//Merge the created index into the target index...
+			IndexHelper.mergeIndex(resultIndexName, jobIndexName);
+
 			//save the configuration file with the new revision numbers.
 			reposConfig.setFromRev(endRev);
 			//store the changed configuration items.
@@ -125,39 +128,6 @@ public class RepositoryScanJob implements StatefulJob {
 	}
 
 	
-	private void mergeIndex(String destination, String source) {
-		ArrayList<String> sourceList = new ArrayList<String>();
-		sourceList.add(source);
-		mergeIndex(destination, sourceList);
-	}
-	/**
-	 * Merge all given indexes together to a single index.
-	 * @param destination This will define the destination directory
-	 *   of the index where all other indexes will be merged to.
-	 * @param indexList This is the list of indexes which are
-	 *   merged into the destination index.
-	 */
-	private void mergeIndex (String destination, List<String> indexList) {
-		LOGGER.debug("We are trying to merge indexes to the destination: " + destination);
-		Index index = new Index ();
-		//We assume an existing index...
-		index.setCreate(false);
-		IndexWriter indexWriter = index.createIndexWriter(destination);
-
-		try {
-			LOGGER.info("Merging of indexes started.");
-			FSDirectory [] fsDirs = new FSDirectory[indexList.size()];
-			for (int i = 0; i < indexList.size(); i++) {
-				fsDirs[i] = FSDirectory.getDirectory(indexList.get(i));
-			}
-			indexWriter.addIndexes(fsDirs);
-			indexWriter.close();
-			LOGGER.info("Merging of indexes succesfull.");
-		} catch (Exception e) {
-			LOGGER.error("Something wrong during merging of index: " + e);
-		}
-	}
-
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		try {
 			subexecute(context);

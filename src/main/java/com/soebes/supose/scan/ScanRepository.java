@@ -242,13 +242,10 @@ public class ScanRepository {
 			} else if (nodeKind == SVNNodeKind.FILE) {
 				
 				//The given entry is a file.
-//TODO: Check if we need to do this in the subclasses instead here.
 				//This means we will get every file from the repository....
-				
 				//Get only the properties of the file
 				repository.getRepository().getFile(entryPath.getPath(), logEntry.getRevision(), fileProperties, null);
 				indexProperties(fileProperties, doc);
-
 
 //TODO: Do we really need this?
 //				addUnTokenizedField(doc, FieldNames.SIZE, Long.toString(baos.size()));

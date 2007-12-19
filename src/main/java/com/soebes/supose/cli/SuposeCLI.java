@@ -46,7 +46,6 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
-import org.apache.lucene.store.FSDirectory;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -59,6 +58,7 @@ import com.soebes.supose.FieldNames;
 import com.soebes.supose.config.ConfigurationRepositories;
 import com.soebes.supose.config.RepositoryConfiguration;
 import com.soebes.supose.config.RepositoryFactory;
+import com.soebes.supose.jobs.IndexHelper;
 import com.soebes.supose.jobs.JobDataNames;
 import com.soebes.supose.jobs.JobSchedulerListener;
 import com.soebes.supose.jobs.RepositoryScanJob;
@@ -104,7 +104,7 @@ public class SuposeCLI {
 		} else if (commandLine.hasOption(suposecli.getScheduleCommand())) {
 			runSchedule(suposecli.getScliScheduleCommand());
 		} else {
-			System.err.println("Error: You should define either scan or search as command or the -H option to get help.");
+			System.err.println("Error: You should define either scan, search, merge or schedule as command or use -H option to get further detailed information.");
 			System.exit(1);
 		}
 	}
@@ -168,8 +168,8 @@ public class SuposeCLI {
 		int scheduledJobs = 0;
 		Scheduler scheduler = null;
         try {
+        	// Grab the Scheduler instance from the Factory 
         	scheduler = StdSchedulerFactory.getDefaultScheduler();
-            // Grab the Scheduler instance from the Factory 
 
             // and start it off
             scheduler.start();
@@ -196,7 +196,7 @@ public class SuposeCLI {
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORY, repository);
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORYCONFIGURATION, reposConfig);
 //HACK: Remove hard coded path => Put it into a configuration file.
-            	jobDetail.getJobDataMap().put(JobDataNames.CONFIGDIR, "/home/kama/supose/repositories/");
+            	jobDetail.getJobDataMap().put(JobDataNames.BASEDIR, "/home/kama/supose/repositories/");
 
             	CronTrigger cronTrigger1 = null;
             	String cronExpression = "";
@@ -207,11 +207,12 @@ public class SuposeCLI {
             		//The default every minue...
             		cronExpression = "0 * * ? * *";
             	}
+
             	try {
             		cronTrigger1 = new CronTrigger(
-            				"SupoSE." + repositoryName,
-            				Scheduler.DEFAULT_GROUP,
-            				cronExpression
+        				"SupoSE." + repositoryName,
+        				Scheduler.DEFAULT_GROUP,
+        				cronExpression
             		);
             	} catch (Exception e) {
             		System.err.println("Error for cronTrigger wrong expression for cron: " + e);
@@ -225,7 +226,7 @@ public class SuposeCLI {
             //If we haven't started any job we shutdown...
             if (scheduledJobs == 0) {
             	System.err.println("We couldn't start any scan job so we are dying...");
-//            	scheduler.shutdown();
+            	scheduler.shutdown();
             }
             System.out.println("End with CTRL-C");
         } catch (SchedulerException se) {
@@ -256,20 +257,7 @@ public class SuposeCLI {
 		System.out.println("");
 		System.out.println("Destination: " + destination);
 
-		Index index = new Index ();
-		//We assume an existing index...
-		IndexWriter indexWriter = index.createIndexWriter(destination);
-
-		try {
-			FSDirectory [] fsDirs = new FSDirectory[indexList.size()];
-			for (int i = 0; i < indexList.size(); i++) {
-				fsDirs[i] = FSDirectory.getDirectory(indexList.get(i));
-			}
-			indexWriter.addIndexes(fsDirs);
-			indexWriter.close();
-		} catch (Exception e) {
-			System.err.println("Something had gone wrong: " + e);
-		}
+		IndexHelper.mergeIndex(destination, indexList);
 	}
 
 	private static void runSearch(SearchCommand searchCommand) {

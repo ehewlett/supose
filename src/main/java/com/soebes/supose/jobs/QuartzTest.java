@@ -78,7 +78,7 @@ public class QuartzTest {
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORY, repository);
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORYCONFIGURATION, reposConfig);
             	//HACK: Remove hard coded path => Put it into a configuration file.
-            	jobDetail.getJobDataMap().put(JobDataNames.CONFIGDIR, "/home/kama/supose/repositories/");
+            	jobDetail.getJobDataMap().put(JobDataNames.BASEDIR, "/home/kama/supose/repositories/");
 
             	CronTrigger cronTrigger1 = null;
             	String cronExpression = "";

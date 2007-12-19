@@ -29,5 +29,5 @@ public final class JobDataNames {
 	public final static String REPOSITORY = "repository";
 	public final static String REPOSITORYCONFIGURATION = "repositoryConfiguraion";
 	public final static String INDEX = "index";
-	public final static String CONFIGDIR = "configDir";
+	public final static String BASEDIR = "configDir";
 }
