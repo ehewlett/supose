@@ -75,6 +75,13 @@ public class ScanRepository {
 		setName("");
 	}
 
+	/**
+	 * This method will do the real scanning of the whole repository.
+	 * It will extract all log entries as first step and go on with
+	 * scanning every change set.
+	 * @param writer The index where the result of the scanning
+	 *   will be written to.
+	 */
 	public void scan(IndexWriter writer) {
 
        LOGGER.debug("Repositories latest Revision: " + endRevision);
@@ -83,11 +90,11 @@ public class ScanRepository {
             logEntries = repository.getRepository().log(new String[] {""}, null, startRevision, endRevision, true, true);
         } catch (SVNException svne) {
             LOGGER.error("error while collecting log information for '"
-                    + repository.getUrl() + "': " + svne.getMessage());
-            System.exit(1);
+                    + repository.getUrl() + "': " + svne);
+            return;
         }
 
-        LOGGER.debug("LogEntries: " + logEntries.size());
+        LOGGER.debug("We have " + logEntries.size() + " LogEntries to scan.");
         for (Iterator entries = logEntries.iterator(); entries.hasNext();) {
             SVNLogEntry logEntry = (SVNLogEntry) entries.next();
 
@@ -154,10 +161,6 @@ public class ScanRepository {
 				if (SVNLogEntryPath.TYPE_DELETED == entryPath.getType()) {
 					LOGGER.debug("The file '" + entryPath.getPath() + "' has been deleted.");
 					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
-					if (dirEntry != null
-							&& dirEntry.getKind().equals(SVNNodeKind.DIR)) {
-					} else {
-					}
 				}
 			} catch (IOException e) {
 				LOGGER.error("IOExcepiton: " + e);
