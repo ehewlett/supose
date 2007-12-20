@@ -151,11 +151,9 @@ public class SuposeCLI {
 			indexWriter.optimize();
 			indexWriter.close();
 		} catch (CorruptIndexException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("CorruptIndexException: Error during optimization of index: " + e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("IOException: Error during optimization of index: " + e);
 		}
 
 	}
@@ -196,7 +194,6 @@ public class SuposeCLI {
             	
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORY, repository);
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORYCONFIGURATION, reposConfig);
-//HACK: Remove hard coded path => Put it into a configuration file.
             	jobDetail.getJobDataMap().put(JobDataNames.BASEDIR, configurationBaseDir);
 
             	CronTrigger cronTrigger1 = null;
