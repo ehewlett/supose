@@ -163,6 +163,7 @@ public class SuposeCLI {
 
 	private static void runSchedule(ScheduleCommand scheduleCommand) {
 		String configurationFile = scheduleCommand.getConfiguration(commandLine);
+		String configurationBaseDir = scheduleCommand.getConfBaseDir(commandLine);
 
 		System.out.println("Configuration file: " + configurationFile);
 		int scheduledJobs = 0;
@@ -196,7 +197,7 @@ public class SuposeCLI {
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORY, repository);
             	jobDetail.getJobDataMap().put(JobDataNames.REPOSITORYCONFIGURATION, reposConfig);
 //HACK: Remove hard coded path => Put it into a configuration file.
-            	jobDetail.getJobDataMap().put(JobDataNames.BASEDIR, "/home/kama/supose/repositories/");
+            	jobDetail.getJobDataMap().put(JobDataNames.BASEDIR, configurationBaseDir);
 
             	CronTrigger cronTrigger1 = null;
             	String cronExpression = "";

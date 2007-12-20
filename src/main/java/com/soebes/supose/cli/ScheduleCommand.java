@@ -41,7 +41,7 @@ import org.apache.commons.cli2.option.Command;
 public class ScheduleCommand extends CLIBase {
 
     private Option optionConfiguration = null;
-    private Option optionConfigurationDirectory = null;
+    private Option optionConfigurationBaseDir = null;
 
 	public ScheduleCommand() {
 		setCommand(createCommand());
@@ -53,11 +53,20 @@ public class ScheduleCommand extends CLIBase {
 			.withLongName("configuration")
 			.withRequired(true)
 			.withArgument(abuilder.withName("configuration").create())
-			.withDescription("Define where to find the repository.ini file.")
+			.withDescription("Define where to find the ini file with the information about the different repositories.")
+			.create();
+
+    	optionConfigurationBaseDir = obuilder
+			.withShortName("D")
+			.withLongName("configbase")
+			.withRequired(true)
+			.withArgument(abuilder.withName("configbase").create())
+			.withDescription("Define where to put the created index files etc.")
 			.create();
 
     	Group scanOptionIndex = gbuilder
     		.withOption(optionConfiguration)
+    		.withOption(optionConfigurationBaseDir)
     		.create();
     	
     	return cbuilder
@@ -71,12 +80,26 @@ public class ScheduleCommand extends CLIBase {
 		return optionConfiguration;
 	}
 
+	public Option getOptionConfigBaseDir() {
+		return optionConfigurationBaseDir;
+	}
+
 	@SuppressWarnings("unchecked")
 	public String getConfiguration (CommandLine cline) {
 		List<String> list = cline.getValues((getOptionConfiguration()));
 		if (list == null || list.size() == 0) {
 			//This should never happen, cause the option is required.
 			return "Default";
+		} else {
+			return list.get(0);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public String getConfBaseDir (CommandLine cline) {
+		List<String> list = cline.getValues((getOptionConfigBaseDir()));
+		if (list == null || list.size() == 0) {
+			return "basedir";
 		} else {
 			return list.get(0);
 		}

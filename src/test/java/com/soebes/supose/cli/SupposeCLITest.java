@@ -237,7 +237,7 @@ public class SupposeCLITest {
 	}
 	
 	public void testMergeCommand() throws Exception {
-		final String[] args = new String[] { "merge" };
+		final String[] args = new String[] { "merge", "--destination", "result" };
 		CommandLine cl = suposecli.doParseArgs(args);
 		assertNotNull(cl, "The return value of the parse is null!");
 		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globle Help option not set.");
@@ -245,10 +245,13 @@ public class SupposeCLITest {
 	}
 
 	public void testMergeCommandIndexList() throws Exception {
-		final String[] args = new String[] { "merge", "--index", "anton", "egon"};
+		final String[] args = new String[] { "merge", "--index", "anton", "egon", "--destination", "result" };
 		CommandLine cl = suposecli.doParseArgs(args);
 		assertNotNull(cl, "The return value of the parse is null!");
 		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globle Help option not set.");
+		assertFalse(cl.hasOption(suposecli.getScanCommand()));
+		assertFalse(cl.hasOption(suposecli.getSearchCommand()));
+		assertFalse(cl.hasOption(suposecli.getScheduleCommand()));
 		assertTrue(cl.hasOption(suposecli.getMergeCommand()));
 		
 		MergeCommand mergeCommand = suposecli.getScliMergeCommand();
@@ -256,5 +259,26 @@ public class SupposeCLITest {
 		List<String> indexList = mergeCommand.getIndex(cl);
 		assertNotNull(indexList, "We had expected to get a list of index direcotriy");
 		assertEquals(indexList.size(), 2, "We had expected to get a least two elements");
+	}
+	
+	public void testScheduleCommand() throws Exception {
+		final String[] args = new String[] {
+			"schedule", 
+			"--configuration", 
+			"/home/kama/supose/test", 
+			"--configbase", "/home/kama/base" 
+		};
+		CommandLine cl = suposecli.doParseArgs(args);
+		assertNotNull(cl, "The return value of the parse is null!");
+		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globle Help option not set.");
+		assertFalse(cl.hasOption(suposecli.getScanCommand()));
+		assertFalse(cl.hasOption(suposecli.getSearchCommand()));
+		assertFalse(cl.hasOption(suposecli.getMergeCommand()));
+		assertTrue(cl.hasOption(suposecli.getScheduleCommand()));
+		
+		ScheduleCommand scheduleCommand = suposecli.getScliScheduleCommand();
+		String configBaseDir = scheduleCommand.getConfBaseDir(cl);
+		assertTrue(configBaseDir.length() > 0, "We had expected to get information for --configbasedir ..");
+		assertEquals(configBaseDir, "/home/kama/base", "We had expected to get exactly /home/kama/base");
 	}
 }

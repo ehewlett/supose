@@ -43,7 +43,6 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperty;
-import org.tmatesoft.svn.core.internal.wc.admin.SVNEntry;
 
 import com.soebes.supose.FieldNames;
 import com.soebes.supose.repository.Repository;
