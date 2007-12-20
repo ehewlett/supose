@@ -43,6 +43,7 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperty;
+import org.tmatesoft.svn.core.internal.wc.admin.SVNEntry;
 
 import com.soebes.supose.FieldNames;
 import com.soebes.supose.repository.Repository;
@@ -82,10 +83,11 @@ public class ScanRepository {
 	 * @param writer The index where the result of the scanning
 	 *   will be written to.
 	 */
+	@SuppressWarnings("unchecked")
 	public void scan(IndexWriter writer) {
 
        LOGGER.debug("Repositories latest Revision: " + endRevision);
-        Collection logEntries = null;
+        Collection<SVNLogEntry> logEntries = null;
         try {
             logEntries = repository.getRepository().log(new String[] {""}, null, startRevision, endRevision, true, true);
         } catch (SVNException svne) {
@@ -190,7 +192,7 @@ public class ScanRepository {
 
 	private void indexFile(IndexWriter indexWriter, SVNDirEntry dirEntry, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
 		throws SVNException, IOException {
-			Map fileProperties  = new HashMap();
+			HashMap<String, String> fileProperties  = new HashMap<String, String>();
 
 			SVNNodeKind nodeKind = repository.getRepository().checkPath(entryPath.getPath(), logEntry.getRevision());
 
@@ -227,7 +229,7 @@ public class ScanRepository {
 
 			addUnTokenizedField(doc, FieldNames.KIND, entryPath.getType());
 
-//TODO: May be don't need this if we use repositoryname?
+//TODO: May be don't need this if we use repository name?
 			addUnTokenizedField(doc, FieldNames.REPOSITORYUUID, repository.getRepository().getRepositoryUUID(false));
 			
 			addUnTokenizedField(doc, FieldNames.REPOSITORY, getName());
@@ -238,7 +240,7 @@ public class ScanRepository {
 				//The given entry is a directory.
 				LOGGER.debug("The " + entryPath.getPath() + " is a directory.");
 				//Here we need to call getDir to get directory properties.
-				Collection dirEntries = null;
+				Collection<SVNDirEntry> dirEntries = null;
 				repository.getRepository().getDir(entryPath.getPath(), logEntry.getRevision(), fileProperties, dirEntries);
 				indexProperties(fileProperties, doc);
 
@@ -263,13 +265,12 @@ public class ScanRepository {
 	}
 
 
-	private void indexProperties(Map fileProperties, Document doc) {
-		for (Iterator iterator = fileProperties.entrySet().iterator(); iterator.hasNext();) {
-			Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
-			if (!SVNProperty.isEntryProperty(entry.getKey())) {
+	private void indexProperties(Map<String, String> fileProperties, Document doc) {
+		for (Map.Entry<String, String> item : fileProperties.entrySet()) {
+			if (!SVNProperty.isEntryProperty(item.getKey())) {
 				//Every property will be stored with key:value.
-				LOGGER.debug("Indexing property: " + entry.getKey() + " value:'" + entry.getValue() + "'"); 
-				addUnTokenizedField(doc, entry.getKey(), entry.getValue());
+				LOGGER.debug("Indexing property: " + item.getKey() + " value:'" + item.getValue() + "'"); 
+				addUnTokenizedField(doc, item.getKey(), item.getValue());
 			}
 		}
 	}
