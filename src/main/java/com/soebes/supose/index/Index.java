@@ -24,7 +24,7 @@
  *
  */
 // SupoSE
-package com.soebes.supose.scan;
+package com.soebes.supose.index;
 
 import java.io.File;
 import java.io.IOException;

@@ -9,6 +9,8 @@ import org.apache.lucene.store.FSDirectory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import com.soebes.supose.index.Index;
+
 import static org.testng.Assert.*;
 
 public class IndexMergeTest {

@@ -32,6 +32,8 @@ import org.apache.lucene.document.Document;
 import org.tmatesoft.svn.core.SVNDirEntry;
 
 import com.soebes.supose.repository.Repository;
+import com.soebes.supose.scan.document.AScanDocument;
+import com.soebes.supose.scan.document.ScanDefaultDocument;
 import com.soebes.supose.utility.FileExtensionProperty;
 import com.soebes.supose.utility.FileName;
 

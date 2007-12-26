@@ -38,8 +38,9 @@ import org.quartz.StatefulJob;
 
 import com.soebes.supose.config.RepositoryConfiguration;
 import com.soebes.supose.config.RepositoryJobConfiguration;
+import com.soebes.supose.index.Index;
+import com.soebes.supose.index.IndexHelper;
 import com.soebes.supose.repository.Repository;
-import com.soebes.supose.scan.Index;
 import com.soebes.supose.scan.ScanRepository;
 
 public class RepositoryScanJob implements StatefulJob {

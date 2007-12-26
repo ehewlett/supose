@@ -23,7 +23,7 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.scan;
+package com.soebes.supose.scan.document;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -58,13 +58,13 @@ public abstract class AScanDocument {
 		setDocument(null);
 	}
 
-	abstract void indexDocument (Repository repository, SVNDirEntry dirEntry, String path, long revision);
+	public abstract void indexDocument (Repository repository, SVNDirEntry dirEntry, String path, long revision);
 
-	void setDocument(Document doc) {
+	public void setDocument(Document doc) {
 		this.doc = doc;
 	}
 	
-	Document getDocument() {
+	public Document getDocument() {
 		return doc;
 	}
 	

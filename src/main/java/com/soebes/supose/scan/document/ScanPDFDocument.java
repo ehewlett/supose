@@ -23,7 +23,7 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.scan;
+package com.soebes.supose.scan.document;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

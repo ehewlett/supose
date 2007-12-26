@@ -23,13 +23,13 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.scan;
+package com.soebes.supose.scan.document;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hslf.extractor.PowerPointExtractor;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 
@@ -40,27 +40,24 @@ import com.soebes.supose.repository.Repository;
  * @author Karl Heinz Marbaise
  *
  */
-public class ScanPowerPointDocument extends AScanDocument {
-	private static Logger LOGGER = Logger.getLogger(ScanPowerPointDocument.class);
+public class ScanWordDocument extends AScanDocument {
+	private static Logger LOGGER = Logger.getLogger(ScanWordDocument.class);
 
-	public ScanPowerPointDocument() {
+	public ScanWordDocument() {
 	}
 
 	@Override
 	public void indexDocument(Repository repository, SVNDirEntry dirEntry, String path, long revision) {
-		LOGGER.info("Scanning document");
-
-
+		LOGGER.info("Scanning word document");
+		
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			//This means we get the contents of the file only. No properties.
 			repository.getRepository().getFile(path, revision, null, baos);
 			ByteArrayInputStream str = new ByteArrayInputStream(baos.toByteArray());
 
-//TODO: Check if this enough...
-			PowerPointExtractor pe = new PowerPointExtractor(str);
-//TODO: Add fields for slides, title etc.
-			addTokenizedField(FieldNames.CONTENTS, pe.getText());
+			WordExtractor we = new WordExtractor(str);
+			addTokenizedField(FieldNames.CONTENTS, we.getText());
 		} catch (SVNException e) {
 			LOGGER.error("Exception by SVN: " + e);
 		} catch (Exception e) {

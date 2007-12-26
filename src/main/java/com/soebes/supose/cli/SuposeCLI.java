@@ -58,12 +58,12 @@ import com.soebes.supose.FieldNames;
 import com.soebes.supose.config.ConfigurationRepositories;
 import com.soebes.supose.config.RepositoryConfiguration;
 import com.soebes.supose.config.RepositoryFactory;
-import com.soebes.supose.jobs.IndexHelper;
+import com.soebes.supose.index.Index;
+import com.soebes.supose.index.IndexHelper;
 import com.soebes.supose.jobs.JobDataNames;
 import com.soebes.supose.jobs.JobSchedulerListener;
 import com.soebes.supose.jobs.RepositoryScanJob;
 import com.soebes.supose.repository.Repository;
-import com.soebes.supose.scan.Index;
 import com.soebes.supose.scan.ScanRepository;
 
 /**

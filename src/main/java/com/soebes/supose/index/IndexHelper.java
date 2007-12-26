@@ -23,7 +23,7 @@
  * just write an email to license@soebes.de
  *
  */
-package com.soebes.supose.jobs;
+package com.soebes.supose.index;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
 
-import com.soebes.supose.scan.Index;
 
 /**
  * @author Karl Heinz Marbaise
