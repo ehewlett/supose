@@ -79,9 +79,42 @@
  */
 grammar Java;
 options {k=2; backtrack=true; memoize=true;}
+@header{
+	package com.soebes.supose.parse.java;
+	import java.util.HashMap;
+}
+@members{
+	public enum MethodType {
+		METHOD,
+		METHOD_VOID,
+		METHOD_STATIC
+	}
+	private HashMap methods = new HashMap();
 
+	public HashMap getMethods () {
+		return methods;
+	}
+	private void addMethod(String name, MethodType type) {
+		methods.put(name, type.toString());
+	}
+	
+}
+@lexer::header{
+	package com.soebes.supose.parse.java;
+	
+	import java.util.HashMap;
+}
 @lexer::members {
-protected boolean enumIsKeyword = true;
+	protected boolean enumIsKeyword = true;
+
+	private ArrayList<String> comments = new ArrayList<String>();
+
+	public ArrayList<String> getComments() {
+		return comments;
+	}
+	public void addComment(String comment) {
+		comments.add(comment);
+	}
 }
 
 // starting point for parsing a java file
@@ -184,7 +217,7 @@ memberDecl
 	:	genericMethodOrConstructorDecl
 	|	methodDeclaration
 	|	fieldDeclaration
-	|	'void' Identifier voidMethodDeclaratorRest
+	|	'void' Identifier voidMethodDeclaratorRest { addMethod($Identifier.getText(), MethodType.METHOD_VOID);}
 	|	Identifier constructorDeclaratorRest
 	|	interfaceDeclaration
 	|	classDeclaration
@@ -200,7 +233,7 @@ genericMethodOrConstructorRest
 	;
 
 methodDeclaration
-	:	type Identifier methodDeclaratorRest
+	:	type Identifier methodDeclaratorRest { addMethod($Identifier.getText(), MethodType.METHOD);}
 	;
 
 fieldDeclaration
@@ -214,10 +247,10 @@ interfaceBodyDeclaration
 
 interfaceMemberDecl
 	:	interfaceMethodOrFieldDecl
-	|   interfaceGenericMethodDecl
-    |   'void' Identifier voidInterfaceMethodDeclaratorRest
-    |   interfaceDeclaration
-    |   classDeclaration
+	|	interfaceGenericMethodDecl
+	|	'void' Identifier voidInterfaceMethodDeclaratorRest
+	|	interfaceDeclaration
+	|	classDeclaration
 	;
 	
 interfaceMethodOrFieldDecl
@@ -863,9 +896,9 @@ WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
     ;
 
 COMMENT
-    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;addComment(getText());}
     ;
 
 LINE_COMMENT
-    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;addComment(getText());}
     ;

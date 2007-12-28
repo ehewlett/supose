@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.soebes</groupId>
 	<artifactId>supose</artifactId>
-	<version>0.3.0-SNAPSHOT</version>
+	<version>0.4.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Subversion Repository Search Engine</name>
@@ -357,6 +357,27 @@
 			<version>0.2.6</version>
 			<scope>system</scope>
 			<systemPath>${lib}/ini4j-0.2.6.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr</artifactId>
+			<version>2.7.7</version>
+			<scope>system</scope>
+			<systemPath>${lib}/antlr-2.7.7.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr</artifactId>
+			<version>3.0</version>
+			<scope>system</scope>
+			<systemPath>${lib}/antlr-3.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>stringtemplate</artifactId>
+			<version>3.0</version>
+			<scope>system</scope>
+			<systemPath>${lib}/stringtemplate-3.0.jar</systemPath>
 		</dependency>
 	</dependencies>
 	

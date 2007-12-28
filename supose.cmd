@@ -23,6 +23,9 @@ SET CP=%CP%;.\lib\ini4j-0.2.6.jar
 SET CP=%CP%;.\lib\svnkit.jar
 SET CP=%CP%;.\lib\ganymed.jar
 SET CP=%CP%;.\lib\jbossall-client.jar
+SET CP=%CP%;.\lib\antlr-2.7.7.jar
+SET CP=%CP%;.\lib\antlr-3.0.jar
+SET CP=%CP%;.\lib\stringtemplate-3.0.jar
 SET CP=%CP%;.\lib\@SUPOSE@
 
 

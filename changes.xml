@@ -7,6 +7,7 @@
 	<body>
 		<release version="0.4.0.0 RC1 (Mars)" date="2007-12-XXX" description="Milestone">
 			<action dev="Karl Heinz Marbaise" type="add" issue="45">- Branch created to start working on Milestone</action>
+			<action dev="Karl Heinz Marbaise" type="add" issue="40">- Scanning of Java files</action>
 		</release>
 		<release version="0.3.0.0 RC2 (Earth)" date="2007-12-25" description="Milestone">
 			<action dev="Karl Heinz Marbaise" type="fix" issue="44">- Removed directories which had created by the unit tests.</action>

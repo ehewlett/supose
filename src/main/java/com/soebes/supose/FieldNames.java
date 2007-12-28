@@ -67,4 +67,8 @@ public final class FieldNames {
 	public final static String PDFTITLE = "pdftitle";
 	public final static String PDFTRAPPED = "pdftrapped";
 	
+	//For all kinds of programming languages (first test).
+	public final static String METHODS = "methods";
+	public final static String COMMENTS = "comments"; //Any kind of comment in programming languages.
+	
 }
