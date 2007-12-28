@@ -34,8 +34,6 @@ import com.soebes.supose.FieldNames;
 import com.soebes.supose.repository.Repository;
 
 /**
- * @author Karl Heinz Marbaise
- *
  * This class will handle all files types which are not handled by particular
  * implementation of the <code>AScanDocument</code> class.
  * This will happen if we have files like:
@@ -43,6 +41,8 @@ import com.soebes.supose.repository.Repository;
  * All other types of files (which will be defined by Subversion as Text) 
  * their contents will be indexed.
  * 
+ * @author Karl Heinz Marbaise
+ *
  */
 public class ScanDefaultDocument extends AScanDocument {
 	private static Logger LOGGER = Logger.getLogger(ScanDefaultDocument.class);

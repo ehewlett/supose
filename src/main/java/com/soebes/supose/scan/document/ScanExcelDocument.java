@@ -41,15 +41,16 @@ import com.soebes.supose.FieldNames;
 import com.soebes.supose.repository.Repository;
 
 /**
- * @author Karl Heinz Marbaise
- *
  * This class will scan an Excel document.
  * It will use the following fields:
- * 
- * xlssheets This represents the number of sheets within a workbook.
- * xlscommentauthor The author of a cell comment.
- * xlscomment The comment for an cell which can be assigned to a cell.
- * xlssheetname The name of the sheets within the workbook.
+ *
+ * <ul>
+ * <li><i>xlssheets</i> This represents the number of sheets within a workbook.</li>
+ * <li><i>xlscommentauthor</i> The author of a cell comment.</li>
+ * <li><i>xlscomment</i> The comment for an cell which can be assigned to a cell.</li>
+ * <li><i>xlssheetname</i> The name of the sheets within the workbook.</li>
+ * </ul> 
+ * @author Karl Heinz Marbaise
  */
 public class ScanExcelDocument extends AScanDocument {
 	private static Logger LOGGER = Logger.getLogger(ScanExcelDocument.class);

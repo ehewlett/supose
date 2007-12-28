@@ -1,12 +1,12 @@
 package com.soebes.supose.parse.java;
 
+import static org.testng.Assert.assertTrue;
+
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
 
 import com.soebes.supose.TestBase;
 

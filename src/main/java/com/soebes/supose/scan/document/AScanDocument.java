@@ -58,6 +58,15 @@ public abstract class AScanDocument {
 		setDocument(null);
 	}
 
+	/**
+	 * This method will do the real scanning job of a single document.
+	 * In other words it will do a scanning on a single file.
+	 * @param repository Instance of the Repository class
+	 * @param dirEntry   SVNDirEntry which will hold some information about the entry e.g. 
+	 *  				 the size if it is a file.
+	 * @param path		 The path in the repository.
+	 * @param revision   The particular revision in the repository.
+	 */
 	public abstract void indexDocument (Repository repository, SVNDirEntry dirEntry, String path, long revision);
 
 	public void setDocument(Document doc) {
