@@ -36,8 +36,8 @@
 	</developers>
 
 	<issueManagement>
-		<system>trac</system>
-		<url>http://supose.soebes.de</url>
+		<system>Tracking</system>
+		<url>http://supose.soebes.de/</url>
 	</issueManagement>
 
 	<properties>
@@ -64,7 +64,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4-SNAPSHOT</version>
 				<configuration>
 					<forkMode>once</forkMode>
 					<printSummary>true</printSummary>
@@ -147,7 +146,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
+				<version>2.4-SNAPSHOT</version>
+<!--				<configuration>
 					<stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
 					<linksource>true</linksource>
                     <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
@@ -161,7 +161,7 @@
                         -postfixpackage -nodefontsize 9
                         -nodefontpackagesize 7
                     </additionalparam>
-                </configuration>
+                </configuration> -->
 			</plugin>
 
 			<plugin>
@@ -184,15 +184,14 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changes-plugin</artifactId>
 				<configuration>
+					<issueLinkTemplate>%URL%/ticket/%ISSUE%</issueLinkTemplate>
 					<xmlPath>${basedir}/changes.xml</xmlPath>
-					<link_template>%URL%/supose/ticket/%ISSUE%</link_template>
-					<issueLinkTemplate>%URL%/supose/ticket/%ISSUE%</issueLinkTemplate>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>changelog-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changelog-plugin</artifactId>
 			</plugin>
 
 			<!-- Mark all occurance of @todo in source code -->	
@@ -217,10 +216,10 @@
 
 			  <reportSet>
                   <id>uml</id>
+<!--
                   <configuration>
                      <doclet>gr.spinellis.umlgraph.doclet.UmlGraph</doclet>
 
-                     <!--docletPath>/path/to/UmlGraph.jar</docletPath-->
                      <docletArtifact>
                         <groupId>gr.spinellis</groupId>
                         <artifactId>UmlGraph</artifactId>
@@ -230,7 +229,7 @@
                      <additionalparam>-views</additionalparam>
                      <destDir>target/uml</destDir>
                      <show>private</show>
-                  </configuration>
+                  </configuration> -->
                   <reports>
                      <report>javadoc</report>
                   </reports>
@@ -275,9 +274,8 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>surefire-report-maven-plugin</artifactId>
-				<version>2.0-beta-1</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
 				<configuration>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>
@@ -324,7 +322,9 @@
 		<dependency>
 			<groupId>org.tmatesoft</groupId>
 			<artifactId>svnkit</artifactId>
+			<scope>system</scope>
 			<version>1.1.4</version>
+			<systemPath>${lib}/svnkit.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
