@@ -195,6 +195,13 @@
 					<issueLinkTemplate>%URL%/ticket/%ISSUE%</issueLinkTemplate>
 					<xmlPath>${basedir}/changes.xml</xmlPath>
 				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 
 			<plugin>

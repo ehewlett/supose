@@ -70,7 +70,7 @@ public class ScanDefaultDocument extends AScanDocument {
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					//This means we get the contents of the file only. No properties.
 					repository.getRepository().getFile(path, revision, null, baos);
-					addTokenizedField(FieldNames.CONTENTS, baos.toByteArray());
+					addTokenizedField(FieldNames.CONTENTS, baos.toString());
 				}
 			}
 		} catch (Exception e) {
