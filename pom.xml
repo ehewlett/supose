@@ -101,6 +101,14 @@
 					<descriptor>src/main/assembly/src.xml</descriptor>
 					<descriptor>src/main/assembly/project.xml</descriptor>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -12,7 +12,6 @@
 		<version>1.0-SNAPSHOT</version>
 	</skin>
 	-->
-	<publishDate format="26 12 2007" />
 	<body>
 		<links>
 			<item name="Issue Tracking" href="http://supose.soebes.de/"/>

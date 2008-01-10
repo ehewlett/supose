@@ -23,7 +23,6 @@
  * just write an email to license@soebes.de
  *
  */
-// SupoSE
 package com.soebes.supose.cli;
 
 import org.apache.commons.cli2.builder.ArgumentBuilder;
