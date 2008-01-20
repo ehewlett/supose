@@ -227,11 +227,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
+<!--
 				<reportSets>
-
 			  <reportSet>
                   <id>uml</id>
-<!--
                   <configuration>
                      <doclet>gr.spinellis.umlgraph.doclet.UmlGraph</doclet>
 
@@ -244,7 +243,7 @@
                      <additionalparam>-views</additionalparam>
                      <destDir>target/uml</destDir>
                      <show>private</show>
-                  </configuration> -->
+                  </configuration>
                   <reports>
                      <report>javadoc</report>
                   </reports>
@@ -286,6 +285,8 @@
 						</reports>
 					</reportSet>
 				</reportSets>
+
+-->
 			</plugin>
 
 			<plugin>

@@ -76,7 +76,7 @@ public class RepositoryScanJob implements StatefulJob {
 		jobConfig = new RepositoryJobConfiguration(baseDir + File.separator + reposConfig.getRepositoryName() + ".ini", reposConfig);
 
 		String jobIndexName = baseDir + File.separator + "index." + reposConfig.getRepositoryName();
-		String resultIndexName = baseDir + File.separator + "index." + reposConfig.getResultIndex();
+		String resultIndexName = baseDir + File.separator + reposConfig.getResultIndex();
 
 		LOGGER.info("Revision: " + repos.getRepository().getLatestRevision() + " FromRev:" + reposConfig.getFromRev());
 		if (repos.getRepository().getLatestRevision() > reposConfig.getFromRev()) {

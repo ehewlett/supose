@@ -6,6 +6,7 @@
 	</properties>
 	<body>
 		<release version="0.4.0.0 RC1 (Mars)" date="2008-01-XXX" description="Milestone">
+			<action dev="Karl Heinz Marbaise" type="fix" issue="54">- No prefix for the destination index</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="53">- Don't index svn:wc properties</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="52">- Wrong indexing fixed for contents of non binary files</action>
 			<action dev="Karl Heinz Marbaise" type="add" issue="48">- Update copyright year</action>
