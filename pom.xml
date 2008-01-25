@@ -35,6 +35,23 @@
 		</developer>
 	</developers>
 
+	<contributors>
+		<contributor>
+			<email>msuchy@redhat.com</email>
+			<roles>
+				<role>reporter</role>
+				<role>tester</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<email>bill.lee@sungardhe.com</email>
+			<roles>
+				<role>reporter</role>
+				<role>tester</role>
+			</roles>
+		</contributor>
+	</contributors>
+
 	<issueManagement>
 		<system>Tracking</system>
 		<url>http://supose.soebes.de/</url>

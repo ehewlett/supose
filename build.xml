@@ -157,6 +157,7 @@ The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
 			<tarfileset dir="${basedir}">
 				<include name="release.properties"/>
 				<include name="compile.properties"/>
+				<include name="directory.properties"/>
 				<include name="build.xml"/>
 				<include name="pom.xml"/>
 				<include name=".classpath"/>
@@ -195,6 +196,7 @@ The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
 			<zipfileset dir="${basedir}">
 				<include name="release.properties"/>
 				<include name="compile.properties"/>
+				<include name="directory.properties"/>
 				<include name="build.xml"/>
 				<include name="pom.xml"/>
 				<include name=".classpath"/>
