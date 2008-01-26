@@ -10,9 +10,9 @@
 		<fileSet>
 			<includes>
 				<include>supose.*</include>
-				<include>build.xml</include>
-				<include>release.*</include>
-				<include>pom.xml</include>
+				<include>*.xml</include>
+				<include>*.properties</include>
+				<include>lib/*</include>
 			</includes>
 			<excludes>
 				<exclude>*.log</exclude>

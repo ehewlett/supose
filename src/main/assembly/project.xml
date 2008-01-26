@@ -12,6 +12,10 @@
 			<directory>.</directory>
 			<outputDirectory></outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
+			<includes>
+				<include>supose.*</include>
+				<include>lib/*.jar</include>
+			</includes>
 			<excludes>
 				<exclude>*.log</exclude>
 				<exclude>bin/**</exclude>

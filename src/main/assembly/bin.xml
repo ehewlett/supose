@@ -6,13 +6,12 @@
 		<format>zip</format>
 	</formats>
 	<baseDirectory>${artifactId}-${version}</baseDirectory>
+    <includeSiteDirectory>false</includeSiteDirectory>
 	<fileSets>
 		<fileSet>
 			<includes>
 				<include>supose.*</include>
-				<include>build.xml</include>
-				<include>release.*</include>
-				<include>pom.xml</include>
+				<include>lib/*.jar</include>
 			</includes>
 			<excludes>
 				<exclude>*.log</exclude>
