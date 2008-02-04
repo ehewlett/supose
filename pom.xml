@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.soebes</groupId>
 	<artifactId>supose</artifactId>
-	<version>0.4.0-SNAPSHOT</version>
+	<version>0.4.0-SNAPSHOT-${buildNumber}</version>
 	<packaging>jar</packaging>
 
 	<name>Subversion Repository Search Engine</name>
@@ -117,7 +117,6 @@
 					<descriptors>
 						<descriptor>src/main/assembly/bin.xml</descriptor>
 						<descriptor>src/main/assembly/src.xml</descriptor>
-						<descriptor>src/main/assembly/project.xml</descriptor>
 					</descriptors>
 				</configuration>
 				<executions>
@@ -150,8 +149,25 @@
 							<Built-By>Karl Heinz Marbaise</Built-By>
 							<mode>development</mode>
 							<url>${pom.url}</url>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
 						</manifestEntries>
 					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
 				</configuration>
 			</plugin>
 			
@@ -335,7 +351,12 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>apache.snapshots</id>
-			<url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>tlc</id>
+			<name>TLC Repository</name>
+			<url>http://commons.ucalgary.ca/pub/m2</url>
 		</pluginRepository>
 	</pluginRepositories>
 
