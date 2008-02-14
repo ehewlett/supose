@@ -6,6 +6,7 @@
 	</properties>
 	<body>
 		<release version="0.4.0.0 RC2 (Mars)" date="2008-01-XXX" description="Milestone">
+			<action dev="Karl Heinz Marbaise" type="fix" issue="57">- Update POI to 3.0.2</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="56">- Build of different files now working via Maven</action>
 			<action dev="Karl Heinz Marbaise" type="add" >- Added contributors</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="55">- Added mission directory.properties to distribution</action>
