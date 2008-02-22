@@ -6,7 +6,7 @@
 		-->
 		<id>dev</id>
 		<activation>
-			<activeByDefault>true</activeByDefault>
+			<activeByDefault>false</activeByDefault>
 		</activation>
 		<properties>
 			<system.scm.url>http://svn.traveler/supose/</system.scm.url>

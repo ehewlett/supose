@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.soebes</groupId>
 	<artifactId>supose</artifactId>
-	<version>0.4.0-SNAPSHOT-${buildNumber}</version>
+	<version>0.4.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Subversion Repository Search Engine</name>
@@ -73,6 +73,7 @@
 	</scm>
 
 	<build>
+		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -195,6 +196,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.4-SNAPSHOT</version>
+					<configuration>
+						<doctitle>${project.name} ${project.version}-${project.buildNumber} API</doctitle>
+					</configuration>
 <!--				<configuration>
 					<stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
 					<linksource>true</linksource>
@@ -332,7 +336,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.4.1</version>
+				<version>2.4.2</version>
 				<configuration>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>
@@ -442,5 +446,4 @@
 			<systemPath>${lib}/stringtemplate-3.0.jar</systemPath>
 		</dependency>
 	</dependencies>
-
 </project>

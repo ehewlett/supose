@@ -1,4 +1,5 @@
 <project name="SupoSE - The Subversion Repository Search Engine">
+	<version position="left"/>
 	<bannerLeft>
 		<name>SupoSE</name>
 		<href>http://supose.soebes.de</href>
