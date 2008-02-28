@@ -6,7 +6,6 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/ganymed.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-2.2.0.jar" sourcepath="lib/src/lucene-2.2.0-src.zip"/>
 	<classpathentry kind="lib" path="lib/svnkit.jar" sourcepath="lib/src/org.tmatesoft.svn_1.1.4.src.zip"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.11.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-2.0-SNAPSHOT.jar"/>
@@ -27,5 +26,6 @@
 	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/stringtemplate-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-2.3.1.jar" sourcepath="lib/src/lucene-2.3.1-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

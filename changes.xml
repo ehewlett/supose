@@ -6,6 +6,7 @@
 	</properties>
 	<body>
 		<release version="0.4.0.0 RC2 (Mars)" date="2008-01-XXX" description="Milestone">
+			<action dev="Karl Heinz Marbaise" type="fix" issue="61">- Missed the locally stored jar files and source for Eclipse environment.</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="60">- Update to Lucene 2.3.1.</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="59">- Problem with profiles fixed.</action>
 			<action dev="Karl Heinz Marbaise" type="add" issue="58">- External profiles file instead of POM inline profiles.</action>
