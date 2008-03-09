@@ -12,7 +12,7 @@
 			<system.scm.url>http://svn.traveler/supose/</system.scm.url>
 			<system.scm.url.dev>http://svn.traveler/supose/trunk</system.scm.url.dev>
 			<issuemanagement.url>http://trac.traveler/supose/</issuemanagement.url>
-			<cimanagement.url>http://http://serverix:8080/continuum/</cimanagement.url>
+			<cimanagement.url>http://serverix:8080/continuum/</cimanagement.url>
 		</properties>
 	</profile>
 	<profile>
@@ -28,7 +28,7 @@
 			<system.scm.url>http://svn.soebes.de/supose/</system.scm.url>
 			<system.scm.url.dev>http://svn.soebes.de/supose/trunk</system.scm.url.dev>
 			<issuemanagement.url>http://supose.soebes.de/</issuemanagement.url>
-			<cimanagement.url>http://http://serverix:8080/continuum/</cimanagement.url>
+			<cimanagement.url>http://serverix:8080/continuum/</cimanagement.url>
 		</properties>
 	</profile>
 </profiles>
