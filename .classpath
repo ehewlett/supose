@@ -27,5 +27,6 @@
 	<classpathentry kind="lib" path="lib/antlr-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/stringtemplate-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-2.3.1.jar" sourcepath="lib/src/lucene-2.3.1-src.zip"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER/modules"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

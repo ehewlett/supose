@@ -6,6 +6,7 @@
 	</properties>
 	<body>
 		<release version="0.4.0.0 RC2 (Mars)" date="2008-01-XXX" description="Milestone">
+			<action dev="msuchy@redhat.com" type="fix" issue="64">- Used submitted patch for scanning documents without extension</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="63">- Missed to update the correct revision/date for the POI jar files.</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="62">- Removed doubled http in ci management in profiles.xml file.</action>
 			<action dev="Karl Heinz Marbaise" type="fix" issue="61">- Missed the locally stored jar files and source for Eclipse environment.</action>

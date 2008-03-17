@@ -72,17 +72,22 @@ public class FileExtensionHandler {
 				//There is no entry for the extension so we use the default
 				//scanner for all other document types.
 				LOGGER.info("There is no property entry defined for the file extension '" + fn.getExt() + "'");
-				AScanDocument dh = new ScanDefaultDocument();
-				dh.setProperties(getFileProperties());
-				dh.setDocument(doc);
-				dh.indexDocument(repository, dirEntry, path, revision);
+				indexDefaultDoc(repository, dirEntry, path, revision);
 			}
 		} else {
 			LOGGER.info("We have no file extension found for the file '" + path + "'");
+			indexDefaultDoc(repository, dirEntry, path, revision);
 		}
 	}
 
-	public Document getDoc() {
+	 public void indexDefaultDoc(Repository repository, SVNDirEntry dirEntry, String path, long revision) {
+		 AScanDocument dh = new ScanDefaultDocument();
+		 dh.setProperties(getFileProperties());
+		 dh.setDocument(doc);
+		 dh.indexDocument(repository, dirEntry, path, revision);
+	}
+
+	 public Document getDoc() {
 		return doc;
 	}
 
