@@ -8,6 +8,7 @@
 	<name>Subversion Repository Search Engine</name>
 	<description>SupoSE is an approache to scan a whole Subversion Repository an put all needed information 
 		into an Lucene Index to do search queris on it later.</description>
+	<url>http://supose.soebes.de</url>
 	<licenses>
 		<license>
 			<name>The GNU General Public License Version 2</name>
@@ -230,8 +231,14 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.4</version>
 					<configuration>
-						<doctitle>${project.name} ${project.version}-${project.buildNumber} API</doctitle>
+						<doctitle>${project.name} ${project.version}-${buildNumber} API</doctitle>
+						<links>
+							<!-- Link to official Sun docs -->
+							<link>http://java.sun.com/j2ee/1.4/docs/api</link>
+							<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+						</links>
 					</configuration>
+
 <!--				<configuration>
 					<stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
 					<linksource>true</linksource>

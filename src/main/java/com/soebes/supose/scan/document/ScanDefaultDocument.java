@@ -63,6 +63,7 @@ public class ScanDefaultDocument extends AScanDocument {
 				addTokenizedField(FieldNames.CONTENTS, "BINARY CONTENT");
 			} else {
 				LOGGER.debug("We scan the contents, cause it's text.");
+//TODO: This should be put into a configuration file.
 				if (dirEntry.getSize() > 10*1024*1024) {
 					LOGGER.warn("Document size exceeds limit of 10 Mibi!");
 				} else {
