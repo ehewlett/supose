@@ -115,7 +115,7 @@ public class ScanExcelDocument extends AScanDocument {
 							addUnTokenizedField(FieldNames.XLSCOMMENT, comment.getString() == null ? "" : comment.getString().toString());
 						}
 		
-						text.append(scanCell(sheetName, row, column, cell));
+						text.append(scanCell(sheetName, row, column, cell) + " ");
 					}
 				}
 			}
