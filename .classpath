@@ -5,28 +5,6 @@
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/ganymed.jar"/>
-	<classpathentry kind="lib" path="lib/svnkit.jar" sourcepath="lib/src/org.tmatesoft.svn_1.1.4.src.zip"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.11.jar"/>
-	<classpathentry kind="lib" path="lib/commons-cli-2.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/testng-5.7-jdk15.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.0.1-FINAL-20070705.jar" sourcepath="lib/src/poi-src-3.0.1-FINAL-20070705.zip"/>
-	<classpathentry kind="lib" path="lib/poi-contrib-3.0.1-FINAL-20070705.jar" sourcepath="lib/src/poi-src-3.0.1-FINAL-20070705.zip"/>
-	<classpathentry kind="lib" path="lib/poi-scratchpad-3.0.1-FINAL-20070705.jar" sourcepath="lib/src/poi-src-3.0.1-FINAL-20070705.zip"/>
-	<classpathentry kind="lib" path="lib/PDFBox-0.7.3.jar" sourcepath="lib/src/PDFBox-0.7.3.zip"/>
-	<classpathentry kind="lib" path="lib/bcmail-jdk14-132.jar"/>
-	<classpathentry kind="lib" path="lib/bcprov-jdk14-132.jar"/>
-	<classpathentry kind="lib" path="lib/FontBox-0.1.0-dev.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-api.jar"/>
-	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/quartz-all-1.6.0.jar" sourcepath="lib/src/quartz-1.6.0.zip"/>
-	<classpathentry kind="lib" path="lib/jbossall-client.jar"/>
-	<classpathentry kind="lib" path="lib/ini4j-0.2.6.jar" sourcepath="lib/src/ini4j-src-0.2.6.zip"/>
-	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
-	<classpathentry kind="lib" path="lib/antlr-3.0.jar"/>
-	<classpathentry kind="lib" path="lib/stringtemplate-3.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-2.3.1.jar" sourcepath="lib/src/lucene-2.3.1-src.zip"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER/modules"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

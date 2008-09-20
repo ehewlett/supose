@@ -45,7 +45,8 @@ public class RepositoryJobConfigurationTest {
 		if (f.exists()) {
 			f.delete();
 		}
-        ConfigurationRepositories confRepos = new ConfigurationRepositories("/configuration-repository.ini");
+//		String f = getFileResource("/com/soebes/supose/config/configuration-repository.ini");
+        ConfigurationRepositories confRepos = new ConfigurationRepositories("/com/soebes/supose/config/configuration-repository.ini");
         assertNotNull(confRepos, "We had expected to get the configuration!");
         String repositoryName = confRepos.getNames()[0];
     	RepositoryConfiguration reposConfig = confRepos.getRepositoryConfiguration(repositoryName);

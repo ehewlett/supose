@@ -43,7 +43,7 @@ public class ConfigurationRepositoriesTest extends TestBase {
 	
 	@BeforeClass
 	public void beforeClass() {
-		confRepos = new ConfigurationRepositories(getFileResource("repositories-test.ini"));		
+		confRepos = new ConfigurationRepositories(getFileResource("/repositories-test.ini"));		
 		assertNotNull(confRepos, "We had expected to get an instance");
 	}
 
@@ -66,7 +66,7 @@ public class ConfigurationRepositoriesTest extends TestBase {
 		assertEquals(rconfig.getUrl(), "http://svn.traveler/jagosi", "We had expected to get an URL");
 		assertEquals(rconfig.getIndexUsername(), "kama", "We had expected to get the username 'kama'");
 		assertEquals(rconfig.getIndexPassword(), "kama", "We had expected to get the username 'kama'");
-		assertEquals(rconfig.getFromRev(), "1", "We had expected to get the revision 1");
+		assertEquals(rconfig.getFromRev(), 1, "We had expected to get the revision 1");
 		assertEquals(rconfig.getToRev(), "HEAD", "We had expected to get the revision HEAD");
 		assertEquals(rconfig.getCron(), "0 * * ? * *", "We had expected to get the cron expression '0 * * ? * *'");
 	}
