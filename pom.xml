@@ -450,7 +450,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>commons-cli</groupId>
+            <groupId>org.apache.commons</groupId>
             <artifactId>commons-cli</artifactId>
 			<version>2.0-DEV</version>
 		</dependency>
@@ -525,18 +525,14 @@
 			<url>http://download.java.net/maven/2/</url>
 			<layout>default</layout>
 		</repository>
+	<!--
 		<repository>
 			<id>atlassian.m2proxy</id>
 			<name>Atlassian.com m2proxy</name>
 			<url>https://m2proxy.atlassian.com/repository/public</url>
 			<layout>default</layout>
 		</repository>
-		<repository>
-			<id>I.m2proxy</id>
-			<name>Atlassian.com m2proxy</name>
-			<url>https://m2proxy.atlassian.com/repository/public</url>
-			<layout>default</layout>
-		</repository>
 
+		-->
 	</repositories>
 </project>
