@@ -44,6 +44,7 @@ import com.soebes.supose.repository.Repository;
 public class ScanJavaDocument extends AScanDocument {
 	private static Logger LOGGER = Logger.getLogger(ScanJavaDocument.class);
 
+	@Override
 	public void indexDocument(Repository repository, SVNDirEntry dirEntry, String path, long revision) {
 		LOGGER.info("Scanning Java file");
 		try {

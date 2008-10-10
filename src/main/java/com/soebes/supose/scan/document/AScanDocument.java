@@ -51,7 +51,7 @@ import com.soebes.supose.repository.Repository;
 public abstract class AScanDocument {
 
 	private Document doc;
-	private Map properties;
+	private Map<String, String> properties;
 
 
 	public AScanDocument() {
@@ -101,20 +101,20 @@ public abstract class AScanDocument {
 	}
 
 	protected boolean isBinary () {
-		String mimeType = (String)getProperties().get(SVNProperty.MIME_TYPE);
+		String mimeType = getProperties().get(SVNProperty.MIME_TYPE);
 		return SVNProperty.isBinaryMimeType(mimeType);
 	}
 	protected boolean isText () {
-		String mimeType = (String)getProperties().get(SVNProperty.MIME_TYPE);
+		String mimeType = getProperties().get(SVNProperty.MIME_TYPE);
 		return SVNProperty.isTextMimeType(mimeType);
 	}
 
 	
-	public Map getProperties() {
+	public Map<String, String> getProperties() {
 		return properties;
 	}
 
-	public void setProperties(Map properties) {
+	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
 	}
 
