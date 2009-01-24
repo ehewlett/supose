@@ -3,9 +3,9 @@
 	<groupId>com.soebes</groupId>
 	<artifactId>supose</artifactId>
 	<version>0.5.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
-	<name>Subversion Repository Search Engine</name>
+	<name>SupoSE :: Subversion Repository Search Engine</name>
 	<description>SupoSE is an approache to scan a whole Subversion Repository an put all needed information 
 		into an Lucene Index to do search queris on it later.</description>
 	<url>http://www.supose.org</url>
@@ -73,6 +73,13 @@
 		<developerConnection>scm:svn:http://svn.serverix/supose/trunk</developerConnection>
 		<url>http://svn.serverix/supose/</url>
 	</scm>
+
+	<modules>
+		<module>supose-core</module>
+		<module>supose-cli</module>
+		<module>supose-it</module>
+	</modules>
+
 
 	<build>
 		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
@@ -213,19 +220,6 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>antlr3-maven-plugin</artifactId>
-				<version>1.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>antlr</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
 		<!-- Configuration of the plugin: http://code.google.com/p/maven-license-plugin/wiki/Configuration -->
 			<plugin>
 				<groupId>com.google.code.maven-license-plugin</groupId>
@@ -606,5 +600,26 @@
 			<version>0.2</version>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>supose-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>supose-cli</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>supose-it</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 </project>
