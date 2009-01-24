@@ -1,0 +1,55 @@
+<assembly>
+	<id>bin</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<baseDirectory>${artifactId}-${version}</baseDirectory>	
+	<fileSets>
+		<fileSet>
+			<directory>src/main/resources/</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>**</include>
+			</includes>
+			<excludes>
+				<exclude>bin/**</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/bin</directory>
+			<outputDirectory>/bin</outputDirectory>
+			<includes>
+				<include>*.sh</include>
+			</includes>
+			<fileMode>0755</fileMode>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/bin</directory>
+			<outputDirectory>/bin</outputDirectory>
+			<excludes>
+				<exclude>*.sh</exclude>
+			</excludes>
+			<includes>
+				<include>**</include>
+			</includes>
+		</fileSet>
+
+		<fileSet>
+			<outputDirectory>/webapps</outputDirectory>
+			<directory>${basedir}/../supose-soap/target</directory>
+			<includes>
+				<include>supose-soap.war</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/lib</outputDirectory>
+			<unpack>false</unpack>
+			<excludes>
+				<exclude>*:supose-soap</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+</assembly>
+

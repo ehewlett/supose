@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serviceGroup>
+    <service name="suposeSearchAPI"
+	scope="application"
+	class="com.soebes.supose.soap.service.SupoSEServiceLifeCycle">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="MessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">com.soebes.supose.soap.service.SupoSEService</parameter>
+    </service>
+</serviceGroup>

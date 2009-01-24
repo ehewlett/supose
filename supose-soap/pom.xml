@@ -8,9 +8,95 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.soebes</groupId>
-    <artifactId>supose-sopa</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>supose-soap</artifactId>
+    <packaging>war</packaging>
     <name>SupoSE :: SOAP</name>
     <version>0.5.0-SNAPSHOT</version>
 
+
+	<build>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<!--
+			We have to set the name of the WAR finally here, cause
+			currently it's not possible to make a configuration (context.xml)
+			to change URL to access the service.
+		-->
+		<finalName>supose-soap</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1-alpha-2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+					<webResources>
+						<resource>
+							<directory>${basedir}/src/main/jsp</directory>
+							<includes>
+								<include>*.jsp</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+	
+			<plugin>
+				<groupId>com.google.code.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>${maven-license-plugin.version}</version>
+				<configuration>
+					<header>${basedir}/../src/main/etc/header.txt</header>
+				</configuration>
+			</plugin>
+
+    	</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>${axis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-kernel</artifactId>
+			<version>${axis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-adb</artifactId>
+			<version>${axis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-java2wsdl</artifactId>
+			<version>${axis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>supose-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>	
 </project>
