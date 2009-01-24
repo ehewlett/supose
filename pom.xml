@@ -77,6 +77,8 @@
 	<modules>
 		<module>supose-core</module>
 		<module>supose-cli</module>
+		<module>supose-soap</module>
+		<module>supose-rest</module>
 		<module>supose-it</module>
 	</modules>
 
