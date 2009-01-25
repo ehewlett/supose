@@ -1,0 +1,9 @@
+To check if there are new updated for plugins you can use
+the following command:
+
+  $ mvn versions:display-plugin-updates
+
+The following call will display the list of updateable 
+depedencies.
+
+  $ mvn versions:display-dependency-updates

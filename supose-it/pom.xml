@@ -4,14 +4,14 @@
     <parent>
         <groupId>com.soebes.supose</groupId>
 		<artifactId>supose</artifactId>
-        <version>0.5.0-SNAPSHOT</version>
+        <version>0.6.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.soebes.supose</groupId>
     <artifactId>supose-it</artifactId>
     <packaging>jar</packaging>
     <name>SupoSE :: Integration Test</name>
-    <version>0.5.0-SNAPSHOT</version>
+	<version>${parent.version}</version>
 
 	<build>
 		<testSourceDirectory>src/test</testSourceDirectory>
