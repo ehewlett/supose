@@ -59,6 +59,48 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.axis2</groupId>
+				<artifactId>axis2-java2wsdl-maven-plugin</artifactId>
+				<version>${axis.version}</version>
+				<configuration>
+					<classPath>target/classes</classPath>
+					<className>com.soebes.supose.soap.SupoSEService</className>
+					<outputFileName>test.xml</outputFileName>
+					<schemaTargetNamespace>com.soebes.supose.soap</schemaTargetNamespace>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java2wsdl</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+<!--
+			<plugin>
+    			<groupId>org.apache.axis2</groupId>
+    			<artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+				<version>1.4</version>
+    			<executions>
+    				<execution>
+    					<goals>
+    						<goal>wsdl2code</goal>
+    					</goals>
+    				<configuration>
+					<packageName>com.soebes.supose.soap</packageName>
+					<wsdlFile>${basedir}/src/main/...</wsdlFile>
+					<databindingName>adb</databindingName>
+					<generateAllClasses>true</generateAllClasses>
+					<generateServerSide>true</generateServerSide>
+					<generateServerSideInterface>true</generateServerSideInterface>
+					<generateTestcase>true</generateTestcase>
+				</configuration>
+				</execution>
+			</executions>
+    		</plugin>
+-->
+
     	</plugins>
 	</build>
 
@@ -69,8 +111,8 @@
 			<version>${commons-logging.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>axis</groupId>
-			<artifactId>axis</artifactId>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2</artifactId>
 			<version>${axis.version}</version>
 		</dependency>
 		<dependency>
