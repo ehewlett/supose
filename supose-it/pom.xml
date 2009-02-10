@@ -31,11 +31,10 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-
+<!-- 
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
-				<!-- 				<version>1.0-SNAPSHOT</version> -->
 				<version>1.0-alpha-6</version>
 				<configuration>
 					<wait>false</wait>
@@ -89,7 +88,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+-->			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -105,9 +104,6 @@
 				<configuration>
 					<printSummary>true</printSummary>
 					<testFailureIgnore>true</testFailureIgnore>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/test-all.xml</suiteXmlFile>
-					</suiteXmlFiles>
 				</configuration>				
 			</plugin>
 			
@@ -119,7 +115,6 @@
 					<header>${basedir}/../src/etc/header.txt</header>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>
