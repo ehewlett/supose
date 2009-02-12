@@ -75,7 +75,7 @@
 		<module>supose-soap</module>
 		<module>supose-rest</module>
 		<module>supose-it</module>
-		<module>supose-wefe</module>
+		<!-- 	<module>supose-wefe</module> -->
 		<module>supose-tomcat</module>
 	</modules>
 
@@ -157,7 +157,7 @@
 					<debug>true</debug>
 				</configuration>
 			</plugin>
-<!--
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -167,15 +167,9 @@
 					<printSummary>true</printSummary>
 					<useFile>true</useFile>
 					<testFailureIgnore>true</testFailureIgnore>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/test-all.xml</suiteXmlFile>
-					</suiteXmlFiles>
-					<parameters>
-						<parameter><name>testxz</name></parameter>
-					</parameters>
 				</configuration>
 			</plugin>
--->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -384,66 +378,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-<!--
-				<reportSets>
-			  <reportSet>
-                  <id>uml</id>
-                  <configuration>
-                     <doclet>gr.spinellis.umlgraph.doclet.UmlGraph</doclet>
-
-                     <docletArtifact>
-                        <groupId>gr.spinellis</groupId>
-                        <artifactId>UmlGraph</artifactId>
-                        <version>4.4</version>
-                     </docletArtifact>
-
-                     <additionalparam>-views</additionalparam>
-                     <destDir>target/uml</destDir>
-                     <show>private</show>
-                  </configuration>
-                  <reports>
-                     <report>javadoc</report>
-                  </reports>
-               </reportSet>
-               <reportSet>
-                  <id>html</id>
-                  <configuration>
-                     <show>private</show>
-                  </configuration>
-                  <reports>
-                     <report>javadoc</report>
-                  </reports>
-               </reportSet>
-					
-					<reportSet>
-						<id>perf</id>
-						<configuration>
-							<reportsDirectory>${project.build.directory}/surefire-reports/perf</reportsDirectory>
-							<outputName>surefire-report-perf</outputName>
-						</configuration>
-						<reports>
-							<report>report</report>
-						</reports>
-					</reportSet>
-					
-					<reportSet>
-						<reports>
-							<report>dependencies</report>
-							<report>project-team</report>
-							<report>license</report>
-							<report>scm</report>
-							<report>jxr</report>
-							<report>javadoc</report>
-							<report>pmd</report>
-							<report>perf</report>
-							<report>cim</report>
-							<report>changes</report>
-							<report>issue-tracking</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-
--->
 			</plugin>
 
 			<plugin>
@@ -451,6 +385,7 @@
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>2.4.3</version>
 				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>
 			</plugin>
