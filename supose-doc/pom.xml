@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.soebes.supose</groupId>
+		<artifactId>supose</artifactId>
+        <version>0.6.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <groupId>com.soebes.supose</groupId>
+    <artifactId>supose-doc</artifactId>
+    <packaging>jar</packaging>
+    <name>SupoSE :: Documentation</name>
+	<version>${parent.version}</version>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.google.code.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>${maven-license-plugin.version}</version>
+				<configuration>
+					<header>${basedir}/../src/etc/header.txt</header>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.doxia</groupId>
+				<artifactId>doxia-maven-plugin</artifactId>
+				<version>1.0-alpha-10</version>
+				<executions>
+					<execution>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>render-books</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<books>
+						<book>
+							<directory>src/site/apt</directory>
+							<descriptor>src/site/suposeguide.xml</descriptor>
+							<formats>
+								<format>
+									<id>xdoc</id>
+								</format>
+								<format>
+									<id>pdf</id>
+								</format>
+							</formats>
+						</book>
+					</books>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
