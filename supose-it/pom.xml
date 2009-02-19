@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.soebes.supose</groupId>
     <artifactId>supose-it</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>SupoSE :: Integration Test</name>
 	<version>${parent.version}</version>
 
