@@ -27,7 +27,7 @@
 			<plugin>
 				<groupId>org.apache.maven.doxia</groupId>
 				<artifactId>doxia-maven-plugin</artifactId>
-				<version>1.0-alpha-10</version>
+				<version>1.0</version>
 				<executions>
 					<execution>
 						<phase>pre-site</phase>

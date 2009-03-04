@@ -27,9 +27,6 @@ package com.soebes.supose.repository;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
-import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 
 /**
  * This test will prepare the created repository with

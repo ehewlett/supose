@@ -41,18 +41,10 @@ import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
  * @author Karl Heinz Marbaise
  *
  */
-public class InitRepositoryTest {
+public class InitRepositoryTest extends TestBase {
 	private static Logger LOGGER = Logger.getLogger(InitRepositoryTest.class);
 
-	/**
-	 * The property basedir is defined by Maven during
-	 * the Test processing.
-	 */
-	private String mavenBaseDir = System.getProperty("basedir", "." );
-	
 	private String repositoryDirectory = null;
-	
-	private String dumpDirectory = mavenBaseDir + "/src/test/resources";
 	
 	private SVNURL repositoryURL = null;
 
@@ -64,10 +56,8 @@ public class InitRepositoryTest {
 	 */
 	@BeforeSuite
 	public void createRepository() throws SVNException {
-		LOGGER.info("Maven base directory: " + mavenBaseDir);
-
-		repositoryDirectory = mavenBaseDir + "/target/repos";
-		LOGGER.info("Maven Integration Test Repository directory: " + repositoryDirectory);
+		repositoryDirectory = getTargetDir() + File.separatorChar + "repos";
+		LOGGER.info("Using the following directory: " + repositoryDirectory);
 		repositoryURL = SVNRepositoryFactory.createLocalRepository(new File(repositoryDirectory), false, true);
 		LOGGER.info("Integration Test Repository created.");
 		LOGGER.info("The URL:" + repositoryURL.toString());
@@ -75,8 +65,14 @@ public class InitRepositoryTest {
 	
 	@Test
 	public void RevisionLoadTest () throws FileNotFoundException, SVNException {
+		//Create the path to the repos.dump file which is located 
+		//in the src/test/resources directory.
+		String dumpFile = getMavenBaseDir() 
+			+ File.separatorChar + "src" 
+			+ File.separatorChar + "test" 
+			+ File.separatorChar + "resources"
+			+ File.separatorChar + "repos.dump";
 		SVNAdminClient admin = new SVNAdminClient((ISVNAuthenticationManager)null, null);
-		FileInputStream dumpStream = new FileInputStream(dumpDirectory + "/repos.dump");
-		admin.doLoad(new File(repositoryDirectory), dumpStream);
+		admin.doLoad(new File(repositoryDirectory), new FileInputStream(dumpFile));
 	}
 }

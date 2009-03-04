@@ -373,7 +373,7 @@
 		</repository>
 		<site>
 			<id>mvn.supose.soebes.de</id>
-			<url>scp://h5593.serverkompetenz.net:/usr/local/vhosts/mvn.supose.soebes.de</url>
+			<url>scp://h5593.serverkompetenz.net:/usr/local/vhosts/mvn.supose.soebes.de/0.6.0</url>
 		</site>
 	</distributionManagement>
 
