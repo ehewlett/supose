@@ -11,8 +11,7 @@
     <artifactId>supose-core</artifactId>
     <packaging>jar</packaging>
     <name>SupoSE :: Core</name>
-	<version>${parent.version}</version>
-			
+
 	<build>
 		<plugins>
 			<plugin>

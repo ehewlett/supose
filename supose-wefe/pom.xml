@@ -11,8 +11,7 @@
     <artifactId>supose-wefe</artifactId>
     <packaging>war</packaging>
     <name>SupoSE :: WeFe</name>
-	<version>${parent.version}</version>
-	
+
 	<build>
 		<plugins>
 			<plugin>

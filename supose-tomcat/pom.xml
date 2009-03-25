@@ -11,8 +11,6 @@
     <artifactId>supose-tomcat</artifactId>
     <packaging>pom</packaging>
     <name>SupoSE :: Tomcat</name>
-	<version>${parent.version}</version>
-
 
 	<dependencies>
 		<dependency>

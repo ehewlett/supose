@@ -11,8 +11,6 @@
     <artifactId>supose-soap</artifactId>
     <packaging>war</packaging>
     <name>SupoSE :: SOAP</name>
-	<version>${parent.version}</version>
-
 
 	<build>
 		<resources>

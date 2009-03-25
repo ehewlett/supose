@@ -11,8 +11,6 @@
     <artifactId>supose-rest</artifactId>
     <packaging>jar</packaging>
     <name>SupoSE :: RESTlet</name>
-	<version>${parent.version}</version>
-
 
 	<dependencies>
 		<dependency>  
