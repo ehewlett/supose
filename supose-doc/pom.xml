@@ -15,15 +15,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.google.code.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>${maven-license-plugin.version}</version>
-				<configuration>
-					<header>${basedir}/../src/main/etc/header.txt</header>
-				</configuration>
-			</plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.doxia</groupId>
 				<artifactId>doxia-maven-plugin</artifactId>
 				<version>1.0</version>

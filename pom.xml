@@ -28,10 +28,10 @@
 			<id>kama</id>
 			<name>Karl Heinz Marbase</name>
 			<email>khm@soebes.de</email>
+			<timezone>+1</timezone>
 			<roles>
 				<role>project lead</role>
 				<role>commiter</role>
-				<timezone>+1</timezone>
 			</roles>
 		</developer>
 	</developers>
@@ -108,6 +108,48 @@
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>1.0-alpha-2</version>
 				</plugin>
+				<!-- Configuration of the plugin: http://code.google.com/p/maven-license-plugin/wiki/Configuration -->
+				<plugin>
+					<groupId>com.google.code.maven-license-plugin</groupId>
+					<artifactId>maven-license-plugin</artifactId>
+					<version>${maven-license-plugin.version}</version>
+					<configuration>
+						<header>src/main/etc/header.txt</header>
+						<quiet>false</quiet>
+						<failIfMissing>false</failIfMissing>
+						<includes>
+							<include>src/**</include>
+							<include>**/test/**</include>
+						</includes>
+						<excludes>
+							<exclude>src/main/antlr/**</exclude>
+							<exclude>src/main/java-generated/**</exclude>
+							<exclude>target/**</exclude>
+							<exclude>build/**</exclude>
+							<exclude>src/test/resources/**</exclude>
+							<exclude>src/main/resources/**</exclude>
+						</excludes>
+						<useDefaultExcludes>true</useDefaultExcludes>
+						<mapping>
+							<jwc>xml</jwc>
+							<application>xml</application>
+							<myFileExtension>java</myFileExtension>
+						</mapping>
+						<useDefaultMapping>true</useDefaultMapping>
+						<properties>
+							<year>${project.inceptionYear}</year>
+							<email>my@email.com</email>
+						</properties>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 		
@@ -208,47 +250,10 @@
 					<doUpdate>false</doUpdate>
 				</configuration>
 			</plugin>
-
-		<!-- Configuration of the plugin: http://code.google.com/p/maven-license-plugin/wiki/Configuration -->
 			<plugin>
 				<groupId>com.google.code.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
 				<version>${maven-license-plugin.version}</version>
-				<configuration>
-					<header>src/main/etc/header.txt</header>
-					<quiet>false</quiet>
-					<failIfMissing>false</failIfMissing>
-					<includes>
-						<include>src/**</include>
-						<include>**/test/**</include>
-					</includes>
-					<excludes>
-						<exclude>src/main/antlr/**</exclude>
-						<exclude>src/main/java-generated/**</exclude>
-						<exclude>target/**</exclude>
-						<exclude>build/**</exclude>
-						<exclude>src/test/resources/**</exclude>
-						<exclude>src/main/resources/**</exclude>
-					</excludes>
-					<useDefaultExcludes>true</useDefaultExcludes>
-					<mapping>
-						<jwc>xml</jwc>
-						<application>xml</application>
-						<myFileExtension>java</myFileExtension>
-					</mapping>
-					<useDefaultMapping>true</useDefaultMapping>
-					<properties>
-						<year>${project.inceptionYear}</year>
-						<email>my@email.com</email>
-					</properties>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 		</plugins>

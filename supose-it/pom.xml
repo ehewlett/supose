@@ -48,15 +48,6 @@
 					<testFailureIgnore>true</testFailureIgnore>
 				</configuration>				
 			</plugin>
-			
-			<plugin>
-				<groupId>com.google.code.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>${maven-license-plugin.version}</version>
-				<configuration>
-					<header>${basedir}/../src/main/etc/header.txt</header>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>
