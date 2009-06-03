@@ -36,9 +36,9 @@
 
 		<fileSet>
 			<outputDirectory>/webapps</outputDirectory>
-			<directory>${basedir}/../supose-soap/target</directory>
+			<directory>${basedir}/../supose-war/target</directory>
 			<includes>
-				<include>supose-soap.war</include>
+				<include>supose-war.war</include>
 			</includes>
 		</fileSet>
 	</fileSets>

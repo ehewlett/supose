@@ -13,6 +13,7 @@
 	<name>SupoSE :: WAR</name>
 
 	<build>
+		<finalName>supose-war</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>

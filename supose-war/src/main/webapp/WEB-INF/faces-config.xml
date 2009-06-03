@@ -7,10 +7,14 @@
   <application>
     <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
   </application>
-  
-  
+  <managed-bean>
+  	<managed-bean-name>testSession</managed-bean-name>
+  	<managed-bean-class>com.soebes.supose.release.web.TestSession</managed-bean-class>
+  	<managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+
   <navigation-rule>
-    <from-view-id>/tree.xhtml</from-view-id>
+    <from-view-id>/index.xhtml</from-view-id>
     <navigation-case>
       <from-outcome>SUCCESS</from-outcome>
       <to-view-id>/result.xhtml</to-view-id>
@@ -21,10 +25,4 @@
     </navigation-case>
     
   </navigation-rule>
-  
-  <managed-bean>
-    <managed-bean-name>TreeHandler</managed-bean-name>
-    <managed-bean-class>com.soebes.supose.release.web.TreeHandler</managed-bean-class>
-    <managed-bean-scope>session</managed-bean-scope>
-  </managed-bean>    
 </faces-config>
