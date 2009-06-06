@@ -5,19 +5,22 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:t="http://myfaces.apache.org/tomahawk">
-<f:loadBundle basename="com.soebes.supose.release.web.resource.messages" var="msg" />
+<!--  
+<f:loadBundle basename="com.soebes.supose.release.web.resource.messages" var="bundle" />
+-->
   
   <head>
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <!--link rel="SHORTCUT ICON" href="/favicon.ico" /-->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title><ui:insert name="title"><h:outputText value="Release"/></ui:insert></title>
+    <title><ui:insert name="title"><h:outputText value="SupoSE .::. Subversion Repository Search Engine"/></ui:insert></title>
   </head>
   <body>
     <f:view>
       <h:form>
         <t:div >
-          <h:outputText value="#{msg.greeting_text}" />
+<!--           <h:outputText value="#{bundle.greeting_text}" /> -->
+          <h:outputText value="Test Text" />
           <ui:insert name="header">
             <ui:include src="header.xhtml"/>
           </ui:insert>

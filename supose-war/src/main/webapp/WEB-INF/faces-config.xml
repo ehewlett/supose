@@ -8,9 +8,9 @@
     <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
   </application>
   <managed-bean>
-  	<managed-bean-name>testSession</managed-bean-name>
+  	<managed-bean-name>testBean</managed-bean-name>
   	<managed-bean-class>com.soebes.supose.release.web.TestSession</managed-bean-class>
-  	<managed-bean-scope>session</managed-bean-scope>
+  	<managed-bean-scope>application</managed-bean-scope>
   </managed-bean>
 
   <navigation-rule>
