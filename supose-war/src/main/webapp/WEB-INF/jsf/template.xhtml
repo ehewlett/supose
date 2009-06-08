@@ -20,12 +20,13 @@
       <h:form>
         <t:div >
 <!--           <h:outputText value="#{bundle.greeting_text}" /> -->
-          <h:outputText value="Test Text" />
           <ui:insert name="header">
             <ui:include src="header.xhtml"/>
           </ui:insert>
+		  <hr />
           <ui:insert name="body">
-            <ui:include src="body.xhtml" />
+          <hr />
+          <ui:include src="body.xhtml" />
           </ui:insert>          
         </t:div>
       </h:form>

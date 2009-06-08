@@ -8,10 +8,10 @@
 
 <ui:composition template="/WEB-INF/jsf/template.xhtml">
   <ui:define name="body">
-  	<h:form>
+      <h:form>
 		<h:outputText value="Entry the query:"/>
 		<h:inputText id="query" size="30" required="true" value="#{testBean.query}"/>
-		<h:commandButton action="success" title="Submit" value="Submit"/>
+		<h:commandButton action="#{testBean.query}" title="Submit" value="Submit"/>
 	</h:form>
   </ui:define>
 </ui:composition>
