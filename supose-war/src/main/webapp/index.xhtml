@@ -9,9 +9,19 @@
 <ui:composition template="/WEB-INF/jsf/template.xhtml">
   <ui:define name="body">
       <h:form>
-		<h:outputText value="Entry the query:"/>
-		<h:inputText id="query" size="30" required="true" value="#{testBean.query}"/>
-		<h:commandButton action="#{testBean.query}" title="Submit" value="Submit"/>
+		
+		<table width="100%">
+			<tr>
+				<td width="25%" align="right"><h:outputText value="Entry the query:"/></td>
+				<td width="50%"><h:inputText id="query" size="60" required="true" value="#{testBean.query}"/></td>
+				<td width="25%"></td>
+			</tr>
+			<tr>
+				<td width="25%"></td>
+				<td width="50%"><h:commandButton action="#{testBean.query}" title="Submit" value="Submit"/></td>
+				<td width="25%"></td>
+			</tr>
+		</table>
 	</h:form>
   </ui:define>
 </ui:composition>

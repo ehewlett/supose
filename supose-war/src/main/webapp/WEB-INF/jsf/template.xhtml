@@ -8,28 +8,23 @@
 <!--  
 <f:loadBundle basename="com.soebes.supose.release.web.resource.messages" var="bundle" />
 -->
-  
-  <head>
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
-    <!--link rel="SHORTCUT ICON" href="/favicon.ico" /-->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title><ui:insert name="title"><h:outputText value="SupoSE .::. Subversion Repository Search Engine"/></ui:insert></title>
-  </head>
-  <body>
-    <f:view>
-      <h:form>
-        <t:div >
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<!--link rel="SHORTCUT ICON" href="/favicon.ico" /-->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title><ui:insert name="title"><h:outputText value="SupoSE .::. Subversion Repository Search Engine"/></ui:insert></title>
+	</head>
+	<body>
+		<f:view>
 <!--           <h:outputText value="#{bundle.greeting_text}" /> -->
-          <ui:insert name="header">
-            <ui:include src="header.xhtml"/>
-          </ui:insert>
-		  <hr />
-          <ui:insert name="body">
-          <hr />
-          <ui:include src="body.xhtml" />
-          </ui:insert>          
-        </t:div>
-      </h:form>
-    </f:view>
-  </body>
+			<ui:insert name="header">
+			<ui:include src="header.xhtml"/>
+			</ui:insert>
+			<ui:insert name="body">
+			</ui:insert>          
+			<ui:insert name="footer">
+			<ui:include src="footer.xhtml"/>
+			</ui:insert>
+		</f:view>
+	</body>
 </html>
