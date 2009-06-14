@@ -10,6 +10,14 @@
   <ui:define name="body">
     <h:outputText>Result successfully stored.</h:outputText>
     <h:outputText value="#{testBean.query}"/>
+    <h:dataTable value="#{testBean.result}" var="item">
+    	<f:facet name="header">
+    		<h:outputText value="Spalte 1"/>
+    	</f:facet>
+    	<h:column>
+    		<h:outputText value="#{item}" />
+    	</h:column>
+    </h:dataTable>
     <h:form>
     	<h:commandButton action="SUCCESS" title="New Search" value="Submit"/>
     </h:form>
