@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -24,6 +24,7 @@
  */
 package com.soebes.supose;
 
+import java.io.File;
 import java.net.URL;
 
 /**
@@ -56,4 +57,51 @@ public class TestBase {
 		}
 	}
 
+	/**
+	 * Return the base directory of the project.
+	 * @return
+	 */
+	public String getMavenBaseDir() {
+		//basedir is defined by Maven 
+		//but the above will not work under Eclipse.
+		//So there I'M using user.dir 
+		return System.getProperty("basedir", System.getProperty("user.dir", "."));
+	}
+
+	
+	/**
+	 * Return the target directory of the current project.
+	 * @return
+	 */
+	public String getTargetDir() {
+		return getMavenBaseDir() + File.separatorChar + "target";
+	}
+	
+	/**
+	 * This will give you back the position of a repository which
+	 * is stored inside the <b>target</b> directory.
+	 * @return The directory where the repository has been stored.
+	 */
+	public String getRepositoryDirectory() {
+		return getTargetDir() + File.separatorChar + "repos";
+	}
+	
+	/**
+	 * This will give you back the position of an index directory
+	 * which is stored inside the <b>target</b> directory.
+	 * @return The directory where the index is stored.
+	 */
+	public String getIndexDirectory() {
+		return getTargetDir() + File.separatorChar + "index.Test";
+	}
+	
+	public String getSrcDirectory () {
+		return getMavenBaseDir() + File.separator + "src" ;
+	}
+	public String getTestDirectory () {
+		return getSrcDirectory() + File.separator + "test";
+	}
+	public String getTestResourcesDirectory() {
+		return getTestDirectory() + File.separator + "resources";
+	}
 }

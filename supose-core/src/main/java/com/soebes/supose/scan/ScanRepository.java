@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -25,6 +25,8 @@
 package com.soebes.supose.scan;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -34,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
+import org.tmatesoft.svn.core.ISVNLogEntryHandler;
 import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
@@ -42,6 +45,8 @@ import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperties;
 
 import com.soebes.supose.FieldNames;
+import com.soebes.supose.recognition.TagBranch;
+import com.soebes.supose.recognition.TagBranchRecognition;
 import com.soebes.supose.repository.Repository;
 import com.soebes.supose.search.NumberUtils;
 import com.soebes.supose.utility.FileName;
@@ -50,11 +55,17 @@ import com.soebes.supose.utility.FileName;
  * @author Karl Heinz Marbaise
  *
  */
-public class ScanRepository {
+public class ScanRepository extends ScanRepositoryBase {
+	public static final String DISPLAY_PROPERTIES_PREFIX = "d";
+
 	private static Logger LOGGER = Logger.getLogger(ScanRepository.class);
+
+	private boolean abbort;
 
 	private String name;
 	
+	private ArrayList<SVNLogEntry> logEntries = null;
+
 	/**
 	 * This defines the revision from where we start to scan the given repository.
 	 */
@@ -63,14 +74,17 @@ public class ScanRepository {
 	 * This defines the revision to which we will scan the given repository. 
 	 */
 	private long endRevision;
-	
+
 	private Repository repository = null;
 
 	public ScanRepository() {
+		super();
 		setStartRevision(0);
 		setEndRevision(0);
 		setRepository(null);
 		setName("");
+		setAbbort(false);
+		logEntries = new ArrayList<SVNLogEntry>();
 	}
 
 	/**
@@ -83,17 +97,26 @@ public class ScanRepository {
 	@SuppressWarnings("unchecked")
 	public void scan(IndexWriter writer) {
 
-       LOGGER.debug("Repositories latest Revision: " + endRevision);
-        Collection<SVNLogEntry> logEntries = null;
+		LOGGER.debug("Repositories latest Revision: " + endRevision);
         try {
-            logEntries = repository.getRepository().log(new String[] {""}, null, startRevision, endRevision, true, true);
+        	LogEntryStart();
+            repository.getRepository().log(new String[] {""}, startRevision, endRevision, true, true, new ISVNLogEntryHandler() {
+                public void handleLogEntry(SVNLogEntry logEntry) {
+                	logEntries.add(logEntry);
+                	LogEntry(logEntry);
+                }
+            });
         } catch (SVNException svne) {
             LOGGER.error("error while collecting log information for '"
-                    + repository.getUrl() + "': " + svne);
+                    + repository.getUrl() + "'", svne);
             return;
+        } finally {
+        	LogEntryStop();
         }
 
         LOGGER.debug("We have " + logEntries.size() + " change sets to scan.");
+        scanStart(logEntries.size());
+        long count = 1;
         for (Iterator entries = logEntries.iterator(); entries.hasNext();) {
             SVNLogEntry logEntry = (SVNLogEntry) entries.next();
 
@@ -106,16 +129,26 @@ public class ScanRepository {
             }
 
             if (logEntry.getChangedPaths().size() > 0) {
+            	
             	LOGGER.debug("changed paths:");
 				try {
+					scanBeginRevision(count, logEntry.getRevision(), logEntry.getChangedPaths().size());
 					workOnChangeSet(writer, repository, logEntry);
 				} catch (Exception e) {
-	            	LOGGER.error("Error during workOnChangeSet() " + e);
-				}                
+	            	LOGGER.error("Error during workOnChangeSet() ", e);
+				} finally {
+					scanEndRevision(count, logEntry.getRevision(), logEntry.getChangedPaths().size());
+					count++;
+				}
             } else {
             	LOGGER.debug("No changed paths found!");
             }
+            if (isAbbort()) {
+            	LOGGER.warn("We have received an abort signal!");
+            	break;
+            }
         }
+        scanStop();
 		repository.close();
 	}
 
@@ -129,13 +162,33 @@ public class ScanRepository {
 	private void workOnChangeSet(IndexWriter indexWriter, Repository repository, SVNLogEntry logEntry) {
 		Set changedPathsSet = logEntry.getChangedPaths().keySet();
 
+		TagBranchRecognition tbr = new TagBranchRecognition(repository);
+//		tbr.setRepository(repository);
+		
+		TagBranch res = null;
+		//Check if we have a Tag, Branch, Maven Tag or Subversion Tag.
+		if (changedPathsSet.size() == 1) {
+			res = tbr.checkForTagOrBranch(logEntry, changedPathsSet);
+		} else {
+			res = tbr.checkForMavenTag(logEntry, changedPathsSet);
+			if (res == null) {
+				res = tbr.checkForSubverisonTag(logEntry, changedPathsSet);
+			}
+		}
+
 		int count = 0;
-		LOGGER.info("Number of files for revision: " + changedPathsSet.size());
+		LOGGER.debug("Number of files for revision: " + changedPathsSet.size());
+		startIndexChangeSet();
 		for (Iterator changedPaths = changedPathsSet.iterator(); changedPaths.hasNext();) {
 			count ++;
 
+			Document doc = new Document();
+			addTagBranchToDoc(res, doc);
+
+			//It is needed to check it in every entry 
+			//This will result in making entries for every record of the ChangeSet.
 			SVNLogEntryPath entryPath = (SVNLogEntryPath) logEntry.getChangedPaths().get(changedPaths.next());
-			LOGGER.debug(" "
+			LOGGER.debug("SVNEntry: "
 		            + entryPath.getType()
 		            + "	"
 		            + entryPath.getPath()
@@ -144,97 +197,133 @@ public class ScanRepository {
 		                    + entryPath.getCopyRevision() + ")" : ""));
 
 			//We would like to know something about the entry.
-			SVNDirEntry dirEntry = getInformationAboutEntry(repository, logEntry, entryPath);
-		    
+			SVNDirEntry dirEntry = tbr.getEntryCache().getEntry(logEntry.getRevision(), entryPath.getPath());
+
 			try {
-				if (SVNLogEntryPath.TYPE_ADDED == entryPath.getType()) {
-					LOGGER.debug("File " + entryPath.getPath() + " added...");
-					//get All file content and index it.
-					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
-				}
-				if (SVNLogEntryPath.TYPE_MODIFIED == entryPath.getType()) {
-					//Get all file content and index it...
-					LOGGER.debug("Modified file...");
-					//get All file content and index it.
-					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
-				}
-				if (SVNLogEntryPath.TYPE_REPLACED == entryPath.getType()) {
-					//Get all file content and index it...
-					LOGGER.debug("Replaced file...");
-					//get All file content and index it.
-					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
-				}
-				if (SVNLogEntryPath.TYPE_DELETED == entryPath.getType()) {
-					LOGGER.debug("The file '" + entryPath.getPath() + "' has been deleted.");
-					indexFile(indexWriter, dirEntry, repository, logEntry, entryPath);
-				}
+				beginIndexChangeSetItem(dirEntry);
+				indexFile(doc, indexWriter, dirEntry, repository, logEntry, entryPath);
 			} catch (IOException e) {
-				LOGGER.error("IOExcepiton: " + e);
+				LOGGER.error("IOExcepiton: ", e);
 			} catch (SVNException e) {
-				LOGGER.error("SVNExcepiton: " + e);
+				LOGGER.error("SVNExcepiton: ", e);
 			} catch (Exception e) {
-				LOGGER.error("something wrong: " + e);
+				LOGGER.error("something wrong: ", e);
+			} finally {
+				endIndexChangeSetItem(dirEntry);
+			}
+		}
+		stopIndexChangeSet();
+	}
+
+	private void addTagBranchToDoc(TagBranch res, Document doc) {
+		if (res != null) {
+			switch (res.getType()) {
+				case BRANCH:
+					addUnTokenizedField(doc, FieldNames.BRANCH, res.getName());
+					break;
+				case TAG:
+					addUnTokenizedField(doc, FieldNames.TAG, res.getName());
+					switch(res.getTagType()) {
+						case NONE:
+							break;
+						case TAG: //We already have it marked as Tag.
+							break;
+						case MAVENTAG:
+							addUnTokenizedField(doc, FieldNames.MAVENTAG, res.getName());
+							break;
+						case SUBVERSIONTAG:
+							addUnTokenizedField(doc, FieldNames.SUBVERSIONTAG, res.getName());
+							break;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 	}
 
+	protected void addTokenizedField(Document doc, FieldNames fieldName, String value) {
+		doc.add(new Field(fieldName.getValue(),  value, Field.Store.YES, Field.Index.ANALYZED));
+	}
 	protected void addTokenizedField(Document doc, String fieldName, String value) {
 		doc.add(new Field(fieldName,  value, Field.Store.YES, Field.Index.ANALYZED));
+	}
+	private void addUnTokenizedField(Document doc, FieldNames fieldName, String value) {
+		doc.add(new Field(fieldName.getValue(),  value, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 	private void addUnTokenizedField(Document doc, String fieldName, String value) {
 		doc.add(new Field(fieldName,  value, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
-	private void addUnTokenizedField(Document doc, String fieldName, Long value) {
-		doc.add(new Field(fieldName,  value.toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+	private void addUnTokenizedField(Document doc, FieldNames fieldName, Long value) {
+		doc.add(new Field(fieldName.getValue(),  value.toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
-	private void addUnTokenizedField(Document doc, String fieldName, Date value) {
-		doc.add(new Field(fieldName,  value.toGMTString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-	}
-	private void addUnTokenizedField(Document doc, String fieldName, Character value) {
-		doc.add(new Field(fieldName,  value.toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+	private void addUnTokenizedField(Document doc, FieldNames fieldName, Date value) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss.SSS");
+		doc.add(new Field(fieldName.getValue(),  sdf.format(value), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
-	private void indexFile(IndexWriter indexWriter, SVNDirEntry dirEntry, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
+	private void indexFile(Document doc, IndexWriter indexWriter, SVNDirEntry dirEntry, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
 		throws SVNException, IOException {
 			SVNProperties fileProperties = new SVNProperties();
 
-			SVNNodeKind nodeKind = repository.getRepository().checkPath(entryPath.getPath(), logEntry.getRevision());
+			SVNNodeKind nodeKind = null;
+			//if the entry has been deleted we will check the information about the entry 
+			//via the revision before...
+			LOGGER.debug("Before checking...");
+			nodeKind = repository.getRepository().checkPath(entryPath.getPath(), logEntry.getRevision());
+			LOGGER.debug("After checking...");
 
-			Document doc = new Document();
 			addUnTokenizedField(doc, FieldNames.REVISION, NumberUtils.pad(logEntry.getRevision()));
 
 			boolean isDir = nodeKind == SVNNodeKind.DIR;
 			boolean isFile = nodeKind == SVNNodeKind.FILE;
-			FileName fileName = new FileName(entryPath.getPath(), isDir);
-			LOGGER.info("FileName: '" + entryPath.getPath() + "'");
-			addUnTokenizedField(doc, FieldNames.PATH, fileName.getPath());
-
+			FileName fileName = null;
 			if (isDir) {
 				LOGGER.debug("The " + entryPath.getPath() + " is a directory entry.");
 				addUnTokenizedField(doc, FieldNames.NODE, "dir");
+				fileName = new FileName(entryPath.getPath(), true);
 			} else if (isFile) {
 				LOGGER.debug("The " + entryPath.getPath() + " is a file entry.");
 				addUnTokenizedField(doc, FieldNames.NODE, "file");
+				fileName = new FileName(entryPath.getPath(), false);
 			} else {
 				//This means a file/directory has been deleted.
 				addUnTokenizedField(doc, FieldNames.NODE, "unknown");
 				LOGGER.debug("The " + entryPath.getPath() + " is an unknown entry.");
+
+				//We would like to know what is has been?
+				//Directory? File? So we go a step back in History...
+				long rev = logEntry.getRevision() - 1;
+				SVNNodeKind nodeKindUnknown = repository.getRepository().checkPath(entryPath.getPath(), rev);
+				LOGGER.debug("NodeKind(" + rev + "): " + nodeKindUnknown.toString());
+				fileName = new FileName(entryPath.getPath(), nodeKindUnknown == SVNNodeKind.DIR);
 			}
 
+			LOGGER.debug("FileNameCheck: entryPath   -> kind:" + nodeKind.toString() + " path:" + entryPath.getPath());
+			LOGGER.debug("FileNameCheck:                path:'" + fileName.getPath() + "' filename:'" + fileName.getBaseName() + "'");
+			//TODO: We have to check if we need to set localization
+			addUnTokenizedField(doc, FieldNames.PATH, fileName.getPath().toLowerCase());
+			addUnTokenizedField(doc, FieldNames.DPATH, fileName.getPath());
+			
 			//Does a copy operation took place...
 			if (entryPath.getCopyPath() != null) {
 				addUnTokenizedField(doc, FieldNames.FROM, entryPath.getCopyPath());
 				addUnTokenizedField(doc, FieldNames.FROMREV, entryPath.getCopyRevision());
 			}
 
-			addUnTokenizedField(doc, FieldNames.FILENAME, entryPath.getPath());
+			//The field we use for searching is stored as lowercase.
+			//TODO: We have to check if we need to set localization
+			addUnTokenizedField(doc, FieldNames.FILENAME, fileName.getBaseName().toLowerCase());
+			//The field we use to display the filename is stored as case as in the original.
+			addUnTokenizedField(doc, FieldNames.DFILENAME, fileName.getBaseName());
+
 			addUnTokenizedField(doc, FieldNames.AUTHOR, logEntry.getAuthor() == null ? "" : logEntry.getAuthor());
 
 			//We will add the message as tokenized field to be able to search within the log messages.
 			addTokenizedField(doc, FieldNames.MESSAGE, logEntry.getMessage() == null ? "" : logEntry.getMessage());
 			addUnTokenizedField(doc, FieldNames.DATE, logEntry.getDate());
 
-			addUnTokenizedField(doc, FieldNames.KIND, entryPath.getType());
+			addUnTokenizedField(doc, FieldNames.KIND, String.valueOf(entryPath.getType()).toLowerCase());
 
 //TODO: May be don't need this if we use repository name?
 			addUnTokenizedField(doc, FieldNames.REPOSITORYUUID, repository.getRepository().getRepositoryUUID(false));
@@ -256,7 +345,8 @@ public class ScanRepository {
 				//The given entry is a file.
 				//This means we will get every file from the repository....
 				//Get only the properties of the file
-				
+
+				addTokenizedField(doc, FieldNames.SIZE, Long.toString(dirEntry.getSize()));
 				repository.getRepository().getFile(entryPath.getPath(), logEntry.getRevision(), fileProperties, null);
 				indexProperties(fileProperties, doc);
 
@@ -283,19 +373,9 @@ public class ScanRepository {
 		for (Iterator<String> iterator = list.nameSet().iterator(); iterator.hasNext();) {
 			String propname = (String) iterator.next();
 			LOGGER.debug("Indexing property: " + propname); 
-			addUnTokenizedField(doc, propname, list.getStringValue(propname));
+			addUnTokenizedField(doc, propname, list.getStringValue(propname).toLowerCase());
+			addUnTokenizedField(doc, DISPLAY_PROPERTIES_PREFIX + propname, list.getStringValue(propname));
 		}
-	}
-
-	private SVNDirEntry getInformationAboutEntry(Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) {
-		SVNDirEntry dirEntry = null;
-		try {
-			LOGGER.debug("getInformationAboutEntry() name:" + entryPath.getPath() + " rev:" + logEntry.getRevision());
-			dirEntry = repository.getRepository().info(entryPath.getPath(), logEntry.getRevision());
-		} catch (SVNException e) {
-			LOGGER.error("Unexpected Exception: " + e);
-		}
-		return dirEntry;
 	}
 
 	public long getStartRevision() {
@@ -328,6 +408,14 @@ public class ScanRepository {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isAbbort() {
+		return abbort;
+	}
+
+	public void setAbbort(boolean abbort) {
+		this.abbort = abbort;
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -31,10 +31,10 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
-import org.ini4j.InvalidIniFormatException;
-import org.ini4j.Ini.Section;
+import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Profile.Section;
 
-import com.soebes.supose.config.ini.IniFileEntryNames;
+import com.soebes.supose.config.ini.IReposConfig;
 
 /**
  * This class will handle the configuration for the Job
@@ -42,35 +42,44 @@ import com.soebes.supose.config.ini.IniFileEntryNames;
  * @author Karl Heinz Marbaise
  */
 public class RepositoryJobConfiguration {
-	private static Logger LOGGER = Logger.getLogger(RepositoryConfiguration.class);
+	private static Logger LOGGER = Logger.getLogger(RepositoryJobConfiguration.class);
+	
+	private String REPOSITORY_CONFIG_SECTION = "repositoryJobConfiguration"; 
 
 	private String configFile;
 	private Ini iniFile;
 	private boolean newCreated;
 
+	private IReposConfig configData;
+
+	private RepositoryConfiguration reposConfig;
+
 	public RepositoryJobConfiguration(String configFile, RepositoryConfiguration reposConfig) throws Exception {
 		setConfigFile(configFile);
+		setReposConfig(reposConfig);
 		File f = new File(configFile);
 		if (f.exists()) {
 			setNewCreated(false);
 			try {
 				FileInputStream fin = new FileInputStream(f);
 				iniFile = new Ini(fin);
-			} catch (InvalidIniFormatException e) {
-				LOGGER.error("The format of the given INI is not correct. " + e);
+				configData = iniFile.get(REPOSITORY_CONFIG_SECTION).as(IReposConfig.class);
+			} catch (InvalidFileFormatException e) {
+				LOGGER.error("The format of the given INI is not correct. ", e);
 				throw e;
 			} catch (IOException e) {
-				LOGGER.error("Some problems happen with the INI File " + e);
+				LOGGER.error("Some problems happen with the INI File ", e);
 				throw e;
 			}
 		} else {
+			LOGGER.debug("We will create a new configuration file " + configFile);
 			setNewCreated(true);
 			//The first time. We will create a new configuration file.
 			iniFile = new Ini();
-			iniFile.add("repositoryJobConfiguration");
-			Section section = iniFile.get("repositoryJobConfiguration");
-			section.put(IniFileEntryNames.FROMREV, Long.toString(reposConfig.getFromRev()));
-			section.put(IniFileEntryNames.TOREV, reposConfig.getToRev());
+			iniFile.add(REPOSITORY_CONFIG_SECTION);
+			configData = iniFile.get(REPOSITORY_CONFIG_SECTION).as(IReposConfig.class);
+			configData.setFromrev(Long.toString(reposConfig.getFromRev()));
+			configData.setTorev(reposConfig.getToRev());
 			try {
 				if (f.createNewFile()) {
 					FileWriter out = new FileWriter(f);
@@ -78,20 +87,30 @@ public class RepositoryJobConfiguration {
 					out.close();
 				}
 			} catch (Exception e) {
-				LOGGER.error("We had a problem to write the new configuration file " + e);
+				LOGGER.error("We had a problem to write the new configuration file ", e);
 			}
 		}
+	}
+
+	public RepositoryConfiguration getReposConfig() {
+		return reposConfig;
+	}
+
+	public void setReposConfig(RepositoryConfiguration reposConfig) {
+		this.reposConfig = reposConfig;
 	}
 
 	public void save() {
 		try {
 			LOGGER.debug("Trying to write new configuration.");
 			FileWriter out = new FileWriter(new File(getConfigFile()));
+			Section sec = iniFile.get(REPOSITORY_CONFIG_SECTION);
+			sec.from(configData);
 			iniFile.store(out);
 			out.close();
 			LOGGER.debug("Writing of new configuration file '" + getConfigFile() + "'sucessful.");
 		} catch (Exception e) {
-			LOGGER.error("Unexpected exception: " + e);
+			LOGGER.error("Unexpected exception: ", e);
 		}
 	}
 
@@ -110,6 +129,15 @@ public class RepositoryJobConfiguration {
 	public void setNewCreated(boolean newCreated) {
 		this.newCreated = newCreated;
 	}
+
+	public IReposConfig getConfigData() {
+		return configData;
+	}
+
+	public void setConfigData(IReposConfig configData) {
+		this.configData = configData;
+	}
+
 
 }
 

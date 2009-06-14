@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -72,11 +72,12 @@ public class IndexHelper {
 			for (int i = 0; i < indexList.size(); i++) {
 				fsDirs[i] = FSDirectory.getDirectory(indexList.get(i));
 			}
-			indexWriter.addIndexes(fsDirs);
+			indexWriter.addIndexesNoOptimize(fsDirs);
+			indexWriter.optimize();
 			indexWriter.close();
 			LOGGER.info("Merging of indexes succesfull.");
 		} catch (Exception e) {
-			LOGGER.error("Something wrong during merge of index: " + e);
+			LOGGER.error("Something wrong during merge of index: ", e);
 		}
 	}
 

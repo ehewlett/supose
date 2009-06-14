@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -45,6 +45,7 @@ public class RepositoryTest {
 		assertNotNull(confRepos, "We had expected to get an instance");
 	}
 
+	@Test(enabled = false)
 	public void testConnection() {
     	RepositoryConfiguration reposConfig = confRepos.getRepositoryConfiguration(confRepos.getNames()[0]);
     	assertNotNull(reposConfig, "We had expected to get a configuration for a single repository.");

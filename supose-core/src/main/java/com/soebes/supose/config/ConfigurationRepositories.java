@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -29,7 +29,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
-import org.ini4j.InvalidIniFormatException;
+import org.ini4j.InvalidFileFormatException;
 
 
 /**
@@ -46,10 +46,10 @@ public class ConfigurationRepositories {
 		setConfigFile(configFile);
 		try {
 			iniFile = new Ini(new FileInputStream(configFile));
-		} catch (InvalidIniFormatException e) {
-			LOGGER.error("The format of the given INI is not correct. " + e);
+		} catch (InvalidFileFormatException e) {
+			LOGGER.error("The format of the given INI is not correct. ", e);
 		} catch (IOException e) {
-			LOGGER.error("Some problems happen with the INI File " + e);
+			LOGGER.error("Some problems happen with the INI File ", e);
 		}
 	}
 

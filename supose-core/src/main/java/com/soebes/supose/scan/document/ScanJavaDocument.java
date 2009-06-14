@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -45,7 +45,7 @@ public class ScanJavaDocument extends AScanDocument {
 
 	@Override
 	public void indexDocument(Repository repository, SVNDirEntry dirEntry, String path, long revision) {
-		LOGGER.info("Scanning Java file");
+		LOGGER.debug("Scanning Java file");
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			//This means we get the contents of the file only. No properties.
@@ -54,11 +54,11 @@ public class ScanJavaDocument extends AScanDocument {
 
 			scanJavaFile(str);
 		} catch (SVNException e) {
-			LOGGER.error("Exception by SVN: " + e);
+			LOGGER.error("Exception by SVN: ", e);
 		} catch (Exception e) {
-			LOGGER.error("Something has gone wrong with JavaDocuments " + e);
+			LOGGER.error("Something has gone wrong with JavaDocuments ", e);
 		}
-		LOGGER.info("Scanning of Java file done.");
+		LOGGER.debug("Scanning of Java file done.");
 	}
 
 	
@@ -87,7 +87,7 @@ public class ScanJavaDocument extends AScanDocument {
 				addTokenizedField(FieldNames.COMMENTS, item);
 			}
 		} catch (Exception e) {
-			LOGGER.error("We had an error during the parsing process." + e);
+			LOGGER.error("We had an error during the parsing process.", e);
 		}		
 	}
 }

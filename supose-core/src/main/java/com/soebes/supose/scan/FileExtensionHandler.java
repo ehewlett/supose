@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -60,20 +60,22 @@ public class FileExtensionHandler {
 					dh.setDocument(doc);
 					dh.indexDocument(repository, dirEntry, path, revision);
 				} catch (ClassNotFoundException e) {
-					LOGGER.error("Cannot create instance of : " + className + " " + e);
+					LOGGER.error("Cannot create instance of : " + className, e);
 				} catch (InstantiationException e) {
-					LOGGER.error("Cannot create an instance of : " + className + " " + e);
+					LOGGER.error("Cannot create an instance of : " + className, e);
 				} catch (IllegalAccessException e) {
-					LOGGER.error("Illegal Access of instance of : " + className + " " + e);
+					LOGGER.error("Illegal Access of instance of : " + className, e);
+				} catch (Exception e) {
+					LOGGER.error("Exception happened during scanning of " + dirEntry.getName() + " for class " + className, e);
 				}
 			} catch (Exception e) {
 				//There is no entry for the extension so we use the default
 				//scanner for all other document types.
-				LOGGER.info("There is no property entry defined for the file extension '" + fn.getExt() + "'");
+				LOGGER.warn("There is no property entry defined for the file extension '" + fn.getExt() + "' (" + dirEntry.getRevision() + ")", e);
 				indexDefaultDoc(repository, dirEntry, path, revision);
 			}
 		} else {
-			LOGGER.info("We have no file extension found for the file '" + path + "'");
+			LOGGER.warn("We have no file extension found for the file '" + path + "' (r" + dirEntry.getRevision() + ")");
 			indexDefaultDoc(repository, dirEntry, path, revision);
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -37,7 +37,6 @@ import java.io.File;
  */
 public class FileName {
 
-	private String fileName;
     private String name;
     private String ext;
     private String baseName;
@@ -63,13 +62,16 @@ public class FileName {
     	}
 
     	File f = new File(fileName);
-    	if (!isDir) {
-    		setBaseName(f.getName());
-    	} else {
+    	if (isDir) {
+    		if (!fileName.endsWith("/")) {
+    			fileName += "/";
+    		}
     		setPath(fileName);
+    	} else {
+    		setBaseName(f.getName());
     	}
 
-    	if (getBaseName().lastIndexOf('.') > 0) {
+    	if (getBaseName().lastIndexOf('.') >= 0) {
     		setExt(getBaseName().substring(getBaseName().lastIndexOf('.') + 1));
     		setPath(fileName.substring(0, fileName.length() - getBaseName().length()));
     	}
@@ -114,10 +116,6 @@ public class FileName {
         this.name = name;
     }
 
-    public String getFileName() {
-    	return fileName;
-    }
-
 	public String getBaseName() {
 		return baseName;
 	}
@@ -132,10 +130,6 @@ public class FileName {
 
 	public void setPath(String path) {
 		this.path = path;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
 	}
 
 	public String getNameWithoutExtension() {

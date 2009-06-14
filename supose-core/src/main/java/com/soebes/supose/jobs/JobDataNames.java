@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -28,5 +28,6 @@ public final class JobDataNames {
 	public final static String REPOSITORY = "repository";
 	public final static String REPOSITORYCONFIGURATION = "repositoryConfiguraion";
 	public final static String INDEX = "index";
+	// TODO: Change the name of BASEDIR or the value
 	public final static String BASEDIR = "configDir";
 }

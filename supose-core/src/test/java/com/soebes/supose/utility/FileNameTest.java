@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -25,6 +25,8 @@
 package com.soebes.supose.utility;
 
 import static org.testng.Assert.assertEquals;
+
+import java.io.File;
 
 import org.testng.annotations.Test;
 
@@ -95,7 +97,7 @@ public class FileNameTest {
 		assertEquals(fn.getExt(), "", "The extension is not as expected.");
 		assertEquals(fn.getBaseName(), "", "The basename is not as expected.");
 		assertEquals(fn.getNameWithoutExtension(), "", "The name without extension is not as expected.");
-		assertEquals(fn.getPath(), "/branches", "The path is not as expected.");
+		assertEquals(fn.getPath(), "/branches/", "The path is not as expected.");
 	}
 
 	public void testF70() {
@@ -106,4 +108,23 @@ public class FileNameTest {
 		assertEquals(fn.getNameWithoutExtension(), "", "The name without extension is not as expected.");
 		assertEquals(fn.getPath(), "/", "The path is not as expected.");
 	}
+	
+	public void testF80() {
+		String fileName = "/tags/1.5.o-beta1";
+		FileName fn = new FileName(fileName, true);
+		assertEquals(fn.getExt(), "", "The extension is not as expected.");
+		assertEquals(fn.getBaseName(), "", "The basename is not as expected.");
+		assertEquals(fn.getNameWithoutExtension(), "", "The name without extension is not as expected.");
+		assertEquals(fn.getPath(), "/tags/1.5.o-beta1/", "The path is not as expected.");
+	}
+	
+	public void testF90() {
+		String fileName = "/branches/B_0.4.0/.project";
+		FileName fn = new FileName(fileName, false);
+		assertEquals(fn.getExt(), "project", "The extension is not as expected.");
+		assertEquals(fn.getBaseName(), ".project", "The basename is not as expected.");
+		assertEquals(fn.getNameWithoutExtension(), "", "The name without extension is not as expected.");
+		assertEquals(fn.getPath(), "/branches/B_0.4.0/", "The path is not as expected.");
+	}
+	
 }

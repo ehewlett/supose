@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -24,7 +24,7 @@
  */
 package com.soebes.supose.config;
 
-import org.ini4j.Ini.Section;
+import org.ini4j.Profile.Section;
 
 import com.soebes.supose.config.ini.IniFileEntryNames;
 

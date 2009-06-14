@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -51,7 +51,7 @@ public class ScanHTMLDocument extends AScanDocument {
 
 	@Override
 	public void indexDocument(Repository repository, SVNDirEntry dirEntry, String path, long revision) {
-		LOGGER.info("Scanning document");
+		LOGGER.debug("Scanning document");
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			//This means we get the contents of the file only. No properties.
@@ -59,9 +59,9 @@ public class ScanHTMLDocument extends AScanDocument {
 			ByteArrayInputStream str = new ByteArrayInputStream(baos.toByteArray());
 			scan(str, path);
 		} catch (SVNException e) {
-			LOGGER.error("Exception by SVN: " + e);
+			LOGGER.error("Exception by SVN: ", e);
 		} catch (Exception e) {
-			LOGGER.error("Something has gone wrong with ExcelDocuments " + e);
+			LOGGER.error("Something has gone wrong with ExcelDocuments ", e);
 		}
 	}
 
@@ -74,12 +74,12 @@ public class ScanHTMLDocument extends AScanDocument {
 			parser.parse(in, handler, metadata);
 			addTokenizedField(FieldNames.CONTENTS, handler.toString());
 		} catch (Exception e) {
-			LOGGER.error("We had an exception: " + e);
+			LOGGER.error("We had an exception: ", e);
 		} finally {
 			try {
 				in.close();
 			} catch (Exception e) {
-				LOGGER.error("We had an exception during closing: " + e);
+				LOGGER.error("We had an exception during closing: ", e);
 			}
 		}
 	}

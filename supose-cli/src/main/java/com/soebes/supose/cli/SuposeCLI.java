@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -27,7 +27,10 @@ package com.soebes.supose.cli;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli2.CommandLine;
 import org.apache.commons.cli2.OptionException;
@@ -35,18 +38,9 @@ import org.apache.commons.cli2.util.HelpFormatter;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Searcher;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.TopDocs;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -66,7 +60,9 @@ import com.soebes.supose.jobs.JobSchedulerListener;
 import com.soebes.supose.jobs.RepositoryScanJob;
 import com.soebes.supose.repository.Repository;
 import com.soebes.supose.scan.ScanRepository;
-import com.soebes.supose.search.CustomQueryParser;
+import com.soebes.supose.search.ResultEntry;
+import com.soebes.supose.search.SearchRepository;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * This will define the Command Line Version of SupoSE.
@@ -91,10 +87,10 @@ public class SuposeCLI {
 
 		if (commandLine.hasOption(suposecli.getGlobalOptionH())) {
 	        final StringWriter out = new StringWriter();
-	        final HelpFormatter helpFormatter = new HelpFormatter();
-	        helpFormatter.setGroup(suposecli.getSuposeOptions());
-	        helpFormatter.setPrintWriter(new PrintWriter(out));
-	        helpFormatter.printHelp();
+	        final HelpFormatter hf = new HelpFormatter();
+	        hf.setGroup(suposecli.getSuposeOptions());
+	        hf.setPrintWriter(new PrintWriter(out));
+	        hf.printHelp();
 	        System.out.println(out);
 	        System.exit(0);
 		} else if (commandLine.hasOption(suposecli.getScanCommand())) {
@@ -139,6 +135,15 @@ public class SuposeCLI {
 		);
 		Repository repository = new Repository(url, authManager);
 
+		CLIInterceptor interceptor = new CLIInterceptor();
+		scanRepository.registerScanInterceptor(interceptor);
+		
+		CLILogEntryInterceptor logEntryInterceptor = new CLILogEntryInterceptor();
+		scanRepository.registerLogEntryInterceptor(logEntryInterceptor);
+
+		CLIChangeSetInterceptor changeSetInterceptor = new CLIChangeSetInterceptor();
+		scanRepository.registerChangeSetInterceptor(changeSetInterceptor);
+		
 		scanRepository.setRepository(repository);
 
 		//We start with the revision which is given on the command line.
@@ -262,86 +267,87 @@ public class SuposeCLI {
 		IndexHelper.mergeIndex(destination, indexList);
 	}
 
+	private static List<FieldNames> getDisplayFields(List<String> cliFields) {
+		//Here we translate the search fields into the fields which are displayed.
+		List<FieldNames> cliDisplayFields = new ArrayList<FieldNames>();
+		for (String fieldName : cliFields) {
+			if (fieldName.equals(FieldNames.FILENAME.getValue())) {
+				cliDisplayFields.add(FieldNames.DFILENAME);
+			} else if (fieldName.equals(FieldNames.PATH.getValue())) {
+				cliDisplayFields.add(FieldNames.DPATH);
+			} else {
+				FieldNames fn = FieldNames.valueOf(fieldName.toUpperCase());
+				cliDisplayFields.add(fn);
+			}
+		}
+		return cliDisplayFields;
+	}
+
 	private static void runSearch(SearchCommand searchCommand) {
 		LOGGER.info("Searching started...");
 		String indexDirectory = searchCommand.getIndexDir(commandLine);
 		String queryLine = searchCommand.getQuery(commandLine);
+		boolean xml = searchCommand.getXML(commandLine);
 		List<String> cliFields = searchCommand.getFields(commandLine);
+		
+		SearchRepository searchRepository = new SearchRepository(indexDirectory);
 
-		System.out.println("Query: '" + queryLine + "'");
+		List<ResultEntry> result = searchRepository.getResult(queryLine);
+		
+		if (xml) {
+			XStream xstream = new XStream();
+			xstream.alias("entry", ResultEntry.class);
+			System.out.println(xstream.toXML(result));
+		} else {
+			System.out.println("Query: '" + queryLine + "'");
+			
+			if (cliFields.size() > 0) {
+				for(int i=0; i<cliFields.size(); i++) {
+					System.out.print("Field[" + i + "]=" + cliFields.get(i) + " ");
+				}
+			} else {
+				cliFields = new ArrayList<String>();
+				//If nothings is given on command line we have to define 
+				//default fields which will be printed
+				cliFields.add(FieldNames.REVISION.getValue());
+				cliFields.add(FieldNames.DFILENAME.getValue());
+				cliFields.add(FieldNames.PATH.getValue());
+				cliFields.add(FieldNames.KIND.getValue());
+			}
+			List<FieldNames> cliDisplayFields = getDisplayFields(cliFields);
 
-		for(int i=0; i<cliFields.size(); i++) {
-			System.out.print("Field[" + i + "]=" + cliFields.get(i) + " ");
-		}
-		System.out.println("");
-
-	    IndexReader reader = null;
-	    
-	    try {
-	    	
-	    	reader = IndexReader.open(indexDirectory);
-	    	
-	    	Searcher searcher = new IndexSearcher(reader);
-	    	Analyzer analyzer = new StandardAnalyzer();
-//	    	Analyzer analyzer = new KeywordAnalyzer();
-
-	    	//Sort primary based on Revision
-	    	//secondary by filename.
-	    	SortField[] sf = {
-	    		new SortField(FieldNames.REVISION),
-	    		new SortField(FieldNames.FILENAME),
-	    	};
-	    	Sort sort = new Sort(sf);
-	    	//Here we define the default field for searching.
-	        QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
-	        //We will allow using a wildcard at the beginning of the expression.
-	        parser.setAllowLeadingWildcard(true);
-	        //The search term will not be expanded to lowercase.
-	        parser.setLowercaseExpandedTerms(false);
-	        Query query = parser.parse(queryLine);
-
-	        //That's not the best idea...but currently i have not better solution for this...
-	        TopDocs tmp = searcher.search(query, null, 20, sort);
-		    TopDocs result = searcher.search(query, null, tmp.totalHits, sort);
-
-		    System.out.println("Query analyzer:" + query.toString());
-			System.out.println("Total Hits: " + result.totalHits);
-		    for (int i = 0; i < result.scoreDocs.length; i++) {
-		    	Document hit = searcher.doc(result.scoreDocs[i].doc);
-				List<Field> fieldList = hit.getFields();
-				System.out.print((i+1) + ". ");
-				for(int k=0; k<fieldList.size();k++) {
-					Field field = (Field) fieldList.get(k);
-					if ((cliFields.size() > 0) && cliFields.contains(field.name())) {
-						System.out.print(field.name() + ": " + field.stringValue() + " ");
+			if (result == null) {
+				System.out.println("Somethings has gone wrong. Check the log file output!");
+				return;
+			}
+			System.out.println("Total Hits: " + result.size());
+			
+			long count = 1;
+			for (ResultEntry item : result) {
+				System.out.printf("%6d: ", count);
+				for (FieldNames fn : cliDisplayFields) {
+					if (fn.equals(FieldNames.PROPERTIES)) {
+						//Properties will be put into separate lines
+						System.out.println("");
+						Map<String, String> properties = item.getProperties();
+						for (Map.Entry<String, String> prop : properties.entrySet()) {
+							System.out.println(" --> K:" + prop.getKey() + " V:" + prop.getValue());
+						}
 					} else {
-						if (FieldNames.FILENAME.equals(field.name())) {
-							System.out.print("F:" + field.stringValue() + " ");
-						}
-						if (FieldNames.REVISION.equals(field.name())) {
-							long rev = Long.parseLong(field.stringValue());
-							System.out.print("R:" + rev + " ");
-						}
-						if (FieldNames.KIND.equals(field.name())) {
-							System.out.print("K:" + field.stringValue() + " ");
-						}
+						Object attribute = searchRepository.callGetterByName(item, fn.getValue());
+						System.out.print(fn.name() + ":" + attribute + " ");
 					}
 				}
 				System.out.println("");
+				count++;
 			}
-			
-	    } catch (CorruptIndexException e) {
-			System.err.println("Error: The index is corrupted: " + e);
-	    } catch (IOException e) {
-			System.err.println("Error: IOException: " + e);
-		} catch (Exception e) {
-			System.err.println("Error: Something has gone wrong: " + e);
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				System.err.println("Error: IOException during close(): " + e);
-			}
+		}
+
+		IndexReader reader = searchRepository.getReader();
+		try {
+			reader.close();
+		} catch (IOException e) {
+			LOGGER.error("Error during closing of the index happened: ", e);
 		}
 	}
 

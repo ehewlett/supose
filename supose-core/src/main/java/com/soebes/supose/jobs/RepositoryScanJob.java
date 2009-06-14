@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -30,10 +30,12 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.quartz.InterruptableJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
+import org.quartz.UnableToInterruptJobException;
 
 import com.soebes.supose.config.RepositoryConfiguration;
 import com.soebes.supose.config.RepositoryJobConfiguration;
@@ -42,8 +44,10 @@ import com.soebes.supose.index.IndexHelper;
 import com.soebes.supose.repository.Repository;
 import com.soebes.supose.scan.ScanRepository;
 
-public class RepositoryScanJob implements StatefulJob {
+public class RepositoryScanJob implements InterruptableJob, StatefulJob {
 	private static Logger LOGGER = Logger.getLogger(RepositoryScanJob.class);
+
+	private boolean shutdown = false;
 
 	private ScanRepository scanRepos = null;
 	private RepositoryJobConfiguration jobConfig = null;
@@ -77,16 +81,17 @@ public class RepositoryScanJob implements StatefulJob {
 		String jobIndexName = baseDir + File.separator + "index." + reposConfig.getRepositoryName();
 		String resultIndexName = baseDir + File.separator + reposConfig.getResultIndex();
 
-		LOGGER.info("Revision: " + repos.getRepository().getLatestRevision() + " FromRev:" + reposConfig.getFromRev());
-		if (repos.getRepository().getLatestRevision() > reposConfig.getFromRev()) {
+		LOGGER.info("Repository Revision: " + repos.getRepository().getLatestRevision() + " Configuration File FromRev:" + jobConfig.getConfigData().getFromrev());
+		long fromRev = Long.parseLong(jobConfig.getConfigData().getFromrev());
+		if (repos.getRepository().getLatestRevision() > fromRev) {
 
-			long startRev = 1;
+			long startRev = 0;
 			if (jobConfig.isNewCreated()) {
 				LOGGER.info("This is the first time we scan the repository.");
-				startRev = reposConfig.getFromRev();
+				startRev = jobConfig.getReposConfig().getFromRev();
 			} else {
 				LOGGER.info("This is n'th time we scan the repository.");
-				startRev += reposConfig.getFromRev();
+				startRev += jobConfig.getReposConfig().getFromRev();
 			}
 			long endRev = repos.getRepository().getLatestRevision();
 			scanRepos.setRepository(repos);
@@ -108,17 +113,19 @@ public class RepositoryScanJob implements StatefulJob {
 				indexWriter.optimize();
 				indexWriter.close();
 			} catch (CorruptIndexException e) {
-				LOGGER.error("Corrupted index: " + e);
+				LOGGER.error("Corrupted index: ", e);
 			} catch (IOException e) {
-				LOGGER.error("IOException during closing of index: " + e);
+				LOGGER.error("IOException during closing of index: ", e);
 			}
 
 			//Merge the created index into the target index...
 			IndexHelper.mergeIndex(resultIndexName, jobIndexName);
 
 			//save the configuration file with the new revision numbers.
-			reposConfig.setFromRev(endRev);
+			jobConfig.getConfigData().setFromrev(Long.toString(endRev));
 			//store the changed configuration items.
+
+			LOGGER.info("Revision: FromRev:" + jobConfig.getConfigData().getFromrev() + " ToRev:" + jobConfig.getConfigData().getTorev());
 			jobConfig.save();
 		} else {
 			LOGGER.info("Nothing to do, cause no changes had been made at the repository.");
@@ -132,8 +139,22 @@ public class RepositoryScanJob implements StatefulJob {
 		try {
 			subexecute(context);
 		} catch (Exception e) {
-			LOGGER.error("We had an unexpected Exception: " + e);
+			LOGGER.error("We had an unexpected Exception: ", e);
 		}
+	}
+
+	public void interrupt() throws UnableToInterruptJobException {
+		LOGGER.info("Shutdown Signal received.");
+		setShutdown(true);
+		scanRepos.setAbbort(true);
+	}
+
+	public void setShutdown(boolean shutdown) {
+		this.shutdown = shutdown;
+	}
+
+	public boolean isShutdown() {
+		return shutdown;
 	}
 	
 }

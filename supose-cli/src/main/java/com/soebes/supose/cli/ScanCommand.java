@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -23,8 +23,6 @@
  * just write an email to license@soebes.de
  */
 package com.soebes.supose.cli;
-
-import java.util.List;
 
 import org.apache.commons.cli2.CommandLine;
 import org.apache.commons.cli2.Group;
@@ -54,39 +52,76 @@ public class ScanCommand extends CLIBase {
     	optionURL = obuilder
     		.withShortName("U")
     		.withLongName("url")
-    		.withArgument(abuilder.withName("url").create())
+    		.withRequired(true)
+    		.withArgument(
+    			abuilder
+    			.withName("url")
+    			.withMinimum(1)
+    			.withMaximum(1)
+    			.create()
+    		)
     		.withDescription("Define the position where to find the index created by an scan.")
     		.create();
     	
     	optionUsername = obuilder
 			.withLongName("username")
-			.withArgument(abuilder.withName("username").create())
+			.withArgument(
+				abuilder
+				.withName("username")
+				.withMinimum(1)
+				.withMaximum(1)
+				.create()
+			)
 			.withDescription("Define the username which is used to make an authorization against the Subversion repository.")
 			.create();
 
     	optionPassword = obuilder
     		.withShortName("p")
 			.withLongName("password")
-			.withArgument(abuilder.withName("password").create())
+			.withArgument(
+				abuilder
+				.withName("password")
+				.withMinimum(1)
+				.withMaximum(1)
+				.create()
+			)
 			.withDescription("Define the password which is used to make an authorization against the Subversion repository.")
 			.create();
 
     	optionFromRev = obuilder
 			.withLongName("fromrev")
-			.withArgument(abuilder.withName("fromrev").create())
+			.withArgument(
+				abuilder
+				.withName("fromrev")
+				.withMinimum(1)
+				.withMaximum(1)
+				.create()
+			)
 			.withDescription("Define the revision from which we will start to scan the repository.")
 			.create();
 
     	optionToRev = obuilder
 	    	.withLongName("torev")
-	    	.withArgument(abuilder.withName("torev").create())
+	    	.withArgument(
+	    		abuilder
+	    		.withName("torev")
+				.withMinimum(1)
+				.withMaximum(1)
+	    		.create()
+	    	)
 	    	.withDescription("Define the revision to which we will scan the repository. If it's not given we scan til HEAD.")
 	    	.create();
 
     	optionIndexDir = obuilder
 			.withShortName("I")
 			.withLongName("index")
-			.withArgument(abuilder.withName("index").create())
+			.withArgument(
+				abuilder
+				.withName("index")
+				.withMinimum(1)
+				.withMaximum(1)
+				.create()
+			)
 			.withDescription("Define the index directory where the created index will be stored.")
 			.create();
 
@@ -145,66 +180,83 @@ public class ScanCommand extends CLIBase {
 		return cline.hasOption((getOptionCreate()));
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getURL (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionURL()));
-		if (list == null || list.size() == 0) {
-			return null;
+		String result = (String) cline.getValue((getOptionURL()));
+		if (result != null) {
+			return result.trim();
 		} else {
-			return list.get(0);
+			return null;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getUsername (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionUsername()));
-		if (list == null || list.size() == 0) {
+		String username = (String) cline.getValue((getOptionUsername()));
+		if (username == null) {
 			return null;
+		}
+		if (username.trim().length() > 0) {
+			return username.trim();
 		} else {
-			return list.get(0);
+			return null;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getPassword (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionPassword()));
-		if (list == null || list.size() == 0) {
+		String password = (String) cline.getValue((getOptionPassword()));
+		if (password == null) {
 			return null;
+		}
+		if (password.trim().length() > 0) {
+			return password.trim();
 		} else {
-			return list.get(0);
+			return null;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * This will extract the revision number which is given by 
+	 * the --fromrev option on command line.
+	 * --fromrev HEAD is also possible.
+	 * @param cline The command line which will be analyzed.
+	 * @return The revision number extracted from the command line
+	 *   or HEAD if given in the option.
+	 */
 	public Long getFromRev (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionFromRev()));
-		if (list == null || list.size() == 0) {
-			//Default value for --fromrev
-			return new Long(1);
-		} else {
-			return Long.parseLong(list.get(0));
+		String revision = (String) cline.getValue(getOptionFromRev());
+		Long result = new Long(1);
+		if (revision == null) {
+			return result;
 		}
+		revision = revision.trim();
+		if (revision.length() > 0) {
+			if ("HEAD".equalsIgnoreCase(revision)) {
+				result = SVNRevision.HEAD.getNumber();
+			} else {
+				result = Long.parseLong(revision);
+			}
+		}
+		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Long getToRev (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionToRev()));
-		if (list == null || list.size() == 0) {
-			//Default value for --torev HEAD
+		String revision = (String) cline.getValue((getOptionToRev()));
+		if (revision == null) {
 			return SVNRevision.HEAD.getNumber();
+		}
+		if (revision.trim().length() > 0) {
+			return Long.parseLong(revision.trim());
 		} else {
-			return Long.parseLong(list.get(0));
+			return SVNRevision.HEAD.getNumber();
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getIndexDir (CommandLine cline) {
-		List<String> list = cline.getValues((getOptionIndexDir()));
-		if (list == null || list.size() == 0) {
-			return "indexDir.test";
-		} else {
-			return list.get(0);
+		String indexDir = (String) cline.getValue((getOptionIndexDir()));
+		String result = "indexDir.test";
+		if (indexDir != null && indexDir.trim().length() > 0) {
+			result = indexDir.trim();
 		}
+		return result;
 	}
 	
 	

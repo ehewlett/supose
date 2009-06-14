@@ -1,5 +1,5 @@
 /**
- * The (S)ubversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
  * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
  * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
@@ -55,6 +55,7 @@ public class FileExtensionProperty {
 	public String getProperty(String propName) {
 		String s = properties.getProperty(propName);
 		if (s == null || s.length() == 0) {
+//FIXME: Create our own Exception class for this. Must be fixed in FileExtensionHandler as well			
 			throw new RuntimeException("The Property " + propName + " does not exist.");
 		}
 		return s;
