@@ -5,6 +5,26 @@
 		<author email="supose@soebes.de">Karl Heinz Marbaise</author>
 	</properties>
 	<body>
+		<release version="0.6.1 Bestla" date="2009-XX-XX" description="Bug Fix and Enhancement Release">
+			<action dev="Karl Heinz Marbaise" type="add" issue="178">
+				Now you can use the --xml option at the search command to produce an xml file as result output.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="212">
+				Now you can search for propery values as well Take a look at the issue for further explanations.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="209">
+				The PDFSUBJECT field has not been filled correctly. The PDFTITLE field was used instead.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="208">
+				Now the size information about a file will be stored into the index (FieldNames.SIZE).
+			</action>
+			<action dev="Karl Heinz Marbaise" type="add" issue="204" due-to="Christian Dehning">
+				Now you can use --fromrev HEAD to scan the HEAD revision only.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="206" due-to="Christian Dehning">
+				Fixed Bug in interceptors calculation of percentage rate.
+			</action>
+		</release>
 		<release version="0.6.0 Bebhionn" date="2009-06-01" description="Enhancement Release">
 			<action dev="Karl Heinz Marbaise" type="add">
 				We now can recognize Tags/Branches and Maven Tags and the information is stored

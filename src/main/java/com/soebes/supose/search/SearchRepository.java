@@ -26,10 +26,16 @@
 package com.soebes.supose.search;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.QueryParser;
@@ -42,6 +48,7 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TopDocs;
 
 import com.soebes.supose.FieldNames;
+import com.soebes.supose.scan.ScanRepository;
 
 public class SearchRepository {
 	private static Logger LOGGER = Logger.getLogger(SearchRepository.class);
@@ -63,6 +70,101 @@ public class SearchRepository {
 		setReader(null);
 	}
 
+	public Method getGetterByName(Class z, String name) {
+		Method[] methods = z.getMethods();
+		Method result = null;
+		for (Method method : methods) {
+			if (method.getName().toLowerCase().startsWith("get")) {
+				String m = method.getName().toLowerCase();
+				if (m.equals("get" + name.toLowerCase())) {
+//					System.out.println("MS:" + name);
+					result = method;
+				}
+			}
+		}
+		return result;
+	}
+	
+	
+	public Method getSetterByName(Class z, String name) {
+		Method[] methods = z.getMethods();
+		Method result = null;
+		for (Method method : methods) {
+			if (method.getName().toLowerCase().startsWith("set")) {
+				String m = method.getName().toLowerCase();
+				if (m.equals("set" + name.toLowerCase())) {
+//					System.out.println("MS:" + name);
+					result = method;
+				}
+			}
+		}
+		return result;
+	}
+	
+	
+	public Object callGetterByName(ResultEntry z, String name) {
+		Method m = getGetterByName(z.getClass(), name);
+		Object attribute = null;
+		if (m == null) {
+			LOGGER.fatal("Method get" + name + " not found!");
+			return attribute; 
+		}
+		try {
+			attribute = m.invoke(z);
+		} catch (IllegalArgumentException e) {
+			LOGGER.fatal("IllegalArgumentException", e);
+		} catch (IllegalAccessException e) {
+			LOGGER.fatal("IllegalAccessException", e);
+		} catch (InvocationTargetException e) {
+			LOGGER.fatal("InvocationTargetException", e);
+		}
+		return attribute;
+	}
+	
+	
+	public List<ResultEntry> getResult(String queryLine) {
+		TopDocs result = getQueryResult(queryLine);
+		ArrayList<ResultEntry> resultList = new ArrayList<ResultEntry>();
+		
+		try {
+			for (int i = 0; i < result.scoreDocs.length; i++) {
+		    	Document hit = getSearcher().doc(result.scoreDocs[i].doc);
+				List<Field> fieldList = hit.getFields();
+				ResultEntry re = new ResultEntry();
+				for(int k=0; k<fieldList.size();k++) {
+					Field field = (Field) fieldList.get(k);
+					Method method = getSetterByName(re.getClass(), field.name());
+					if (method != null) {
+//						System.out.println(
+//							"-> Name:" + field.name() 
+//							+ " " + field.stringValue()
+//							+ " [" + field.getBinaryLength() + "] "
+//							+ " Method:" + method.getName());
+						try {
+							method.invoke(re, field.stringValue());
+						} catch (IllegalArgumentException e) {
+							LOGGER.fatal("IllegalArgumentException", e);
+						} catch (IllegalAccessException e) {
+							LOGGER.fatal("IllegalAccessException", e);
+						} catch (InvocationTargetException e) {
+							LOGGER.fatal("InvocationTargetException", e);
+						}
+					} else {
+						if (field.name().startsWith(ScanRepository.DISPLAY_PROPERTIES_PREFIX)) {
+							//Only properties which starts with "D" are those which should be displayed.
+							//We assume we have found an field with an property.
+							re.addProperty(field.name().substring(ScanRepository.DISPLAY_PROPERTIES_PREFIX.length()), field.stringValue());
+						}
+					}
+				}
+				resultList.add(re);
+			}
+		} catch (Exception e) {
+			LOGGER.fatal("Exception", e);
+		}
+		return resultList;
+	}
+
 	public TopDocs getQueryResult(String queryLine) {
 	    IndexReader reader = null;
 	    TopDocs result = null;	    
@@ -75,12 +177,12 @@ public class SearchRepository {
 	    	Searcher searcher = new IndexSearcher(reader);
 	    	setSearcher(searcher);
 	    	SortField[] sf = {
-	    		new SortField(FieldNames.REVISION),
-	    		new SortField(FieldNames.DFILENAME), //We use for sorting the display Filename
+	    		new SortField(FieldNames.REVISION.toString()),
+	    		new SortField(FieldNames.DFILENAME.toString()), //We use for sorting the display Filename
 	    	};
 	    	Sort sort = new Sort(sf);
 	    	//Here we define the default field for searching.
-	        QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, getAnalyzer());
+	        QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS.toString(), getAnalyzer());
 	        //We will allow using a wildcard at the beginning of the expression.
 	        parser.setAllowLeadingWildcard(true);
 	        //The search term will not be expanded to lowercase.

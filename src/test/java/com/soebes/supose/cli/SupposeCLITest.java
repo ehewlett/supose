@@ -192,7 +192,37 @@ public class SupposeCLITest {
 		assertEquals(fromRev, 21, "We didn't get the expected fromRev value.");
 		assertEquals(toRev, SVNRevision.HEAD.getNumber(), "We didn't get the expected toRev value(HEAD).");
 	}
-	
+
+	public void testCommandFromRevHead() throws Exception {
+		final String[] args = new String[] { "scan",  "--url", "URL", "--fromrev", "head"};
+		CommandLine cl = suposecli.doParseArgs(args);
+		assertNotNull(cl, "The return value of the parse is null!");
+		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globel Help option not set.");
+		assertTrue(cl.hasOption(suposecli.getScanCommand()));
+
+		ScanCommand scanCommand = suposecli.getScliScanCommand();
+
+		long fromRev = scanCommand.getFromRev(cl);
+		long toRev = scanCommand.getToRev(cl);
+		assertEquals(fromRev, SVNRevision.HEAD.getNumber(), "We didn't get the expected HEAD for fromRev.");
+		assertEquals(toRev, SVNRevision.HEAD.getNumber(), "We didn't get the expected toRev value(HEAD).");
+	}
+
+	@Test(expectedExceptions = NumberFormatException.class)
+	public void testCommandFromRevWrongParameter() throws Exception {
+		final String[] args = new String[] { "scan",  "--url", "URL", "--fromrev", "elizabeth"};
+		CommandLine cl = suposecli.doParseArgs(args);
+		assertNotNull(cl, "The return value of the parse is null!");
+		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globel Help option not set.");
+		assertTrue(cl.hasOption(suposecli.getScanCommand()));
+
+		ScanCommand scanCommand = suposecli.getScliScanCommand();
+
+		long fromRev = scanCommand.getFromRev(cl);
+		//We will never reach till here...
+		assertEquals(fromRev, SVNRevision.HEAD.getNumber(), "We didn't get the expected HEAD for fromRev.");
+	}
+
 	public void testCommandFromToRev() throws Exception {
 		final String[] args = new String[] { "scan", "--url", "URL", "--fromrev", "156", "--torev", "200"};
 		CommandLine cl = suposecli.doParseArgs(args);
@@ -240,6 +270,50 @@ public class SupposeCLITest {
 		assertTrue(cl.hasOption(suposecli.getSearchCommand()));
 	}
 
+	@Test(expectedExceptions = OptionException.class)
+	public void testCommandSearchFieldsWrong() throws Exception {
+		final String[] args = new String[] { "search", "--fields", "test"};
+		CommandLine cl = suposecli.doParseArgs(args);
+		assertNotNull(cl, "The return value of the parse is null!");
+		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globle Help option set.");
+		assertTrue(cl.hasOption(suposecli.getSearchCommand()));
+	}
+
+	public void testCommandSearchFields() throws Exception {
+		final String[] args = new String[] { "search", "--fields", "author", "revision", "date"};
+		CommandLine cl = suposecli.doParseArgs(args);
+		assertNotNull(cl, "The return value of the parse is null!");
+		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globle Help option set.");
+		assertTrue(cl.hasOption(suposecli.getSearchCommand()));
+	}
+	
+	public void testCommandSearchFieldsResult() throws Exception {
+		final String[] args = new String[] { "search", "--fields", "author", "revision", "date"};
+		CommandLine cl = suposecli.doParseArgs(args);
+		assertNotNull(cl, "The return value of the parse is null!");
+		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globle Help option set.");
+		assertTrue(cl.hasOption(suposecli.getSearchCommand()));
+
+		SearchCommand searchCommand = suposecli.getScliSearchCommand();
+		List<String> cliFields = searchCommand.getFields(cl);
+		assertEquals(cliFields.get(0), "author");
+		assertEquals(cliFields.get(1), "revision");
+		assertEquals(cliFields.get(2), "date");
+		
+	}
+
+	public void testCommandSearchXML() throws Exception {
+		final String[] args = new String[] { "search", "--xml"};
+		CommandLine cl = suposecli.doParseArgs(args);
+		assertNotNull(cl, "The return value of the parse is null!");
+		assertFalse(cl.hasOption(suposecli.getGlobalOptionH()), "Globle Help option set.");
+		assertTrue(cl.hasOption(suposecli.getSearchCommand()));
+		SearchCommand searchCommand = suposecli.getScliSearchCommand();
+		
+		boolean xml = cl.hasOption(searchCommand.getOptionXML());
+		assertTrue(xml, "We had expected to get an activated XML flag.");
+	}
+	
 	public void testOptionHCommandSearch() throws Exception {
 		final String[] args = new String[] { "search", "-H" };
 		CommandLine cl = suposecli.doParseArgs(args);

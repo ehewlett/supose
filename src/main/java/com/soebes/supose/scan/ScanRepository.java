@@ -25,6 +25,7 @@
 package com.soebes.supose.scan;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -55,6 +56,8 @@ import com.soebes.supose.utility.FileName;
  *
  */
 public class ScanRepository extends ScanRepositoryBase {
+	public static final String DISPLAY_PROPERTIES_PREFIX = "d";
+
 	private static Logger LOGGER = Logger.getLogger(ScanRepository.class);
 
 	private boolean abbort;
@@ -113,6 +116,7 @@ public class ScanRepository extends ScanRepositoryBase {
 
         LOGGER.debug("We have " + logEntries.size() + " change sets to scan.");
         scanStart(logEntries.size());
+        long count = 1;
         for (Iterator entries = logEntries.iterator(); entries.hasNext();) {
             SVNLogEntry logEntry = (SVNLogEntry) entries.next();
 
@@ -128,12 +132,13 @@ public class ScanRepository extends ScanRepositoryBase {
             	
             	LOGGER.debug("changed paths:");
 				try {
-					scanBeginRevision(logEntry.getRevision(), logEntry.getChangedPaths().size());
+					scanBeginRevision(count, logEntry.getRevision(), logEntry.getChangedPaths().size());
 					workOnChangeSet(writer, repository, logEntry);
 				} catch (Exception e) {
 	            	LOGGER.error("Error during workOnChangeSet() ", e);
 				} finally {
-					scanEndRevision(logEntry.getRevision(), logEntry.getChangedPaths().size());
+					scanEndRevision(count, logEntry.getRevision(), logEntry.getChangedPaths().size());
+					count++;
 				}
             } else {
             	LOGGER.debug("No changed paths found!");
@@ -237,20 +242,24 @@ public class ScanRepository extends ScanRepositoryBase {
 		}
 	}
 
+	protected void addTokenizedField(Document doc, FieldNames fieldName, String value) {
+		doc.add(new Field(fieldName.getValue(),  value, Field.Store.YES, Field.Index.ANALYZED));
+	}
 	protected void addTokenizedField(Document doc, String fieldName, String value) {
 		doc.add(new Field(fieldName,  value, Field.Store.YES, Field.Index.ANALYZED));
+	}
+	private void addUnTokenizedField(Document doc, FieldNames fieldName, String value) {
+		doc.add(new Field(fieldName.getValue(),  value, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 	private void addUnTokenizedField(Document doc, String fieldName, String value) {
 		doc.add(new Field(fieldName,  value, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
-	private void addUnTokenizedField(Document doc, String fieldName, Long value) {
-		doc.add(new Field(fieldName,  value.toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+	private void addUnTokenizedField(Document doc, FieldNames fieldName, Long value) {
+		doc.add(new Field(fieldName.getValue(),  value.toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
-	private void addUnTokenizedField(Document doc, String fieldName, Date value) {
-		doc.add(new Field(fieldName,  value.toGMTString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-	}
-	private void addUnTokenizedField(Document doc, String fieldName, Character value) {
-		doc.add(new Field(fieldName,  value.toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+	private void addUnTokenizedField(Document doc, FieldNames fieldName, Date value) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss.SSS");
+		doc.add(new Field(fieldName.getValue(),  sdf.format(value), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
 	private void indexFile(Document doc, IndexWriter indexWriter, SVNDirEntry dirEntry, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
@@ -336,7 +345,8 @@ public class ScanRepository extends ScanRepositoryBase {
 				//The given entry is a file.
 				//This means we will get every file from the repository....
 				//Get only the properties of the file
-				
+
+				addTokenizedField(doc, FieldNames.SIZE, Long.toString(dirEntry.getSize()));
 				repository.getRepository().getFile(entryPath.getPath(), logEntry.getRevision(), fileProperties, null);
 				indexProperties(fileProperties, doc);
 
@@ -363,7 +373,8 @@ public class ScanRepository extends ScanRepositoryBase {
 		for (Iterator<String> iterator = list.nameSet().iterator(); iterator.hasNext();) {
 			String propname = (String) iterator.next();
 			LOGGER.debug("Indexing property: " + propname); 
-			addUnTokenizedField(doc, propname, list.getStringValue(propname));
+			addUnTokenizedField(doc, propname, list.getStringValue(propname).toLowerCase());
+			addUnTokenizedField(doc, DISPLAY_PROPERTIES_PREFIX + propname, list.getStringValue(propname));
 		}
 	}
 

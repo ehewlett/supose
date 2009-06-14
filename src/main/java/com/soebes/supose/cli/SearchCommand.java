@@ -25,11 +25,16 @@
 package com.soebes.supose.cli;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.cli2.CommandLine;
 import org.apache.commons.cli2.Group;
 import org.apache.commons.cli2.Option;
 import org.apache.commons.cli2.option.Command;
+import org.apache.commons.cli2.validation.EnumValidator;
+
+import com.soebes.supose.FieldNames;
 
 /**
  * @author Karl Heinz Marbaise
@@ -40,6 +45,7 @@ public class SearchCommand extends CLIBase {
     private Option optionIndex = null;
     private Option optionQuery = null;
     private Option optionFields = null;
+    private Option optionXML = null;
 
 	public SearchCommand() {
 		setCommand(createCommand());
@@ -64,24 +70,42 @@ public class SearchCommand extends CLIBase {
 			.withArgument(abuilder.withName("query").create())
 			.withDescription("Define the query which will be executed.")
 			.create();
+
+    	optionXML = obuilder
+			.withShortName("x")
+			.withLongName("xml")
+			.withDescription("Output in XML")
+			.create();
+
+		Set<String> enumSetFields = new TreeSet<String>();
+		for (FieldNames item : FieldNames.values()) {
+			enumSetFields.add(item.getValue());
+		}
+    	EnumValidator fieldValidator = new EnumValidator(enumSetFields);
     	optionFields = obuilder
 	    	.withShortName("F")
 	    	.withLongName("fields")
-	    	.withArgument(abuilder.withName("fields").create())
+	    	.withArgument(
+	    		abuilder
+	    		.withName("fields")
+	    		.withValidator(fieldValidator)
+	    		.create()
+	    	)
 	    	.withDescription("Define the fields which will be shown on the result set.")
 	    	.create();
     	
-    	Group optionUpdate = gbuilder
+    	Group optionSearch = gbuilder
     		.withOption(optionIndex)
     		.withOption(optionQuery)
     		.withOption(optionFields)
+    		.withOption(optionXML)
     		.create();
     	
     	return cbuilder
 	    	.withName("search")
 	    	.withName("se")
 	    	.withDescription("Search within index with particular query.")
-	    	.withChildren(optionUpdate)
+	    	.withChildren(optionSearch)
 	    	.create();
 	}
 
@@ -93,6 +117,9 @@ public class SearchCommand extends CLIBase {
 	}
 	public Option getOptionFields() {
 		return optionFields;
+	}
+	public Option getOptionXML() {
+		return optionXML;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -119,6 +146,10 @@ public class SearchCommand extends CLIBase {
 		return result;
 	}
 	
+	public boolean getXML(CommandLine cline) {
+		return cline.hasOption((getOptionXML()));
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<String> getFields(CommandLine cline) {
 		return cline.getValues(getOptionFields());
