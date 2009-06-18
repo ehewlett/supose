@@ -84,6 +84,7 @@
 	<properties>
 		<log4j.version>1.2.13</log4j.version>
 		<testng.version>5.8</testng.version>
+		<spring.version>2.5.6</spring.version>
 		<axis.version>1.4.1</axis.version>
 		<ini4j.version>0.5.1</ini4j.version>
 		<tika.version>0.3</tika.version>

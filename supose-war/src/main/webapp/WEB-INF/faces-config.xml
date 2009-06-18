@@ -6,12 +6,20 @@
 
   <application>
     <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+	<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
   </application>
   <managed-bean>
   	<managed-bean-name>testBean</managed-bean-name>
   	<managed-bean-class>com.soebes.supose.release.web.TestSession</managed-bean-class>
   	<managed-bean-scope>session</managed-bean-scope>
   </managed-bean>
+  
+  <managed-bean>
+  	<managed-bean-name>repositoryBean</managed-bean-name>
+  	<managed-bean-class>com.soebes.supose.release.web.RepositoryBean</managed-bean-class>
+  	<managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  
 
   <navigation-rule>
     <from-view-id>/index.xhtml</from-view-id>

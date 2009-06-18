@@ -3,7 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee web-app_2_5.xsd" version="2.5">
    
-  <display-name>Release</display-name> 
+  <display-name>SupoSE</display-name> 
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	<resource-env-ref>
+	  <description>Repository Bean</description>
+	  <resource-env-ref-name>RepositoryBean</resource-env-ref-name>
+	  <resource-env-ref-type>com.soebes.supose.release.web.RepositoryBean</resource-env-ref-type>
+	</resource-env-ref>
  
   <!-- Use documents saved as *.xhtml for Facelets -->
   <context-param>

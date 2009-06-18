@@ -11,11 +11,41 @@
     <h:outputText>Result successfully stored.</h:outputText>
     <h:outputText value="#{testBean.query}"/>
     <h:dataTable value="#{testBean.result}" var="item">
-    	<f:facet name="header">
-    		<h:outputText value="Spalte 1"/>
-    	</f:facet>
     	<h:column>
-    		<h:outputText value="#{item}" />
+	    	<f:facet name="header">
+	    		<h:outputText value="Revision"/>
+	    	</f:facet>
+    		<h:outputText value="#{item.revision}" />
+    	</h:column>
+    	<h:column>
+	    	<f:facet name="header">
+	    		<h:outputText value="Filename"/>
+	    	</f:facet>
+    		<h:outputText value="#{item.filename}" />
+    	</h:column>
+    	<h:column>
+	    	<f:facet name="header">
+	    		<h:outputText value="path"/>
+	    	</f:facet>
+    		<h:outputText value="#{item.path}" />
+    	</h:column>
+    	<h:column>
+	    	<f:facet name="header">
+	    		<h:outputText value="Node"/>
+	    	</f:facet>
+    		<h:outputText value="#{item.node}" />
+    	</h:column>
+    	<h:column>
+	    	<f:facet name="header">
+	    		<h:outputText value="Kind"/>
+	    	</f:facet>
+    		<h:outputText value="#{item.kind}" />
+    	</h:column>
+    	<h:column>
+	    	<f:facet name="header">
+	    		<h:outputText value="Date"/>
+	    	</f:facet>
+    		<h:outputText value="#{item.date}" />
     	</h:column>
     </h:dataTable>
     <h:form>
