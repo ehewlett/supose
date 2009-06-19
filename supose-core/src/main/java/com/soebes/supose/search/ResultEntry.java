@@ -126,7 +126,17 @@ public class ResultEntry {
 	}
 
 	public String getKind() {
-		return kind;
+		if ("a".equals(kind)) {
+			return "ADDED";
+		} else if ("D".equalsIgnoreCase(kind)) {
+			return "DELETED";
+		} else if ("M".equalsIgnoreCase(kind)) {
+			return "MODIFIED";
+		} else if ("R".equalsIgnoreCase(kind)) {
+			return "REPLACED";
+		} else { 
+			return kind;
+		}
 	}
 
 	public void setKind(String kind) {

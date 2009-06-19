@@ -9,7 +9,7 @@ body {
 /* Horizontal rules (line) */
 hr {
     background-color: #bec3c3;
-    height: 2px;
+    height: 1px;
 }
 
 a {
@@ -17,7 +17,7 @@ a {
 }
 
 a:link {
-	color: gray;	
+	color: gray;
 }
 
 a:active, a:hover {
@@ -27,7 +27,7 @@ a:active, a:hover {
 
 .error {
     color: red;
-    font-size: small;	
+    font-size: small;
 }
 
 div.action {
@@ -42,4 +42,8 @@ div.actionFlag {
 	margin-top: 120px; 
 	/*margin-right: 10px;*/
 	float: left;
+}
+
+img {
+	border: none;
 }

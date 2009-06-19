@@ -21,10 +21,12 @@ public class TestSession implements Serializable {
 
 	private String query;
 
+	private RepositoryBean repositoryBean = null;
+
 	public TestSession() {
 		ApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-	    RepositoryBean repoBean = (RepositoryBean) ctx.getBean("RepositoryBean");
-		setIndex(repoBean.getIndex());
+	    setRepositoryBean((RepositoryBean) ctx.getBean("RepositoryBean"));
+		setIndex(getRepositoryBean().getIndex());
 	}	
 
 	public void setQuery(String query) {
@@ -56,4 +58,11 @@ public class TestSession implements Serializable {
 		return index;
 	}
 
+	public void setRepositoryBean(RepositoryBean repositoryBean) {
+		this.repositoryBean = repositoryBean;
+	}
+
+	public RepositoryBean getRepositoryBean() {
+		return repositoryBean;
+	}
 }

@@ -9,10 +9,9 @@
 <ui:composition template="/WEB-INF/jsf/template.xhtml">
   <ui:define name="body">
       <h:form>
-		
 		<table width="100%">
 			<tr>
-				<td width="25%" align="right"><h:outputText value="Entry the query:"/></td>
+				<td width="25%" align="right"><label for="query" accesskey="q">Entry the query:</label></td>
 				<td width="50%"><h:inputText id="query" size="60" required="true" value="#{testBean.query}"/></td>
 				<td width="25%"></td>
 			</tr>
