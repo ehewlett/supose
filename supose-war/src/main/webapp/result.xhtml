@@ -8,8 +8,11 @@
 
 <ui:composition template="/WEB-INF/jsf/template.xhtml">
   <ui:define name="body">
-    <h:outputText>Result successfully stored.</h:outputText>
     <h:outputText value="#{testBean.query}"/>
+    <h:form>
+    	<h:commandButton action="SUCCESS" title="New Search" value="New Search"/>
+    </h:form>
+
     <h:dataTable value="#{testBean.result}" var="item">
     	<h:column>
 	    	<f:facet name="header">
@@ -21,7 +24,7 @@
 	    	<f:facet name="header">
 	    		<h:outputText value="Filename"/>
 	    	</f:facet>
-    		<h:outputText value="#{item.filename}" />
+    		<h:outputText value="#{item.dfilename}" />
     	</h:column>
     	<h:column>
 	    	<f:facet name="header">
@@ -49,7 +52,7 @@
     	</h:column>
     </h:dataTable>
     <h:form>
-    	<h:commandButton action="SUCCESS" title="New Search" value="Submit"/>
+    	<h:commandButton action="SUCCESS" title="New Search" value="New Search"/>
     </h:form>
   </ui:define>
 </ui:composition>

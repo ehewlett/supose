@@ -13,7 +13,7 @@
 	</listener>
 	<resource-env-ref>
 	  <description>Repository Bean</description>
-	  <resource-env-ref-name>RepositoryBean</resource-env-ref-name>
+	  <resource-env-ref-name>repositoryBean</resource-env-ref-name>
 	  <resource-env-ref-type>com.soebes.supose.release.web.RepositoryBean</resource-env-ref-type>
 	</resource-env-ref>
  

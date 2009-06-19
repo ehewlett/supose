@@ -3,6 +3,6 @@
 		  "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans>
 	<bean id="RepositoryBean" class="com.soebes.supose.release.web.RepositoryBean">
-    	<property name="index" value="C:/test/suposeX/scan/result.SupoSE"/>
+    	<property name="index" value="J:/test-supose/index.subversion"/>
 	</bean>
 </beans>
