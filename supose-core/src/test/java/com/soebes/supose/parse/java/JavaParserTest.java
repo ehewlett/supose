@@ -26,6 +26,7 @@ package com.soebes.supose.parse.java;
 
 import static org.testng.Assert.assertTrue;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.antlr.runtime.ANTLRFileStream;
@@ -40,7 +41,7 @@ public class JavaParserTest extends TestBase {
 	public void  testFirstJavaFile() throws Exception {
 		//We won't name the Java test files ".java", cause the compiler would
 		//compile them, so we have no access to the real source file.
-		ANTLRFileStream input = new ANTLRFileStream(getTestResourcesDirectory() + "com/soebes/supose/parse/java/Test1.java.test");
+		ANTLRFileStream input = new ANTLRFileStream(getTestResourcesDirectory() + File.separator + "com/soebes/supose/parse/java/Test1.java.test");
 		JavaLexer lexer = new JavaLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		JavaParser parser = new JavaParser(tokens);

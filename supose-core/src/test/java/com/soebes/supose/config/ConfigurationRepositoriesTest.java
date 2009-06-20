@@ -27,6 +27,8 @@ package com.soebes.supose.config;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.io.File;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -42,7 +44,7 @@ public class ConfigurationRepositoriesTest extends TestBase {
 	
 	@BeforeClass
 	public void beforeClass() {
-		confRepos = new ConfigurationRepositories(getFileResource("/repositories-test.ini"));		
+		confRepos = new ConfigurationRepositories(getTestResourcesDirectory() + File.separator + "repositories-test.ini");		
 		assertNotNull(confRepos, "We had expected to get an instance");
 	}
 
