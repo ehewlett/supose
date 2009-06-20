@@ -65,7 +65,7 @@
 
 
 	<scm>
-		<connection>scm:svn:http://svn.serverix/supose/</connection>
+		<connection>scm:svn:http://svn.serverix/supose/branches/B_0.7.0</connection>
 		<developerConnection>scm:svn:http://svn.serverix/supose/branches/B_0.7.0</developerConnection>
 		<url>http://www.supose.org/repositories/show/supose</url>
 	</scm>	

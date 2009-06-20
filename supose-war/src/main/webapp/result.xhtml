@@ -37,7 +37,7 @@
 	    			<h:inputHidden id="query" value="+revision:#{item.revision}"/>
 	    		</h:commandLink>
 				<h:outputLink id="link_revision" value="#{testBean.repositoryBean.urlviewvc}">
-					<h:graphicImage id="viewvc_revision" value="/img/favicon.ico" title="ViewVC Link" />
+					<h:graphicImage id="viewvc_revision" value="/img/viewvc-icon.ico" title="ViewVC Link" />
 					<f:param name="revision" value="#{item.revision}" />
 					<f:param name="view" value="revision" />
 				</h:outputLink>
@@ -51,7 +51,7 @@
     			<h:outputText value="#{item.dfilename}" />
 	    		<!--  http://svn.collab.net/viewvc/svn/trunk/doc/user/quickref/svn-ref.tex?view=markup&pathrev=1855 -->
 				<h:outputLink id="link_filename" value="#{testBean.repositoryBean.urlviewvc}#{item.dpath}#{item.dfilename}">
-					<h:graphicImage id="viewvc_filename" value="/img/favicon.ico" title="ViewVC Link" />
+					<h:graphicImage id="viewvc_filename" value="/img/viewvc-icon.ico" title="ViewVC Link" />
 					<f:param name="pathrev" value="#{item.revision}" />
 					<f:param name="view" value="markup" />
 				</h:outputLink>
@@ -63,7 +63,7 @@
 	    		<h:outputText value="#{item.path}" />
 	    		<!-- http://svn.collab.net/viewvc/svn/trunk/doc/user/quickref/?pathrev=1855  -->
 				<h:outputLink id="link_path" value="#{testBean.repositoryBean.urlviewvc}#{item.dpath}">
-					<h:graphicImage id="viewvc_path" value="/img/favicon.ico" title="ViewVC Link" />
+					<h:graphicImage id="viewvc_path" value="/img/viewvc-icon.ico" title="ViewVC Link" />
 					<f:param name="pathrev" value="#{item.revision}" />
 				</h:outputLink>
 	    	</h:column>
