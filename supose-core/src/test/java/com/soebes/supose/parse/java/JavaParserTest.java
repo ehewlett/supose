@@ -40,7 +40,7 @@ public class JavaParserTest extends TestBase {
 	public void  testFirstJavaFile() throws Exception {
 		//We won't name the Java test files ".java", cause the compiler would
 		//compile them, so we have no access to the real source file.
-		ANTLRFileStream input = new ANTLRFileStream(getFileResource("Test1.java.test"));
+		ANTLRFileStream input = new ANTLRFileStream(getTestResourcesDirectory() + "com/soebes/supose/parse/java/Test1.java.test");
 		JavaLexer lexer = new JavaLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		JavaParser parser = new JavaParser(tokens);
