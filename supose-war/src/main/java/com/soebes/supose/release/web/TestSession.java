@@ -3,6 +3,7 @@ package com.soebes.supose.release.web;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
@@ -17,6 +18,8 @@ public class TestSession implements Serializable {
 
 	private static final long serialVersionUID = 120672378912357403L;
 	
+	private HtmlDataTable dataTable;
+	
 	private String index = null;
 
 	private String query;
@@ -28,6 +31,21 @@ public class TestSession implements Serializable {
 	    setRepositoryBean((RepositoryBean) ctx.getBean("RepositoryBean"));
 		setIndex(getRepositoryBean().getIndex());
 	}	
+
+	public String searchRevision() {
+		LOGGER.info("searchRevision() called.");
+		ResultEntry result = (ResultEntry) getDataTable().getRowData();
+		LOGGER.info("searchRevision() rev:" + result.getRevision());
+		setQuery("+revision:" + result.getRevision());
+		return "SUCCESS";
+	}
+	public String searchFilename() {
+		LOGGER.info("searchFilename() called.");
+		ResultEntry result = (ResultEntry) getDataTable().getRowData();
+		LOGGER.info("searchFilename() filename:" + result.getDfilename());
+		setQuery("+filename:" + result.getDfilename());
+		return "SUCCESS";
+	}
 
 	public void setQuery(String query) {
 		this.query = query;
@@ -64,5 +82,13 @@ public class TestSession implements Serializable {
 
 	public RepositoryBean getRepositoryBean() {
 		return repositoryBean;
+	}
+
+	public HtmlDataTable getDataTable() {
+		return dataTable;
+	}
+
+	public void setDataTable(HtmlDataTable dataTable) {
+		this.dataTable = dataTable;
 	}
 }

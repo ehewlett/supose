@@ -27,28 +27,26 @@
     </h:form>
 
 	<h:form>
-	    <h:dataTable value="#{testBean.result}" var="item">
+	    <h:dataTable value="#{testBean.result}" var="item" binding="#{testBean.dataTable}">
 	    	<h:column>
 		    	<f:facet name="header">
 		    		<h:outputText value="Revision"/>
 		    	</f:facet>
-		    	<h:commandLink id="query_revision">
+		    	<h:commandLink id="query_revision" action="#{testBean.searchRevision}">
 	    			<h:outputText value="#{item.revision}" />
-	    			<h:inputHidden id="query" value="+revision:#{item.revision}"/>
 	    		</h:commandLink>
 				<h:outputLink id="link_revision" value="#{testBean.repositoryBean.urlviewvc}">
 					<h:graphicImage id="viewvc_revision" value="/img/viewvc-icon.ico" title="ViewVC Link" />
-					<f:param name="revision" value="#{item.revision}" />
-					<f:param name="view" value="revision" />
 				</h:outputLink>
-	    		
 	    	</h:column>
 	    	<h:column>
 		    	<f:facet name="header">
 		    		<h:outputText value="Filename"/>
 		    	</f:facet>
 
-    			<h:outputText value="#{item.dfilename}" />
+		    	<h:commandLink id="query_filename" action="#{testBean.searchFilename}">
+	    			<h:outputText value="#{item.dfilename}" />
+	    		</h:commandLink>
 	    		<!--  http://svn.collab.net/viewvc/svn/trunk/doc/user/quickref/svn-ref.tex?view=markup&pathrev=1855 -->
 				<h:outputLink id="link_filename" value="#{testBean.repositoryBean.urlviewvc}#{item.dpath}#{item.dfilename}">
 					<h:graphicImage id="viewvc_filename" value="/img/viewvc-icon.ico" title="ViewVC Link" />

@@ -163,7 +163,6 @@ public class ScanRepository extends ScanRepositoryBase {
 		Set changedPathsSet = logEntry.getChangedPaths().keySet();
 
 		TagBranchRecognition tbr = new TagBranchRecognition(repository);
-//		tbr.setRepository(repository);
 		
 		TagBranch res = null;
 		//Check if we have a Tag, Branch, Maven Tag or Subversion Tag.
