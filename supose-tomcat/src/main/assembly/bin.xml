@@ -34,22 +34,27 @@
 			</includes>
 		</fileSet>
 
-		<fileSet>
-			<outputDirectory>/webapps</outputDirectory>
-			<directory>${basedir}/../supose-war/target</directory>
-			<includes>
-				<include>supose-war.war</include>
-			</includes>
-		</fileSet>
 	</fileSets>
+
 	<dependencySets>
 		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory>/lib</outputDirectory>
 			<unpack>false</unpack>
 			<excludes>
 				<exclude>*:supose-soap</exclude>
+				<exclude>*:supose-war</exclude>
 			</excludes>
 		</dependencySet>
+		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputDirectory>/webapps</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>*:supose-war</include>
+			</includes>
+		</dependencySet>
 	</dependencySets>
+
 </assembly>
 
