@@ -109,6 +109,6 @@ public class TestBase {
 		return getSrcDirectory() + File.separator + "test";
 	}
 	public String getTestResourcesDirectory() {
-		return getTestDirectory() + File.separator + "resources";
+		return getTestDirectory() + File.separator + "resources" + File.separator;
 	}
 }

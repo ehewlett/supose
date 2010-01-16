@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repositories>
+
+	<baseDirectory>/home/index/test</baseDirectory>
+
+	<repository>
+		<id>SupoSE</id>
+		<name>This is the Name we use</name>
+		<url>http://svn.traveler/supose</url>
+		<username>kama</username>
+		<password>kama</password>
+		<fromRevision>1</fromRevision>
+		<toRevision>HEAD</toRevision>
+		<scheduler>0 * * ? * *</scheduler>
+		<indexer>
+			<tempIndex>result.SupoSETemp</tempIndex>
+			<targetIndex>result.SupoSE</targetIndex>
+			<!--  every 200 revisions a commit to the targetIndex will be made indexMerge(). -->
+			<commits>200</commits>
+		</indexer>
+	</repository>
+
+	<repository>
+		<id>JaGoSI</id>
+		<name>JaGoSI</name>
+		<url>http://svn.traveler/jagosi</url>
+		<username>kama</username>
+		<password>kama</password>
+<!--		  This will define to scan the trunk and the tags folder only...no other paths will be scanned -->
+<!--		<reposPaths>-->
+<!--			<reposPath>/trunk</reposPath>-->
+<!--			<reposPath>/tags</reposPath>-->
+<!--		</reposPaths>-->
+		<fromRevision>1</fromRevision>
+		<toRevision>HEAD</toRevision>
+		<scheduler>0 * * ? * *</scheduler>
+		<indexer>
+			<tempIndex>result.JaGoSITemp</tempIndex>
+			<targetIndex>result.JaGoSI</targetIndex>
+			<!--  every 200 revisions a commit to the targetIndex will be made indexMerge(). -->
+			<commits>200</commits>
+		</indexer>
+	</repository>
+
+
+</repositories>
