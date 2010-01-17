@@ -1,4 +1,4 @@
-package com.soebes.supose.config;
+package com.soebes.supose.config.xml;
 
 import java.net.URL;
 
