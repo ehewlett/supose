@@ -23,14 +23,6 @@ public class RepositoriesConfigFile {
 		xs.alias("repository", RepositoryConfig.class);
 
 		xs.alias("indexer", RepositoryIndexConfig.class);
-
-//		xs.alias("licenses", CheckLicenses.class);
-//		xs.alias("license", CheckLicense.class);
-//	
-//		xs.alias("name", CheckLicense.class);
-//		xs.alias("url", CheckLicense.class);
-//		xs.registerLocalConverter(CheckLicense.class, "names", new NamingCollectionConverter("name", String.class, xs.getMapper()));
-//		xs.registerLocalConverter(CheckLicense.class, "urls", new NamingCollectionConverter("url", String.class, xs.getMapper()));
 		return xs;
 	}
 
