@@ -53,9 +53,10 @@ public class RepositoriesConfigFileTest extends TestBase {
 
 		RepositoriesConfig rcs = new RepositoriesConfig();
 		rcs.setBaseDirectory("/home/kama/");
-		rcs.addRepository(rc);
+		rcs.addRepository("SupoSE", rc);
 
 		XStream xs = RepositoriesConfigFile.createInstance();
+		System.out.println(xs.toXML(rcs));
 		Assert.assertEquals(xs.toXML(rcs), expectedXML);
 	}
 

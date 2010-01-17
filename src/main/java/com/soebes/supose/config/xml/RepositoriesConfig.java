@@ -1,11 +1,12 @@
 package com.soebes.supose.config.xml;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RepositoriesConfig {
 
 	private String baseDirectory;
-	private ArrayList<RepositoryConfig> repositories = new ArrayList<RepositoryConfig>();
+	private HashMap<String, RepositoryConfig> repositories = new HashMap<String, RepositoryConfig>(); 
+//	private ArrayList<RepositoryConfig> repositories = new ArrayList<RepositoryConfig>();
 
 	public void setBaseDirectory(String baseDirectory) {
 		this.baseDirectory = baseDirectory;
@@ -15,15 +16,15 @@ public class RepositoriesConfig {
 		return baseDirectory;
 	}
 
-	public void setRepositories(ArrayList<RepositoryConfig> repositories) {
+	public void addRepository(String key, RepositoryConfig repositroy) {
+		this.getRepositories().put(key, repositroy);
+	}
+
+	public void setRepositories(HashMap<String, RepositoryConfig> repositories) {
 		this.repositories = repositories;
 	}
 
-	public ArrayList<RepositoryConfig> getRepositories() {
+	public HashMap<String, RepositoryConfig> getRepositories() {
 		return repositories;
-	}
-	
-	public void addRepository(RepositoryConfig repositroy) {
-		this.repositories.add(repositroy);
 	}
 }

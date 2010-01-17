@@ -18,7 +18,7 @@ public class RepositoriesConfigFile {
 		XStream xs = new XStream();
 		
 		xs.alias("repositories", RepositoriesConfig.class);
-		xs.addImplicitCollection(RepositoriesConfig.class, "repositories");
+//		xs.addImplicitCollection(RepositoriesConfig.class, "repositories");
 
 		xs.alias("repository", RepositoryConfig.class);
 
