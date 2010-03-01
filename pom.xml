@@ -97,42 +97,6 @@
 		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
 		<plugins>
 			<plugin>
-				<groupId>com.soebes.maven.plugins.mlv</groupId>
-				<artifactId>maven-license-verifier-plugin</artifactId>
-				<version>0.2-SNAPSHOT</version>
-				<executions>
-					<execution>
-						<phase>test</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<phase>clean</phase>
-						<configuration>
-							<tasks unless="maven.test.skip">
-								<echo>SCM URL: ${system.scm.url}</echo>
-								<echo>SCM DEV: ${system.scm.dev}</echo>
-								<echo>SCM CON: ${system.scm.connection}</echo>
-								<echo> DI URL: ${system.site.deployment}</echo>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
@@ -386,11 +350,6 @@
 
 	<reporting>
 		<plugins>
-			<plugin>
-				<groupId>com.soebes.maven.plugins.mlv</groupId>
-				<artifactId>maven-license-verifier-plugin</artifactId>
-				<version>0.2-SNAPSHOT</version>
-			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
