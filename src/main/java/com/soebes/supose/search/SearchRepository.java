@@ -22,7 +22,6 @@
  * If you have any questions about the Software or about the license
  * just write an email to license@soebes.de
  */
-// SupoSE
 package com.soebes.supose.search;
 
 import java.io.IOException;
@@ -178,7 +177,7 @@ public class SearchRepository {
 	    	setSearcher(searcher);
 	    	SortField[] sf = {
 	    		new SortField(FieldNames.REVISION.toString()),
-	    		new SortField(FieldNames.DFILENAME.toString()), //We use for sorting the display Filename
+	    		new SortField(FieldNames.FILENAME.toString()), //We use for sorting the filename
 	    	};
 	    	Sort sort = new Sort(sf);
 	    	//Here we define the default field for searching.

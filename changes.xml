@@ -1,10 +1,62 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<document>
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
 	<properties>
 		<title>SupoSE - Release History</title>
 		<author email="supose@soebes.de">Karl Heinz Marbaise</author>
 	</properties>
 	<body>
+		<release version="0.6.2 Calypso" date="2009-XX-XX" description="Bug Fix Release">
+			<action dev="Karl Heinz Marbaise" type="update" issue="266">
+				Updated to Tika 0.6
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="250">
+				Added the dependency for bouncycastle libs temporarily
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="246">
+				The searching with a term which contains a dot didn't work. 
+				Example: +filename:textexcel-formats.xls
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="241">
+				Removed the usage of dfilename and dpath to use filename and path instead. 
+				In the index the lower case variant will be put into whereas the original
+				variant will be stored.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="update">
+				Updated to Java 1.6 and Updated to SVNKit 1.3.1
+				<fixes issue="218"/>
+				<fixes issue="235"/>
+			</action>
+			<action dev="Karl Heinz Marbaise" type="update">
+				Moved log file for unit tests into target folder.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="update" issue="219">
+				Updated to Tika 0.4
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="225">
+				Removed dependency to build213-svnkit-1.2-patch and added dependency to commons-lang 2.1
+			</action>
+			<action dev="Karl Heinz Marbaise" type="update">
+				Updated version number to represent the current development line (0.6.2-SNAPSHOT).
+			</action>
+			<action dev="Karl Heinz Marbaise" type="add" issue="224" due-to="Michael Krkoska">
+				Moved the quartz.properties file into the etc folder of the distribution instead
+				of hiding it within the jar file. Simplifies configuration for the user.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="add" issue="36" due-to="Michael Krkoska">
+				Improved the output of --help option with the provided path.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="update" issue="222" due-to="Michael Krkoska">
+				Enhanced the output in case of an authentication error or using an wrong URL.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="199" due-to="Michael Krkoska">
+				Removed overwritten getFuzzyQuery from CustomQueryParser class.
+			</action>
+			<action dev="Karl Heinz Marbaise" type="fix" issue="215">
+				There had a problemw with recognizing of README files or files without extensions. This
+				was based on wrong implementation in the FileName class. Complete reimplemented the class.
+			</action>
+		</release>
 		<release version="0.6.1 Bestla" date="2009-06-17" description="Bug Fix and Minor Enhancement Release">
 			<action dev="Karl Heinz Marbaise" type="fix" issue="213" due-to="Christian Dehning">
 				There had been a problem with scheduled scanning of a repository, cause after a change 

@@ -37,6 +37,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.tmatesoft.svn.core.ISVNLogEntryHandler;
+import org.tmatesoft.svn.core.SVNAuthenticationException;
 import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
@@ -52,6 +53,10 @@ import com.soebes.supose.search.NumberUtils;
 import com.soebes.supose.utility.FileName;
 
 /**
+ * This class will handle the whole scan of the whole or partials
+ * of a repository.
+ * It will scan the log entries and will than index the documents afterwards.
+ * 
  * @author Karl Heinz Marbaise
  *
  */
@@ -93,26 +98,13 @@ public class ScanRepository extends ScanRepositoryBase {
 	 * scanning every change set.
 	 * @param writer The index where the result of the scanning
 	 *   will be written to.
+	 * @throws SVNException 
 	 */
 	@SuppressWarnings("unchecked")
-	public void scan(IndexWriter writer) {
+	public void scan(IndexWriter writer) throws SVNException {
 
 		LOGGER.debug("Repositories latest Revision: " + endRevision);
-        try {
-        	LogEntryStart();
-            repository.getRepository().log(new String[] {""}, startRevision, endRevision, true, true, new ISVNLogEntryHandler() {
-                public void handleLogEntry(SVNLogEntry logEntry) {
-                	logEntries.add(logEntry);
-                	LogEntry(logEntry);
-                }
-            });
-        } catch (SVNException svne) {
-            LOGGER.error("error while collecting log information for '"
-                    + repository.getUrl() + "'", svne);
-            return;
-        } finally {
-        	LogEntryStop();
-        }
+        readLogEntries();
 
         LOGGER.debug("We have " + logEntries.size() + " change sets to scan.");
         scanStart(logEntries.size());
@@ -141,7 +133,7 @@ public class ScanRepository extends ScanRepositoryBase {
 					count++;
 				}
             } else {
-            	LOGGER.debug("No changed paths found!");
+            	LOGGER.warn("Empty ChangeSet found in revision: " + logEntry.getRevision());
             }
             if (isAbbort()) {
             	LOGGER.warn("We have received an abort signal!");
@@ -150,6 +142,35 @@ public class ScanRepository extends ScanRepositoryBase {
         }
         scanStop();
 		repository.close();
+	}
+
+	/**
+	 * This method will read all entries from the repository
+	 * and store the log entries into internal array list.
+	 * 
+	 * @throws SVNAuthenticationException
+	 * @throws SVNException
+	 */
+	private void readLogEntries() 
+		throws SVNAuthenticationException, SVNException {
+		try {
+        	LogEntryStart();
+            repository.getRepository().log(new String[] {""}, startRevision, endRevision, true, true, new ISVNLogEntryHandler() {
+                public void handleLogEntry(SVNLogEntry logEntry) {
+                	logEntries.add(logEntry);
+                	LogEntry(logEntry);
+                }
+            });
+        } catch (SVNAuthenticationException svnae) {
+            LOGGER.error("Authentication has failed. '" + repository.getUrl() + "'", svnae);
+            throw svnae;
+        } catch (SVNException svne) {
+            LOGGER.error("error while collecting log information for '"
+                    + repository.getUrl() + "'", svne);
+            throw svne;
+        } finally {
+        	LogEntryStop();
+        }
 	}
 
 
@@ -163,7 +184,6 @@ public class ScanRepository extends ScanRepositoryBase {
 		Set changedPathsSet = logEntry.getChangedPaths().keySet();
 
 		TagBranchRecognition tbr = new TagBranchRecognition(repository);
-//		tbr.setRepository(repository);
 		
 		TagBranch res = null;
 		//Check if we have a Tag, Branch, Maven Tag or Subversion Tag.
@@ -176,11 +196,12 @@ public class ScanRepository extends ScanRepositoryBase {
 			}
 		}
 
-		int count = 0;
-		LOGGER.debug("Number of files for revision: " + changedPathsSet.size());
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Number of files for revision: " + changedPathsSet.size());
+		}
+
 		startIndexChangeSet();
 		for (Iterator changedPaths = changedPathsSet.iterator(); changedPaths.hasNext();) {
-			count ++;
 
 			Document doc = new Document();
 			addTagBranchToDoc(res, doc);
@@ -188,13 +209,15 @@ public class ScanRepository extends ScanRepositoryBase {
 			//It is needed to check it in every entry 
 			//This will result in making entries for every record of the ChangeSet.
 			SVNLogEntryPath entryPath = (SVNLogEntryPath) logEntry.getChangedPaths().get(changedPaths.next());
-			LOGGER.debug("SVNEntry: "
-		            + entryPath.getType()
-		            + "	"
-		            + entryPath.getPath()
-		            + ((entryPath.getCopyPath() != null) ? " (from "
-		                    + entryPath.getCopyPath() + " revision "
-		                    + entryPath.getCopyRevision() + ")" : ""));
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("SVNEntry: "
+			            + entryPath.getType()
+			            + "	"
+			            + entryPath.getPath()
+			            + ((entryPath.getCopyPath() != null) ? " (from "
+			                    + entryPath.getCopyPath() + " revision "
+			                    + entryPath.getCopyRevision() + ")" : ""));
+			}
 
 			//We would like to know something about the entry.
 			SVNDirEntry dirEntry = tbr.getEntryCache().getEntry(logEntry.getRevision(), entryPath.getPath());
@@ -251,6 +274,9 @@ public class ScanRepository extends ScanRepositoryBase {
 	private void addUnTokenizedField(Document doc, FieldNames fieldName, String value) {
 		doc.add(new Field(fieldName.getValue(),  value, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
+	private void addUnTokenizedFieldNoStore(Document doc, FieldNames fieldName, String value) {
+		doc.add(new Field(fieldName.getValue(),  value, Field.Store.NO, Field.Index.NOT_ANALYZED));
+	}
 	private void addUnTokenizedField(Document doc, String fieldName, String value) {
 		doc.add(new Field(fieldName,  value, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
@@ -262,6 +288,20 @@ public class ScanRepository extends ScanRepositoryBase {
 		doc.add(new Field(fieldName.getValue(),  sdf.format(value), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
+	/**
+	 * The method will index a particular document (file) into the Lucene index.
+	 * It will store the majority of the information about a file into the Lucene index like
+	 * revision, copyfrom, path, filename etc.
+	 * 
+	 * @param doc
+	 * @param indexWriter
+	 * @param dirEntry
+	 * @param repository
+	 * @param logEntry
+	 * @param entryPath
+	 * @throws SVNException
+	 * @throws IOException
+	 */
 	private void indexFile(Document doc, IndexWriter indexWriter, SVNDirEntry dirEntry, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
 		throws SVNException, IOException {
 			SVNProperties fileProperties = new SVNProperties();
@@ -299,12 +339,15 @@ public class ScanRepository extends ScanRepositoryBase {
 				fileName = new FileName(entryPath.getPath(), nodeKindUnknown == SVNNodeKind.DIR);
 			}
 
-			LOGGER.debug("FileNameCheck: entryPath   -> kind:" + nodeKind.toString() + " path:" + entryPath.getPath());
-			LOGGER.debug("FileNameCheck:                path:'" + fileName.getPath() + "' filename:'" + fileName.getBaseName() + "'");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("FileNameCheck: entryPath   -> kind:" + nodeKind.toString() + " path:" + entryPath.getPath());
+				LOGGER.debug("FileNameCheck:                path:'" + fileName.getPath() + "' filename:'" + fileName.getBaseName() + "'");
+			}
+
 			//TODO: We have to check if we need to set localization
-			addUnTokenizedField(doc, FieldNames.PATH, fileName.getPath().toLowerCase());
-			addUnTokenizedField(doc, FieldNames.DPATH, fileName.getPath());
-			
+			addUnTokenizedFieldNoStore(doc, FieldNames.PATH, fileName.getPath().toLowerCase());
+			addUnTokenizedField(doc, FieldNames.PATH, fileName.getPath());
+
 			//Does a copy operation took place...
 			if (entryPath.getCopyPath() != null) {
 				addUnTokenizedField(doc, FieldNames.FROM, entryPath.getCopyPath());
@@ -313,9 +356,8 @@ public class ScanRepository extends ScanRepositoryBase {
 
 			//The field we use for searching is stored as lowercase.
 			//TODO: We have to check if we need to set localization
-			addUnTokenizedField(doc, FieldNames.FILENAME, fileName.getBaseName().toLowerCase());
-			//The field we use to display the filename is stored as case as in the original.
-			addUnTokenizedField(doc, FieldNames.DFILENAME, fileName.getBaseName());
+			addUnTokenizedFieldNoStore(doc, FieldNames.FILENAME, fileName.getBaseName().toLowerCase());
+			addUnTokenizedField(doc, FieldNames.FILENAME, fileName.getBaseName());
 
 			addUnTokenizedField(doc, FieldNames.AUTHOR, logEntry.getAuthor() == null ? "" : logEntry.getAuthor());
 
