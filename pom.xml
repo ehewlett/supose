@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.soebes</groupId>
 	<artifactId>supose</artifactId>
-	<version>0.6.2-SNAPSHOT</version>
+	<version>0.6.2RC1</version>
 	<packaging>jar</packaging>
 
 	<name>Subversion Repository Search Engine</name>
@@ -88,9 +88,9 @@
 
 
 	<scm>
-		<connection>${system.scm.connection}</connection>
-		<developerConnection>${system.scm.dev}/trunk</developerConnection>
-		<url>http://www.supose.org/repositories/show/supose</url>
+		<connection>scm:svn:http://svn.serverix/supose/tags/supose-0.6.2RC1</connection>
+		<developerConnection>scm:svn:http://svn.serverix/supose/tags/supose-0.6.2RC1</developerConnection>
+		<url>http://www.supose.org/repositories/show/supose/tags/supose-0.6.2RC1</url>
 	</scm>
 
 	<build>
@@ -366,7 +366,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<quiet/>
+					<quiet />
 					<doctitle>${project.name} ${project.version}-${project.buildNumber} API</doctitle>
 					<links>
 						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
