@@ -1,0 +1,4 @@
+[repository:/trunk]
+harry = r
+sally = rw
+others = 

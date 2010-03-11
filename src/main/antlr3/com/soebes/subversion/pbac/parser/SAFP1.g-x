@@ -1,0 +1,176 @@
+//
+// Subversion Access File Parser (SAFP)
+//
+// Copyright (c) 2010 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
+// Copyright (c) 2010 by Karl Heinz Marbaise
+//
+//
+grammar SAFP;
+options {
+	language = Java;
+//	output = AST;
+}
+@parser::header {
+	package com.soebes.subversion.pbac.parser;
+
+}
+@lexer::header{
+	package com.soebes.subversion.pbac.parser;
+}
+@members {
+
+}
+
+/*
+ * ----------------------------------------------------------------------------
+ * Parser Rules 
+ * ----------------------------------------------------------------------------
+ */
+prog
+	:	(statement)*;
+
+statement
+	:	aliases
+	|	groups
+	|	repos
+	;
+
+aliases
+	:	sectionaliases NL (alias EQUAL useraliasdefinition NL)*
+	;
+
+groups
+	:	sectiongroup NL (group EQUAL groupuserdefinition NL)*
+	;
+
+repos
+	:	sectionrepository NL permissionrule NL? (permissionrule NL?)*
+	;
+
+alias
+	:	ID
+	;
+
+group
+	:	ID
+	;
+
+sectiongroup
+	:	'[' GROUPS ']' 
+	;
+
+sectionaliases
+	:	'[' ALIASES ']'
+	;
+
+sectionrepository
+	:	'[' repository repositorypath ']' 
+	;
+
+repository
+	:	(ID ':')?
+	;
+
+repositorypath
+	:	PATH
+	;
+
+permissionrule
+	:	userpermission
+	|	grouppermission
+	;
+
+userpermission
+	:	ID EQUAL permission
+	;
+
+grouppermission
+	:	groupreference EQUAL permission
+	;
+
+permission
+	:	permission_read 
+	|	permission_write
+	|	permission_read_write
+	|	permission_nothing
+	;
+
+permission_read
+	:	'r'
+	|	'R'
+	;
+
+permission_write
+	:	'w'
+	|	'W'
+	;
+
+permission_read_write
+	:	'rw'
+	|	'RW'
+	;
+
+permission_nothing
+	:	NL
+	;
+
+//CN=Harold Hacker,OU=Engineers,DC=red-bean,DC=com
+useraliasdefinition
+	:	useralias (',' useralias)*
+	;
+
+useralias
+	:	ID EQUAL (CHARACTERS | '.' | '-' | ' ')*
+	;
+
+groupuserdefinition
+	:	groupuserreference ( ',' groupuserreference )*
+	;
+
+groupuserreference
+	:	aliasreference 
+	|	groupreference
+	|	userreference
+	;
+
+aliasreference
+	:	'&' ID
+	;
+
+groupreference
+	:	'@' ID
+	;
+
+userreference
+	:	ID
+	;
+
+/*
+ * ----------------------------------------------------------------------------
+ * Lexer Rules 
+ * ----------------------------------------------------------------------------
+ */
+
+EQUAL	:	'=';
+
+GROUPS	:	'groups';
+
+ALIASES	:	'aliases';
+
+WS		: ( '\t' | ' ' )+ { $channel = HIDDEN; };
+
+CHARACTERS:	'_'|'a'..'z'|'A'..'Z'
+		;
+
+ID		:	CHARACTERS (CHARACTERS | INTEGER_DIGITS)*
+		;
+
+INTEGER_DIGITS
+		:	'0'..'9'+
+		;
+
+PATH	:	'/' (CHARACTERS | INTEGER_DIGITS | '/')*
+		;
+
+NL		:	('\r' | '\n')+
+		;
