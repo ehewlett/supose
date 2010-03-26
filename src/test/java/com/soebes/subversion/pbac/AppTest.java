@@ -1,12 +1,12 @@
 package com.soebes.subversion.pbac;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.Tree;
 import org.testng.annotations.Test;
 
 import com.soebes.subversion.pbac.parser.SAFPLexer;
@@ -77,6 +77,18 @@ public class AppTest extends TestBase {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		SAFPParser parser = new SAFPParser(tokens);
 		parser.prog();
+	}
+
+	@Test
+	public void testReadAST() throws IOException, RecognitionException {
+		FileInputStream fis = new FileInputStream(getFileResource("/svnaccess-3.conf"));
+		ANTLRInputStream stream = new ANTLRInputStream(fis);
+		SAFPLexer lexer = new SAFPLexer(stream);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		SAFPParser parser = new SAFPParser(tokens);
+		SAFPParser.prog_return result = parser.prog();
+		Tree t = (Tree)result.getTree();
+		System.out.println("AST:" + t.toStringTree());
 	}
 
 }

@@ -67,7 +67,7 @@ aliases @init { System.out.println("Init:Aliases"); }
 				System.out.println("ALIAS=" + $alias.text); 
 				System.out.println("DEF:" + $useraliasdefinition.text); 
 			}
-		)* 
+		)*
 	;
 
 group
@@ -90,7 +90,7 @@ sectionrepository
 	:	'[' repository repositorypath ']' 
 		{
 			if ($repository.text != null) {
-				System.out.println("Repository:" + $repository.text);
+				System.out.println("Repository->:" + $repository.text);
 			}
 			System.out.println("Repository Path:" + $repositorypath.text);
 		}
