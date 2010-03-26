@@ -13,6 +13,9 @@ options {
 @parser::header {
 	package com.soebes.subversion.pbac.parser;
 
+	import com.soebes.subversion.pbac.AccessLevel;
+	import com.soebes.subversion.pbac.IReference;
+
 }
 @lexer::header{
 	package com.soebes.subversion.pbac.parser;
@@ -36,15 +39,35 @@ statement
 	;
 
 groups
-	:	sectiongroup NL (group EQUAL groupuserdefinition NL)* 
+	:	sectiongroup NL (group EQUAL groupuserdefinition 
+		{
+			System.out.println("Group:" + $group.text + " def:" + $groupuserdefinition.text);
+		}
+		NL)* 
 	;
 
-repos
-	:	sectionrepository NL permissionrule NL? (permissionrule NL?)*
+repos @init { System.out.println("Repository"); }
+	:	sectionrepository NL 
+		perm=permissionrule {
+			System.out.println("permission: " + $perm.text); 
+		} NL?
+		(
+			perm1=permissionrule {
+				System.out.println("permission: " + $perm1.text);
+			} 
+			NL?
+		)*
 	;
 
-aliases
-	:	sectionaliases NL (alias EQUAL useraliasdefinition NL)*
+aliases @init { System.out.println("Init:Aliases"); }
+	:	sectionaliases NL 
+		(
+			alias EQUAL useraliasdefinition NL 
+			{ 
+				System.out.println("ALIAS=" + $alias.text); 
+				System.out.println("DEF:" + $useraliasdefinition.text); 
+			}
+		)* 
 	;
 
 group
@@ -65,6 +88,12 @@ sectionaliases
 
 sectionrepository
 	:	'[' repository repositorypath ']' 
+		{
+			if ($repository.text != null) {
+				System.out.println("Repository:" + $repository.text);
+			}
+			System.out.println("Repository Path:" + $repositorypath.text);
+		}
 	;
 
 repository
@@ -81,17 +110,27 @@ permissionrule
 	;
 
 userpermission
-	:	ID EQUAL permission
+	:	user EQUAL permission
+		{
+			System.out.println("User:" + $user.text + " perm:" + $permission.perm);
+		}
+	;
+
+user
+	: (ID|'*')
 	;
 
 grouppermission
-	:	groupreference EQUAL permission
+	:	groupreference EQUAL permission 
+		{
+			System.out.println("Group:" + $groupreference.text + " perm:" + $permission.perm);
+		}
 	;
 
-permission
-	:	permission_read 
-	|	permission_write
-	|	permission_read_write
+permission returns [ AccessLevel perm; ] @init { $perm = AccessLevel.NOTHING; }
+	:	permission_read { $perm = AccessLevel.READ; }
+	|	permission_write { $perm = AccessLevel.WRITE; }
+	|	permission_read_write { $perm = AccessLevel.READ_WRITE; }
 	|	permission_nothing
 	;
 
@@ -122,12 +161,12 @@ useralias
 	:	ID EQUAL (ID)+
 	;
 
-groupuserdefinition
+groupuserdefinition returns [ArrayList<IReference> gud; ] @init { $gud = new ArrayList<IReference>(); }
 	:	groupuserreference ( ',' groupuserreference )*
 	;
 
 groupuserreference
-	:	aliasreference 
+	:	aliasreference
 	|	groupreference
 	|	userreference
 	;
