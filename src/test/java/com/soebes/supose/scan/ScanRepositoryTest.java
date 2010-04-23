@@ -82,7 +82,7 @@ public class ScanRepositoryTest extends TestBase {
 
 	public void testQueryForFilenameWithPrefixedWildcardTextFiles() {
 		TopDocs result = searchRepository.getQueryResult("+filename:*.txt");
-	    assertEquals(result.totalHits, 8);
+	    assertEquals(result.totalHits, 9);
 	}
 	
 	public void testQueryForFilenameWithPrefixedWildcardExcelFiles() {

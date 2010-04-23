@@ -119,10 +119,10 @@ svn ci -m"- Added XLS files."
 svn up
 cd $POS
 #
-svn cp $URL/project1/trunk/f3.txt $URL/project1/branches/B_0.0.2 -m"- Added f3 from trunk."
+svn cp $URL/project1/trunk/f3.txt $URL/project1/branches/B_0.0.2/f3added.txt -m"- Added f3 as f3added.txt from trunk."
 #
 cd $WC1
-svn merge $URL/project1/branches/B_0.0.2
+svn merge --accept mine-full $URL/project1/branches/B_0.0.2
 svn ci -m"- Merge branches/B_0.0.2"
 svn up
 cd $POS
@@ -145,6 +145,15 @@ cd $WC1
 echo "This is a README file without extension." >README
 svn add README
 svn ci -m"- README added."
+cd $POS
+#
+# Bug #301
+# _is_variable problem with searching
+#
+cp $POS/bugs/301/test.c $WC1/test.c
+cd $WC1
+svn add test.c
+svn ci -m"- Bug #301 added."
 cd $POS
 #
 #

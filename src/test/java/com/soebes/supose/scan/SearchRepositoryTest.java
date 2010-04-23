@@ -101,7 +101,7 @@ public class SearchRepositoryTest extends TestBase {
 
 	public void testQueryForFilenameWithPrefixedWildcardTextFiles() {
 		List<ResultEntry> result = searchRepository.getResult("+filename:*.txt");
-	    assertEquals(result.size(), 8);
+	    assertEquals(result.size(), 9);
 	}
 	
 	public void testQueryForFilenameWithPrefixedWildcardExcelFiles() {
@@ -161,6 +161,12 @@ public class SearchRepositoryTest extends TestBase {
 		//Windows XP
 		List<ResultEntry> result = searchRepository.getResult("+contents:\"Test Mit OpenOffice 3.0 Windows XP\"");
 	    assertEquals(result.size(), 1);
+	}
+
+	public void testQueryOpenOfficeODSWildcard() {
+		//open*
+		List<ResultEntry> result = searchRepository.getResult("+contents:open*");
+	    assertEquals(result.size(), 4);
 	}
 
 	public void testQueryOpenOfficeODT() {
@@ -241,22 +247,22 @@ public class SearchRepositoryTest extends TestBase {
 
 	public void testQueryForSVNProperty() {
 		List<ResultEntry> result = searchRepository.getResult("+svn\\:mergeinfo:*");
-		assertEquals(result.size(), 3);
+		assertEquals(result.size(), 4);
 	}
 
 	public void testQueryForSVNPropertyContent() {
 		List<ResultEntry> result = searchRepository.getResult("+svn\\:mergeinfo:*/branches/*");
-		assertEquals(result.size(), 3);
+		assertEquals(result.size(), 4);
 	}
 
 	public void testQueryForSVNPropertyContentFile() {
 		List<ResultEntry> result = searchRepository.getResult("+svn\\:mergeinfo:*/f3.txt\\:*");
-		assertEquals(result.size(), 1);
+		assertEquals(result.size(), 2);
 	}
 
 	public void testQueryForSVNPropertyContentPath() {
 		List<ResultEntry> result = searchRepository.getResult("+svn\\:mergeinfo:*/B_0.0.2/*");
-		assertEquals(result.size(), 1);
+		assertEquals(result.size(), 2);
 	}
 
 	/**
@@ -266,6 +272,28 @@ public class SearchRepositoryTest extends TestBase {
 		List<ResultEntry> result = searchRepository.getResult("+filename:README");
 		assertEquals(result.size(), 1);
 		assertEquals(result.get(0).getFilename(), "README");
+		assertEquals(result.get(0).getPath(), "/project1/trunk/");
+	}
+
+	/**
+	 * This test is based on issue Bug #301
+	 * Searching for particular content like _this_is_a_variable
+	 */
+	public void testQueryForContentsIssue301() {
+		List<ResultEntry> result = searchRepository.getResult("+contents:_this_is_a_variable");
+		assertEquals(result.size(), 1);
+		assertEquals(result.get(0).getFilename(), "test.c");
+		assertEquals(result.get(0).getPath(), "/project1/trunk/");
+	}
+
+	/**
+	 * This test is based on issue Bug #301
+	 * Searching for particular content like _this_is_a_variable with wildcard
+	 */
+	public void testQueryForContentsIssue301Wildcard() {
+		List<ResultEntry> result = searchRepository.getResult("+contents:_this_is*");
+		assertEquals(result.size(), 1);
+		assertEquals(result.get(0).getFilename(), "test.c");
 		assertEquals(result.get(0).getPath(), "/project1/trunk/");
 	}
 
