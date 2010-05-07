@@ -147,13 +147,13 @@ svn add README
 svn ci -m"- README added."
 cd $POS
 #
-# Bug #301
+# Bug #306
 # _is_variable problem with searching
 #
-cp $POS/bugs/301/test.c $WC1/test.c
+cp $POS/bugs/306/test.c $WC1/test.c
 cd $WC1
 svn add test.c
-svn ci -m"- Bug #301 added."
+svn ci -m"- Bug #306 added."
 cd $POS
 #
 #
