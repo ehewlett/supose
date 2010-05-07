@@ -276,10 +276,10 @@ public class SearchRepositoryTest extends TestBase {
 	}
 
 	/**
-	 * This test is based on issue Bug #301
+	 * This test is based on issue Bug #306
 	 * Searching for particular content like _this_is_a_variable
 	 */
-	public void testQueryForContentsIssue301() {
+	public void testQueryForContentsIssue306() {
 		List<ResultEntry> result = searchRepository.getResult("+contents:_this_is_a_variable");
 		assertEquals(result.size(), 1);
 		assertEquals(result.get(0).getFilename(), "test.c");
@@ -287,10 +287,10 @@ public class SearchRepositoryTest extends TestBase {
 	}
 
 	/**
-	 * This test is based on issue Bug #301
+	 * This test is based on issue Bug #306
 	 * Searching for particular content like _this_is_a_variable with wildcard
 	 */
-	public void testQueryForContentsIssue301Wildcard() {
+	public void testQueryForContentsIssue306Wildcard() {
 		List<ResultEntry> result = searchRepository.getResult("+contents:_this_is*");
 		assertEquals(result.size(), 1);
 		assertEquals(result.get(0).getFilename(), "test.c");
