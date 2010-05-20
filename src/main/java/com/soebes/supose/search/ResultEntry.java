@@ -1,8 +1,8 @@
 /**
  * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
- * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
- * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
+ * Copyright (c) 2007, 2008, 2009, 2010 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
+ * Copyright (c) 2007, 2008, 2009, 2010 by Karl Heinz Marbaise
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
  * If you have any questions about the Software or about the license
  * just write an email to license@soebes.de
  */
+
 package com.soebes.supose.search;
 
 import java.text.ParseException;
@@ -41,8 +42,6 @@ public class ResultEntry {
 	private Date date;
 	private String path;
 	private String filename;
-	private String dpath;
-	private String dfilename;
 	private String author;
 	private String message;
 
@@ -140,22 +139,6 @@ public class ResultEntry {
 	public void setDate(String date) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss.SSS");
 		this.date = sdf.parse(date);
-	}
-
-	public String getDpath() {
-		return dpath;
-	}
-
-	public void setDpath(String path) {
-		dpath = path;
-	}
-
-	public String getDfilename() {
-		return dfilename;
-	}
-
-	public void setDfilename(String fileName) {
-		dfilename = fileName;
 	}
 
 	public String getAuthor() {

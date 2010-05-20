@@ -1,8 +1,8 @@
 /**
  * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
- * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
- * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
+ * Copyright (c) 2007, 2008, 2009, 2010 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
+ * Copyright (c) 2007, 2008, 2009, 2010 by Karl Heinz Marbaise
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
  * If you have any questions about the Software or about the license
  * just write an email to license@soebes.de
  */
+
 package com.soebes.supose.search;
 
 import java.io.IOException;
@@ -47,7 +48,6 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TopDocs;
 
 import com.soebes.supose.FieldNames;
-import com.soebes.supose.scan.ScanRepository;
 
 public class SearchRepository {
 	private static Logger LOGGER = Logger.getLogger(SearchRepository.class);
@@ -147,12 +147,6 @@ public class SearchRepository {
 							LOGGER.fatal("IllegalAccessException", e);
 						} catch (InvocationTargetException e) {
 							LOGGER.fatal("InvocationTargetException", e);
-						}
-					} else {
-						if (field.name().startsWith(ScanRepository.DISPLAY_PROPERTIES_PREFIX)) {
-							//Only properties which starts with "D" are those which should be displayed.
-							//We assume we have found an field with an property.
-							re.addProperty(field.name().substring(ScanRepository.DISPLAY_PROPERTIES_PREFIX.length()), field.stringValue());
 						}
 					}
 				}

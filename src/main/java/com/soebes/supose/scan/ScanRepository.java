@@ -1,8 +1,8 @@
 /**
  * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
  *
- * Copyright (c) 2007, 2008, 2009 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
- * Copyright (c) 2007, 2008, 2009 by Karl Heinz Marbaise
+ * Copyright (c) 2007, 2008, 2009, 2010 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
+ * Copyright (c) 2007, 2008, 2009, 2010 by Karl Heinz Marbaise
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
  * If you have any questions about the Software or about the license
  * just write an email to license@soebes.de
  */
+
 package com.soebes.supose.scan;
 
 import java.io.IOException;
@@ -61,7 +62,6 @@ import com.soebes.supose.utility.FileName;
  *
  */
 public class ScanRepository extends ScanRepositoryBase {
-	public static final String DISPLAY_PROPERTIES_PREFIX = "d";
 
 	private static Logger LOGGER = Logger.getLogger(ScanRepository.class);
 
@@ -125,7 +125,7 @@ public class ScanRepository extends ScanRepositoryBase {
             	LOGGER.debug("changed paths:");
 				try {
 					scanBeginRevision(count, logEntry.getRevision(), logEntry.getChangedPaths().size());
-					workOnChangeSet(writer, repository, logEntry);
+					workOnChangeSet(writer, logEntry);
 				} catch (Exception e) {
 	            	LOGGER.error("Error during workOnChangeSet() ", e);
 				} finally {
@@ -141,7 +141,7 @@ public class ScanRepository extends ScanRepositoryBase {
             }
         }
         scanStop();
-		repository.close();
+		getRepository().close();
 	}
 
 	/**
@@ -155,18 +155,18 @@ public class ScanRepository extends ScanRepositoryBase {
 		throws SVNAuthenticationException, SVNException {
 		try {
         	LogEntryStart();
-            repository.getRepository().log(new String[] {""}, startRevision, endRevision, true, true, new ISVNLogEntryHandler() {
+            getRepository().getRepository().log(new String[] {""}, startRevision, endRevision, true, true, new ISVNLogEntryHandler() {
                 public void handleLogEntry(SVNLogEntry logEntry) {
                 	logEntries.add(logEntry);
                 	LogEntry(logEntry);
                 }
             });
         } catch (SVNAuthenticationException svnae) {
-            LOGGER.error("Authentication has failed. '" + repository.getUrl() + "'", svnae);
+            LOGGER.error("Authentication has failed. '" + getRepository().getUrl() + "'", svnae);
             throw svnae;
         } catch (SVNException svne) {
             LOGGER.error("error while collecting log information for '"
-                    + repository.getUrl() + "'", svne);
+                    + getRepository().getUrl() + "'", svne);
             throw svne;
         } finally {
         	LogEntryStop();
@@ -177,13 +177,12 @@ public class ScanRepository extends ScanRepositoryBase {
 	/**
 	 * Here we have a single ChangeSet which will be analyzed separate.
 	 * @param indexWriter 
-	 * @param repository
 	 * @param logEntry
 	 */
-	private void workOnChangeSet(IndexWriter indexWriter, Repository repository, SVNLogEntry logEntry) {
+	private void workOnChangeSet(IndexWriter indexWriter, SVNLogEntry logEntry) {
 		Set changedPathsSet = logEntry.getChangedPaths().keySet();
 
-		TagBranchRecognition tbr = new TagBranchRecognition(repository);
+		TagBranchRecognition tbr = new TagBranchRecognition(getRepository());
 		
 		TagBranch res = null;
 		//Check if we have a Tag, Branch, Maven Tag or Subversion Tag.
@@ -224,7 +223,7 @@ public class ScanRepository extends ScanRepositoryBase {
 
 			try {
 				beginIndexChangeSetItem(dirEntry);
-				indexFile(doc, indexWriter, dirEntry, repository, logEntry, entryPath);
+				indexFile(doc, indexWriter, dirEntry, logEntry, entryPath);
 			} catch (IOException e) {
 				LOGGER.error("IOExcepiton: ", e);
 			} catch (SVNException e) {
@@ -277,6 +276,9 @@ public class ScanRepository extends ScanRepositoryBase {
 	private void addUnTokenizedFieldNoStore(Document doc, FieldNames fieldName, String value) {
 		doc.add(new Field(fieldName.getValue(),  value, Field.Store.NO, Field.Index.NOT_ANALYZED));
 	}
+	private void addUnTokenizedFieldNoStore(Document doc, String fieldName, String value) {
+		doc.add(new Field(fieldName,  value, Field.Store.NO, Field.Index.NOT_ANALYZED));
+	}
 	private void addUnTokenizedField(Document doc, String fieldName, String value) {
 		doc.add(new Field(fieldName,  value, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
@@ -302,7 +304,7 @@ public class ScanRepository extends ScanRepositoryBase {
 	 * @throws SVNException
 	 * @throws IOException
 	 */
-	private void indexFile(Document doc, IndexWriter indexWriter, SVNDirEntry dirEntry, Repository repository, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
+	private void indexFile(Document doc, IndexWriter indexWriter, SVNDirEntry dirEntry, SVNLogEntry logEntry, SVNLogEntryPath entryPath) 
 		throws SVNException, IOException {
 			SVNProperties fileProperties = new SVNProperties();
 
@@ -334,7 +336,7 @@ public class ScanRepository extends ScanRepositoryBase {
 				//We would like to know what is has been?
 				//Directory? File? So we go a step back in History...
 				long rev = logEntry.getRevision() - 1;
-				SVNNodeKind nodeKindUnknown = repository.getRepository().checkPath(entryPath.getPath(), rev);
+				SVNNodeKind nodeKindUnknown = getRepository().getRepository().checkPath(entryPath.getPath(), rev);
 				LOGGER.debug("NodeKind(" + rev + "): " + nodeKindUnknown.toString());
 				fileName = new FileName(entryPath.getPath(), nodeKindUnknown == SVNNodeKind.DIR);
 			}
@@ -368,7 +370,7 @@ public class ScanRepository extends ScanRepositoryBase {
 			addUnTokenizedField(doc, FieldNames.KIND, String.valueOf(entryPath.getType()).toLowerCase());
 
 //TODO: May be don't need this if we use repository name?
-			addUnTokenizedField(doc, FieldNames.REPOSITORYUUID, repository.getRepository().getRepositoryUUID(false));
+			addUnTokenizedField(doc, FieldNames.REPOSITORYUUID, getRepository().getRepository().getRepositoryUUID(false));
 			
 			addUnTokenizedField(doc, FieldNames.REPOSITORY, getName());
 
@@ -379,7 +381,7 @@ public class ScanRepository extends ScanRepositoryBase {
 				LOGGER.debug("The " + entryPath.getPath() + " is a directory.");
 				//Here we need to call getDir to get directory properties.
 				Collection<SVNDirEntry> dirEntries = null;
-				repository.getRepository().getDir(entryPath.getPath(), logEntry.getRevision(), fileProperties, dirEntries);
+				getRepository().getRepository().getDir(entryPath.getPath(), logEntry.getRevision(), fileProperties, dirEntries);
 				indexProperties(fileProperties, doc);
 
 			} else if (nodeKind == SVNNodeKind.FILE) {
@@ -389,13 +391,13 @@ public class ScanRepository extends ScanRepositoryBase {
 				//Get only the properties of the file
 
 				addTokenizedField(doc, FieldNames.SIZE, Long.toString(dirEntry.getSize()));
-				repository.getRepository().getFile(entryPath.getPath(), logEntry.getRevision(), fileProperties, null);
+				getRepository().getRepository().getFile(entryPath.getPath(), logEntry.getRevision(), fileProperties, null);
 				indexProperties(fileProperties, doc);
 
 				FileExtensionHandler feh = new FileExtensionHandler();
 				feh.setFileProperties(fileProperties);
 				feh.setDoc(doc);
-				feh.execute(repository, dirEntry, entryPath.getPath(), logEntry.getRevision());
+				feh.execute(getRepository(), dirEntry, entryPath.getPath(), logEntry.getRevision());
 			}
 
 			indexWriter.addDocument(doc);
@@ -414,9 +416,9 @@ public class ScanRepository extends ScanRepositoryBase {
 
 		for (Iterator<String> iterator = list.nameSet().iterator(); iterator.hasNext();) {
 			String propname = (String) iterator.next();
-			LOGGER.debug("Indexing property: " + propname); 
-			addUnTokenizedField(doc, propname, list.getStringValue(propname).toLowerCase());
-			addUnTokenizedField(doc, DISPLAY_PROPERTIES_PREFIX + propname, list.getStringValue(propname));
+			LOGGER.debug("Indexing property: " + propname);
+			addUnTokenizedFieldNoStore(doc, propname, list.getStringValue(propname).toLowerCase());
+			addUnTokenizedField(doc, propname, list.getStringValue(propname));
 		}
 	}
 
