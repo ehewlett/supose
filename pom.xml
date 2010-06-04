@@ -362,13 +362,45 @@
 				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.1</version>
 			</plugin>
-
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
 					<quiet/>
+					<doctitle>${project.name} ${project.version}-${project.buildNumber} API</doctitle>
+					<links>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+						<link>http://lucene.apache.org/java/2_4_0/api</link>
+						<link>http://www.quartz-scheduler.org/docs/api/</link>
+					</links>
+				</configuration>
+			</plugin>
+			-->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<doclet>org.jboss.apiviz.APIviz</doclet>
+					<docletArtifact>
+						<groupId>org.jboss.apiviz</groupId>
+						<artifactId>apiviz</artifactId>
+						<version>1.3.1.GA</version>
+					</docletArtifact>
+					<useStandardDocletOptions>true</useStandardDocletOptions>
+					<charset>UTF-8</charset>
+					<encoding>UTF-8</encoding>
+					<docencoding>UTF-8</docencoding>
+					<breakiterator>true</breakiterator>
+					<version>true</version>
+					<author>true</author>
+					<keywords>true</keywords>
+					<additionalparam>
+						-sourceclasspath ${project.build.outputDirectory}
+					</additionalparam>
 					<doctitle>${project.name} ${project.version}-${project.buildNumber} API</doctitle>
 					<links>
 						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
