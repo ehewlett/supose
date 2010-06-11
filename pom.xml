@@ -23,7 +23,7 @@
 		<maven-license-plugin.version>1.6.1</maven-license-plugin.version>
 		<quartz.version>1.7.3</quartz.version>
 		<ini4j.version>0.5.1</ini4j.version>
-		<lucene.version>2.4.0</lucene.version>
+		<lucene.version>3.0.1</lucene.version>
 		<tika.version>0.7</tika.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

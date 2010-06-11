@@ -36,6 +36,7 @@ import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryParser.ParseException;
@@ -46,6 +47,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -69,7 +71,7 @@ public class LuceneTest {
 
 	@BeforeClass
 	public void beforeClass() throws CorruptIndexException, LockObtainFailedException, IOException {
-		 Analyzer analyzer = new StandardAnalyzer();
+		 Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 
 	    // To store an index on disk, use this instead:
 	    //Directory directory = FSDirectory.getDirectory("/tmp/testindex");
@@ -116,8 +118,8 @@ public class LuceneTest {
 	    for (int i = 0; i < result.scoreDocs.length; i++) {
 //	    	System.out.println(" -> Document[" + i + "]");
 	    	Document hit = isearcher.doc(result.scoreDocs[i].doc);
-	    	for (Iterator<Field> iterator = hit.getFields().iterator(); iterator.hasNext();) {
-	    		Field field = (Field) iterator.next();
+	    	for (Iterator<Fieldable> iterator = hit.getFields().iterator(); iterator.hasNext();) {
+	    		Fieldable field = iterator.next();
 //				System.out.println("   --> Field: " + field.name() + " v:" + field.stringValue());
 			}
 		}
@@ -132,7 +134,7 @@ public class LuceneTest {
 
 	@Test
 	public void testSingleAsterik() throws ParseException, IOException {
-		 Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 	    // Parse a simple query that searches for "text":
 	    QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
 	    Query query = parser.parse("+filename:/*.doc");
@@ -144,7 +146,7 @@ public class LuceneTest {
 	
 	@Test
 	public void testSingleAsterikWithPrefix() throws ParseException, IOException {
-		 Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 	    // Parse a simple query that searches for "text":
 	    QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
 	    Query query = parser.parse("+filename:/trunk/*.doc");
@@ -156,7 +158,7 @@ public class LuceneTest {
 
 	@Test
 	public void testMultipleAsterik() throws ParseException, IOException {
-		 Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 	    // Parse a simple query that searches for "text":
 	    QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
 	    Query query = parser.parse("+filename:/*te*.doc");
@@ -167,7 +169,7 @@ public class LuceneTest {
 
 	@Test
 	public void testMultipleAsterikUppercase() throws ParseException, IOException {
-		 Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 	    // Parse a simple query that searches for "text":
 	    QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
 	    parser.setLowercaseExpandedTerms(false);
@@ -191,7 +193,7 @@ public class LuceneTest {
 
 	@Test
 	public void testSingleAsterikRestrictionToRevisionRange() throws ParseException, IOException {
-		Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 	    // Parse a simple query that searches for "text":
 	    QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
 	    parser.setLowercaseExpandedTerms(true);
@@ -202,7 +204,7 @@ public class LuceneTest {
 	}
 	@Test
 	public void testSingleAsterikRestrictionToDifferentRevisionRange() throws ParseException, IOException {
-		Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 	    // Parse a simple query that searches for "text":
 	    QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
 	    parser.setLowercaseExpandedTerms(true);
@@ -214,7 +216,7 @@ public class LuceneTest {
 	
 	@Test
 	public void testSingleRevision() throws ParseException, IOException {
-		Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 	    // Parse a simple query that searches for "text":
 	    QueryParser parser = new CustomQueryParser(FieldNames.CONTENTS, analyzer);
 	    parser.setLowercaseExpandedTerms(true);

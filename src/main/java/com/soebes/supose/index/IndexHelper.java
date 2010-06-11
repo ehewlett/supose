@@ -25,6 +25,7 @@
 
 package com.soebes.supose.index;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,13 +66,13 @@ public class IndexHelper {
 		Index index = new Index ();
 		//We assume an existing index...
 		index.setCreate(false);
-		IndexWriter indexWriter = index.createIndexWriter(destination);
 
 		try {
+			IndexWriter indexWriter = index.createIndexWriter(FSDirectory.open(new File(destination)));
 			LOGGER.info("Merging of indexes started.");
 			FSDirectory [] fsDirs = new FSDirectory[indexList.size()];
 			for (int i = 0; i < indexList.size(); i++) {
-				fsDirs[i] = FSDirectory.getDirectory(indexList.get(i));
+				fsDirs[i] = FSDirectory.open(new File(indexList.get(i)));
 			}
 			indexWriter.addIndexesNoOptimize(fsDirs);
 			indexWriter.optimize();

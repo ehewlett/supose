@@ -34,6 +34,8 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.tmatesoft.svn.core.SVNAuthenticationException;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
@@ -104,7 +106,11 @@ public class ScanSingleRepository {
 			//We will scan the repository to the current HEAD of the repository.
 			scanRepository.setEndRevision(endRevision);
 	
-			ScanSingleRepository.scanSingleRepos(scanRepository, indexDirectory + blockNumber, create);
+			try {
+				ScanSingleRepository.scanSingleRepos(scanRepository, indexDirectory + blockNumber, create);
+			} catch (IOException e) {
+				LOGGER.error("Problem during scanSingleRepos occured.", e);
+			}
 			//BLOCK END
 		}
 		return blockNumber;
@@ -116,18 +122,19 @@ public class ScanSingleRepository {
 	 * @param indexDirectory
 	 * @param create
 	 * @param repository
+	 * @throws IOException 
 	 */
-	public static void scanSingleRepos(ScanRepository scanRepository, String indexDirectory, boolean create) {
+	public static void scanSingleRepos(ScanRepository scanRepository, String indexDirectory, boolean create) throws IOException {
 		// BLOCK ANFANG
 
 		Index index = new Index ();
 		//We will create a new one if --create is given on command line
 		//otherwise we will append to the existing index.
-		Analyzer analyzer = new StandardAnalyzer();		
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);		
 		index.setAnalyzer(analyzer);
 
 		index.setCreate(create);
-		IndexWriter indexWriter = index.createIndexWriter(indexDirectory);
+		IndexWriter indexWriter = index.createIndexWriter(FSDirectory.open(new File(indexDirectory)));
 
 		try {
 			LOGGER.info("Scanning started.");

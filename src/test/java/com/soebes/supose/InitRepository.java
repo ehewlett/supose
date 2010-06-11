@@ -35,6 +35,8 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.testng.annotations.BeforeSuite;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
@@ -70,12 +72,12 @@ public class InitRepository extends TestBase {
 	 * will be used to test the functionality of the scanning
 	 * indexing and search process.
 	 * @throws SVNException 
-	 * @throws FileNotFoundException 
 	 * @throws SVNException 
 	 * @throws FileNotFoundException 
+	 * @throws IOException 
 	 */
 	@BeforeSuite
-	public void beforeSuite() throws FileNotFoundException, SVNException {
+	public void beforeSuite() throws SVNException, IOException {
 		createRepository();
 		scanRepos();
 	}
@@ -97,15 +99,15 @@ public class InitRepository extends TestBase {
 		admin.doVerify(new File(getRepositoryDirectory()));
 	}
 	
-	public void scanRepos() throws SVNException {
+	public void scanRepos() throws SVNException, IOException {
 		Index index = new Index ();
 		//We will create a new one if --create is given on command line
 		//otherwise we will append to the existing index.
-		Analyzer analyzer = new StandardAnalyzer();		
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);		
 		index.setAnalyzer(analyzer);
 		//For the test we allways create the index.
 		index.setCreate(true);
-		IndexWriter indexWriter = index.createIndexWriter(getIndexDirectory());
+		IndexWriter indexWriter = index.createIndexWriter(FSDirectory.open(new File(getIndexDirectory())));
 
 		ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(
 			"", 

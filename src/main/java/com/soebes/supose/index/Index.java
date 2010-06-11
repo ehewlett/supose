@@ -25,7 +25,6 @@
 
 package com.soebes.supose.index;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
@@ -34,7 +33,9 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.util.Version;
 
 /**
  * @author Karl Heinz Marbaise
@@ -43,7 +44,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 public class Index {
 	private static Logger LOGGER = Logger.getLogger(Index.class);
 
-	private String indexDirectory = null;
+	private Directory indexDirectory = null;
 	private IndexWriter indexWriter = null;
 	private Analyzer analyzer = null;
 	
@@ -54,28 +55,27 @@ public class Index {
 	
 	public Index () {
 		setIndexDirectory(null);
-		setAnalyzer(new StandardAnalyzer());
+		setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
 		setMergeFactor(1000);
 		setMaxBufferedDocs(1000);
 		setUseCompoundFile(false);
 	}
 	
-	public IndexWriter createIndexWriter (String indexDirectory) {
+	public IndexWriter createIndexWriter (Directory indexDirectory) {
 		LOGGER.debug("createIndexWriter('" + indexDirectory + "')");
 		setIndexDirectory(indexDirectory);
-		File indexDir = new File(getIndexDirectory());
 		IndexWriter writer = null;
 		try {
 			LOGGER.debug("Trying to create a new Index");
 			if (isCreate()) {
 				LOGGER.debug("Trying to create a new index (overwrite an exsting)");
 				//This will create a new index. Independent if one existed before.
-				writer = new IndexWriter(indexDir, getAnalyzer(), true, MaxFieldLength.UNLIMITED);
+				writer = new IndexWriter(getIndexDirectory(), getAnalyzer(), true, MaxFieldLength.UNLIMITED);
 			} else {
 				LOGGER.debug("Trying to create a new index (using an exsting)");
 				//This will use an existing index or will create one if 
 				//no existed before.
-				writer = new IndexWriter(indexDir, getAnalyzer(), MaxFieldLength.UNLIMITED);
+				writer = new IndexWriter(getIndexDirectory(), getAnalyzer(), MaxFieldLength.UNLIMITED);
 			}
 			LOGGER.debug("Created new index.");
 			writer.setUseCompoundFile(isUseCompoundFile());
@@ -100,11 +100,11 @@ public class Index {
 		this.indexWriter = indexWriter;
 	}
 
-	public String getIndexDirectory() {
+	public Directory getIndexDirectory() {
 		return indexDirectory;
 	}
 
-	public void setIndexDirectory(String indexDirectory) {
+	public void setIndexDirectory(Directory indexDirectory) {
 		this.indexDirectory = indexDirectory;
 	}
 

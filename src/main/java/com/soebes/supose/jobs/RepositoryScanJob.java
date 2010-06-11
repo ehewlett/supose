@@ -31,6 +31,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 import org.quartz.InterruptableJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -116,7 +117,7 @@ public class RepositoryScanJob implements InterruptableJob, StatefulJob {
 			Index index = new Index ();
 			//We will allways create a new index.
 			index.setCreate(true);
-			IndexWriter indexWriter = index.createIndexWriter(jobIndexName);
+			IndexWriter indexWriter = index.createIndexWriter(FSDirectory.open(new File(jobIndexName)));
 			
 			//New revision exist 'till the last scanning...
 			//scan the content

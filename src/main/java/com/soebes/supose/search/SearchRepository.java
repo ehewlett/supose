@@ -25,6 +25,7 @@
 
 package com.soebes.supose.search;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,6 +37,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.QueryParser;
@@ -46,6 +48,8 @@ import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import com.soebes.supose.FieldNames;
 
@@ -60,12 +64,12 @@ public class SearchRepository {
 	
 	public SearchRepository() {
 		setIndexDirectory(null);
-		setAnalyzer(new StandardAnalyzer());
+		setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
 	}
 
 	public SearchRepository(String indexDirectory) {
 		setIndexDirectory(indexDirectory);
-		setAnalyzer(new StandardAnalyzer());
+		setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
 		setReader(null);
 	}
 
@@ -128,7 +132,7 @@ public class SearchRepository {
 		try {
 			for (int i = 0; i < result.scoreDocs.length; i++) {
 		    	Document hit = getSearcher().doc(result.scoreDocs[i].doc);
-				List<Field> fieldList = hit.getFields();
+				List<Fieldable> fieldList = hit.getFields();
 				ResultEntry re = new ResultEntry();
 				for(int k=0; k<fieldList.size();k++) {
 					Field field = (Field) fieldList.get(k);
@@ -163,15 +167,15 @@ public class SearchRepository {
 	    TopDocs result = null;	    
 	    try {
 	    	
-	    	reader = IndexReader.open(getIndexDirectory());
+	    	reader = IndexReader.open(FSDirectory.open(new File(getIndexDirectory())));
 	    	setReader(reader);
 
 	    	BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
 	    	Searcher searcher = new IndexSearcher(reader);
 	    	setSearcher(searcher);
 	    	SortField[] sf = {
-	    		new SortField(FieldNames.REVISION.toString()),
-	    		new SortField(FieldNames.FILENAME.toString()), //We use for sorting the filename
+	    		new SortField(FieldNames.REVISION.toString(), SortField.LONG),
+	    		new SortField(FieldNames.FILENAME.toString(), SortField.STRING_VAL), //We use for sorting the filename
 	    	};
 	    	Sort sort = new Sort(sf);
 	    	//Here we define the default field for searching.

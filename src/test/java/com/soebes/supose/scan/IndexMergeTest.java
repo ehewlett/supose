@@ -77,7 +77,7 @@ public class IndexMergeTest {
 
 	public void testIndex1 () throws Exception {
 		Index index = new Index ();
-		IndexWriter indexWriter = index.createIndexWriter("index1");
+		IndexWriter indexWriter = index.createIndexWriter(FSDirectory.open(new File("index1")));
 		Document doc = new Document();
 		addTokenizedField(doc, "revision", "1");
 		addTokenizedField(doc, "revision", "2");
@@ -87,7 +87,7 @@ public class IndexMergeTest {
 	
 	public void testIndex2 () throws Exception {
 		Index index = new Index ();
-		IndexWriter indexWriter = index.createIndexWriter("index2");
+		IndexWriter indexWriter = index.createIndexWriter(FSDirectory.open(new File("index2")));
 		Document doc = new Document();
 		addTokenizedField(doc, "revision", "3");
 		addTokenizedField(doc, "revision", "4");
@@ -99,9 +99,9 @@ public class IndexMergeTest {
 	public void testMergeIndexes () throws Exception {
 		Index index = new Index ();
 		
-		IndexWriter indexWriter = index.createIndexWriter("result");
+		IndexWriter indexWriter = index.createIndexWriter(FSDirectory.open(new File("result")));
 
-		FSDirectory fsDirs[] = { FSDirectory.getDirectory("index1"), FSDirectory.getDirectory("index2") };
+		FSDirectory fsDirs[] = { FSDirectory.open(new File("index1")), FSDirectory.open(new File("index2")) };
 		
 		indexWriter.addIndexesNoOptimize(fsDirs);
 		indexWriter.optimize();

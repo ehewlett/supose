@@ -32,9 +32,10 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.util.Version;
 
 import com.soebes.supose.FieldNames;
 
@@ -46,10 +47,10 @@ import com.soebes.supose.FieldNames;
 public class CustomQueryParser extends QueryParser {
 	private static Logger LOGGER = Logger.getLogger(CustomQueryParser.class);
 	public CustomQueryParser(FieldNames field, Analyzer analyzer) {
-		super(field.getValue(), analyzer);
+		super(Version.LUCENE_30, field.getValue(), analyzer);
 	}
 	public CustomQueryParser(String field, Analyzer analyzer) {
-		super(field, analyzer);
+		super(Version.LUCENE_30, field, analyzer);
 	}
 
 	/* (non-Javadoc)
@@ -86,11 +87,13 @@ public class CustomQueryParser extends QueryParser {
 			try {
 				int num1 = Integer.parseInt(part1);
 				int num2 = Integer.parseInt(part2);
-				return new RangeQuery(
-					new Term(field, NumberUtils.pad(num1)),
-					new Term(field, NumberUtils.pad(num2)), 
-					inclusive
-				);
+				return new TermRangeQuery(
+					field, 
+					NumberUtils.pad(num1), 
+					NumberUtils.pad(num2), 
+					inclusive,	// include lower 
+					true		// include upper
+				);  
 			} catch (NumberFormatException e) {
 				throw new ParseException(e.getMessage());
 			}

@@ -26,14 +26,14 @@
 package com.soebes.supose.scan;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.TopDocs;
@@ -43,6 +43,7 @@ import org.testng.annotations.Test;
 
 import com.soebes.supose.FieldNames;
 import com.soebes.supose.TestBase;
+import com.soebes.supose.search.ResultEntry;
 import com.soebes.supose.search.SearchRepository;
 
 @Test
@@ -151,6 +152,9 @@ public class SearchRepositoryGetQueryTest extends TestBase {
 		//3.0
 		//Windows XP
 		TopDocs result = searchRepository.getQueryResult("+contents:\"This is a Test In OpenOffice 3.0 Windows XP\"");
+		for (int i = 0; i < result.scoreDocs.length; i++) {
+			System.out.println("TopDocs: " + result.scoreDocs[i].toString());
+		}
 	    assertEquals(result.totalHits, 1);
 	}
 
@@ -211,10 +215,10 @@ public class SearchRepositoryGetQueryTest extends TestBase {
 		assertEquals(result.totalHits, 12);
 	}
 
-	private Field searchForField (Document hit, String name) {
-		Field result = null;
-		List<Field> fieldList = hit.getFields();
-		for (Field field : fieldList) {
+	private Fieldable searchForField (Document hit, String name) {
+		Fieldable result = null;
+		List<Fieldable> fieldList = hit.getFields();
+		for (Fieldable field : fieldList) {
 			if (field.name().equals(name)) {
 				result = field;
 			}
@@ -227,14 +231,14 @@ public class SearchRepositoryGetQueryTest extends TestBase {
 		assertEquals(result.totalHits, 1);
 
 		Document hit = searchRepository.getSearcher().doc(result.scoreDocs[0].doc);
-		List<Field> fieldList = hit.getFields();
+		List<Fieldable> fieldList = hit.getFields();
 
 		//This entry is not allowed to have a filename entry!!!
-		Field fileNameField  = searchForField(hit, FieldNames.FILENAME.getValue());
+		Fieldable fileNameField  = searchForField(hit, FieldNames.FILENAME.getValue());
 		assertNotNull(fileNameField, "We have expected to find the " + FieldNames.FILENAME + " field.");
 		assertEquals(fileNameField.stringValue().length(), 0, "We have expected to get an empty filename field for a tag which is a directory.");
 
-		Field pathField  = searchForField(hit, FieldNames.PATH.getValue());
+		Fieldable pathField  = searchForField(hit, FieldNames.PATH.getValue());
 		assertNotNull(pathField, "We have expected to find the " + FieldNames.PATH + " field.");
 		assertEquals(pathField.stringValue(), "/project1/tags/RELEASE-0.0.1/", "We have expected to get an particular path value");
 	}

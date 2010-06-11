@@ -170,6 +170,9 @@ public class SearchRepositoryGetResultTest extends TestBase {
 		//3.0
 		//Windows XP
 		List<ResultEntry> result = searchRepository.getResult("+contents:\"This is a Test In OpenOffice 3.0 Windows XP\"");
+		for (ResultEntry resultEntry : result) {
+			System.out.println("Entry: " + resultEntry.getFilename());
+		}
 	    assertEquals(result.size(), 1);
 	}
 
