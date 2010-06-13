@@ -43,6 +43,11 @@
 					</association>
 				</field>
 
+				<field>
+					<version>1.0.0</version>
+					<name>baseDirectory</name>
+					<type>String</type>
+				</field>
 			</fields>
 		</class>
 
@@ -67,10 +72,10 @@
 			<version>1.0.0</version>
 			<fields>
 				<field>
-					<name>schduleRepository</name>
+					<name>scheduledRepository</name>
 					<version>1.0.0</version>
 					<association xml.itemsStyle="flat">
-						<type>SchedulerRepositoryItem</type>
+						<type>ScheduledRepositoryItem</type>
 						<multiplicity>*</multiplicity>
 					</association>
 				</field>
@@ -91,6 +96,11 @@
 				<field>
 					<version>1.0.0</version>
 					<name>name</name>
+					<type>String</type>
+				</field>
+				<field>
+					<version>1.0.0</version>
+					<name>url</name>
 					<type>String</type>
 				</field>
 				<field>
@@ -118,12 +128,19 @@
 					<name>blockSize</name>
 					<type>long</type>
 				</field>
+				<field>
+					<name>indexer</name>
+					<version>1.0.0</version>
+					<association>
+						<type>Indexer</type>
+					</association>
+				</field>
 			</fields>
 		</class>
 
-		<class>
-			<id>schedulerRepositoryItem</id>
-			<name>SchedulerRepositoryItem</name>
+		<class xml.tagName="scheduledRepository">
+			<id>scheduledRepositoryItem</id>
+			<name>ScheduledRepositoryItem</name>
 			<version>1.0.0</version>
 			<fields>
 				<field>
@@ -137,6 +154,31 @@
 				<field>
 					<version>1.0.0</version>
 					<name>schedulerTrigger</name>
+					<type>String</type>
+				</field>
+				<field>
+					<name>indexer</name>
+					<version>1.0.0</version>
+					<association>
+						<type>Indexer</type>
+					</association>
+				</field>
+			</fields>
+		</class>
+
+		<class>
+			<id>indexer</id>
+			<name>Indexer</name>
+			<version>1.0.0</version>
+			<fields>
+				<field>
+					<version>1.0.0</version>
+					<name>tempIndex</name>
+					<type>String</type>
+				</field>
+				<field>
+					<version>1.0.0</version>
+					<name>resultIndex</name>
 					<type>String</type>
 				</field>
 			</fields>
