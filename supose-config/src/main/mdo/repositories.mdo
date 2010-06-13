@@ -85,7 +85,6 @@
 				<field>
 					<version>1.0.0</version>
 					<required>true</required>
-					<identifier>true</identifier>
 					<name>id</name>
 					<type>String</type>
 				</field>

@@ -12,7 +12,6 @@ import com.soebes.supose.config.model.SchedulerRepositoryItem;
 import com.soebes.supose.config.model.SchedulerRepositoryList;
 import com.soebes.supose.config.model.io.xpp3.RepositoriesXpp3Writer;
 
-
 public class CreateRepositoryConfigurationTest {
 
 	public String convertToString(RepositoryConfigContainer repositoryConfigContainer) throws IOException {
