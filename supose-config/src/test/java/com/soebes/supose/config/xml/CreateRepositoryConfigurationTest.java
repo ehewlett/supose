@@ -26,7 +26,6 @@ public class CreateRepositoryConfigurationTest {
 		RepositoryConfigContainer rcc = new RepositoryConfigContainer();
 		RepositoryList rl = new RepositoryList();
 
-		
 		RepositoryItem ri1 = new RepositoryItem();
 		ri1.setBlockSize(10000);
 		ri1.setFromRevision("1");
@@ -48,7 +47,7 @@ public class CreateRepositoryConfigurationTest {
 		ri2.setPassword("Password");
 		
 		rl.addRepository(ri2);
-		rcc.setRepository(rl);
+		rcc.setRepositories(rl);
 		
 		SchedulerRepositoryList srl = new SchedulerRepositoryList();
 		
@@ -61,4 +60,27 @@ public class CreateRepositoryConfigurationTest {
 		rcc.setBaseDirectory("/home/test");
 		System.out.println(convertToString(rcc));
 	}
+
+	@Test
+	public void createWriteSingleReposTest() throws IOException {
+		RepositoryConfigContainer rcc = new RepositoryConfigContainer();
+		RepositoryList rl = new RepositoryList();
+
+		RepositoryItem ri1 = new RepositoryItem();
+		ri1.setBlockSize(10000);
+		ri1.setFromRevision("1");
+		ri1.setToRevision("1000");
+		ri1.setId("SupoSE");
+		ri1.setName("SupoSE Repository");
+		ri1.setUsername("username");
+		ri1.setPassword("Password");
+		
+		rl.addRepository(ri1);
+		
+		rcc.setRepositories(rl);
+		
+		rcc.setBaseDirectory("/home/test");
+		System.out.println(convertToString(rcc));
+	}
+
 }

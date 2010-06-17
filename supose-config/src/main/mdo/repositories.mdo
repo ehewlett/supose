@@ -20,7 +20,7 @@
 			<version>1.0.0</version>
 			<fields>
 				<field xml.tagName="repositories">
-					<name>repository</name>
+					<name>repositories</name>
 					<version>1.0.0</version>
 					<description>
 						<![CDATA[
