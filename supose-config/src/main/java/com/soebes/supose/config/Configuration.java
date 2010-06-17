@@ -1,3 +1,27 @@
+/**
+ * The (Su)bversion Re(po)sitory (S)earch (E)ngine (SupoSE for short).
+ *
+ * Copyright (c) 2007, 2008, 2009, 2010 by SoftwareEntwicklung Beratung Schulung (SoEBeS)
+ * Copyright (c) 2007, 2008, 2009, 2010 by Karl Heinz Marbaise
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ *
+ * The License can viewed online under http://www.gnu.org/licenses/gpl.html
+ * If you have any questions about the Software or about the license
+ * just write an email to license@soebes.de
+ */
 package com.soebes.supose.config;
 
 import java.io.File;
@@ -11,6 +35,8 @@ import org.apache.log4j.Logger;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.soebes.supose.config.model.RepositoryConfigContainer;
+import com.soebes.supose.config.model.RepositoryList;
+import com.soebes.supose.config.model.SchedulerRepositoryList;
 import com.soebes.supose.config.model.io.xpp3.RepositoriesXpp3Reader;
 import com.soebes.supose.config.model.io.xpp3.RepositoriesXpp3Writer;
 
@@ -21,6 +47,17 @@ public class Configuration {
 
 	public Configuration() {
 		configContainer = new RepositoryConfigContainer();
+	}
+
+	public Configuration(File file) {
+		configContainer = new RepositoryConfigContainer();
+		load(file);
+	}
+
+	public Configuration(String fileName) {
+		File configFile = new File(fileName);
+		configContainer = new RepositoryConfigContainer();
+		load(configFile);
 	}
 
 	@Override
@@ -69,6 +106,28 @@ public class Configuration {
 		} catch (XmlPullParserException e) {
 			LOGGER.error("XmlPullParser:", e);
 		}
+	}
+
+	public RepositoryList getRepositories() {
+		if (configContainer.getRepositories() == null) {
+			configContainer.setRepositories(new RepositoryList());
+		}
+		return configContainer.getRepositories();
+	}
+
+	public SchedulerRepositoryList getScheduler() {
+		if (configContainer.getScheduler() == null) {
+			configContainer.setScheduler(new SchedulerRepositoryList());
+		} 
+		return configContainer.getScheduler();
+	}
+
+	public String getBaseDirectory() {
+		return configContainer.getBaseDirectory();
+	}
+	
+	public void setBaseDirectory(String baseDir) {
+		configContainer.setBaseDirectory(baseDir);
 	}
 
 }
