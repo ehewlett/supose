@@ -18,16 +18,15 @@ import org.apache.myfaces.custom.tree2.TreeNode;
  *
  */
 public class TreeHandler {
-	private static Logger log = Logger.getLogger(TreeHandler.class);
 
-	private TreeModel treeModel;
-
-	private String reposRelativePath;
-	private String folder;
-	private String revisionStr;
+    private static Logger log = Logger.getLogger(TreeHandler.class);
+    private TreeModel treeModel;
+    private String reposRelativePath;
+    private String folder;
+    private String revisionStr;
 
     public TreeHandler() {
-    	log.debug("TreeHandler::TreeHandler()");
+        log.debug("TreeHandler::TreeHandler()");
     }
 
     public TreeModel getTreeModel() {
@@ -35,43 +34,42 @@ public class TreeHandler {
     }
 
     public TreeNode getRoot() {
-    	log.debug("TreeHandler::getRoot()");
-    	return null;
+        log.debug("TreeHandler::getRoot()");
+        return null;
     }
 
     public String expandAll() {
-    	treeModel.expandAll();
-    	return null;    	
+        treeModel.expandAll();
+        return null;
     }
 
     public void processAction(ActionEvent event) throws AbortProcessingException {
-    	log.debug("TreeHandler::processAction()");
-        UIComponent component = (UIComponent)event.getSource();
+        log.debug("TreeHandler::processAction()");
+        UIComponent component = (UIComponent) event.getSource();
         while (!(component != null && component instanceof HtmlTree)) {
             component = component.getParent();
         }
         if (component != null) {
-            HtmlTree tree = (HtmlTree)component;
+            HtmlTree tree = (HtmlTree) component;
             tree.setNodeSelected(event);
         }
     }
-    
+
     public String getRepository() {
-    	return reposRelativePath;
-	}
+        return reposRelativePath;
+    }
 
-	public String getFolder() {
-		return folder;
-	}
+    public String getFolder() {
+        return folder;
+    }
 
-	public String getRevision() {
-		return revisionStr;
-	}
+    public String getRevision() {
+        return revisionStr;
+    }
 
+    public String ok() {
+        log.info("ok()");
 
-	public String ok() {	
-    	log.info("ok()");
-
-		return "SUCCESS";
-	}
+        return "SUCCESS";
+    }
 }

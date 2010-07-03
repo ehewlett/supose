@@ -2,10 +2,10 @@
 
 <suite name="AllTestsSuiteName">
 
-	<test name="AllTestsTestName" >
-		<packages>
-			<package name="com.soebes.supose.*"/>
-		</packages>
-	</test>
+    <test name="AllTestsTestName" >
+        <packages>
+            <package name="com.soebes.supose.*"/>
+        </packages>
+    </test>
 
 </suite>

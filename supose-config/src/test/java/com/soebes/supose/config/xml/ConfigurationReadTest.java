@@ -36,23 +36,22 @@ import com.soebes.supose.config.Configuration;
 
 public class ConfigurationReadTest extends TestBase {
 
-	@Test
-	public void readXMLConfigurationTest() throws IOException, XmlPullParserException {
-		File configFile = new File(getTestResourcesDirectory() + File.separator + "repositories.xml");
-		Configuration config = new Configuration(configFile);
-		Assert.assertNotNull(config.getRepositories());
-		Assert.assertNotNull(config.getScheduler());
-		Assert.assertEquals(config.getRepositories().getRepository().size(), 2);
-		Assert.assertEquals(config.getScheduler().getScheduledRepository().size(), 1);
-	}
+    @Test
+    public void readXMLConfigurationTest() throws IOException, XmlPullParserException {
+        File configFile = new File(getTestResourcesDirectory() + File.separator + "repositories.xml");
+        Configuration config = new Configuration(configFile);
+        Assert.assertNotNull(config.getRepositories());
+        Assert.assertNotNull(config.getScheduler());
+        Assert.assertEquals(config.getRepositories().getRepository().size(), 2);
+        Assert.assertEquals(config.getScheduler().getScheduledRepository().size(), 1);
+    }
 
-	@Test
-	public void readPartialConfigurationTest() throws IOException, XmlPullParserException {
-		File configFile = new File(getTestResourcesDirectory() + File.separator + "repositories-partial.xml");
-		Configuration config = new Configuration(configFile);
-		Assert.assertNotNull(config.getRepositories());
-		Assert.assertEquals(config.getRepositories().getRepository().size(), 1);
-		Assert.assertEquals(config.getScheduler().getScheduledRepository().size(), 0);
-	}
-
+    @Test
+    public void readPartialConfigurationTest() throws IOException, XmlPullParserException {
+        File configFile = new File(getTestResourcesDirectory() + File.separator + "repositories-partial.xml");
+        Configuration config = new Configuration(configFile);
+        Assert.assertNotNull(config.getRepositories());
+        Assert.assertEquals(config.getRepositories().getRepository().size(), 1);
+        Assert.assertEquals(config.getScheduler().getScheduledRepository().size(), 0);
+    }
 }

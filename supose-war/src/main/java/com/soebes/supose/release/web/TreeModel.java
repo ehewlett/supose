@@ -18,39 +18,37 @@ import org.apache.myfaces.custom.tree2.HtmlTree;
  * @see http://support.teamdev.com/message/5540 (Test implementaion?)
  */
 public class TreeModel {
-	
-	// Logger
-	private static Logger log = Logger.getLogger(TreeModel.class);
 
-	private HtmlTree tree;
-	private String nodePath;
+    // Logger
+    private static Logger log = Logger.getLogger(TreeModel.class);
+    private HtmlTree tree;
+    private String nodePath;
 
-	public TreeModel() {
-		log.debug("TreeModel::TreeModel()");
-	}	
+    public TreeModel() {
+        log.debug("TreeModel::TreeModel()");
+    }
 
-	public void setTree(HtmlTree tree) {
-		this.tree = tree;
-	}
+    public void setTree(HtmlTree tree) {
+        this.tree = tree;
+    }
 
-	public HtmlTree getTree() {
-		return tree;
-	}
+    public HtmlTree getTree() {
+        return tree;
+    }
 
-	public void expandAll() {
-		tree.expandAll();
-	}
+    public void expandAll() {
+        tree.expandAll();
+    }
 
-	public void setNodePath(String nodePath) {
-		this.nodePath = nodePath;
-	}
+    public void setNodePath(String nodePath) {
+        this.nodePath = nodePath;
+    }
 
-	public String getNodePath() {
-		return nodePath;
-	}
+    public String getNodePath() {
+        return nodePath;
+    }
 
-	public void expandPath(ActionEvent event) {
-		tree.expandPath(tree.getPathInformation(nodePath));
-	}
-
+    public void expandPath(ActionEvent event) {
+        tree.expandPath(tree.getPathInformation(nodePath));
+    }
 }

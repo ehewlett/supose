@@ -35,105 +35,105 @@ import com.soebes.supose.config.model.ScheduledRepositoryItem;
 
 public class CreateRepositoryConfigurationTest {
 
-	@Test
-	public void createTest() throws IOException {
-		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-			+ "<repositoryConfiguration>\n"
-			+ "  <repositories>\n"
-			+ "    <repository>\n"
-			+ "      <id>SupoSE</id>\n"
-			+ "      <name>SupoSE Repository</name>\n"
-			+ "      <username>username</username>\n"
-			+ "      <password>Password</password>\n"
-			+ "      <fromRevision>1</fromRevision>\n"
-			+ "      <toRevision>1000</toRevision>\n"
-			+ "      <blockSize>10000</blockSize>\n"
-			+ "    </repository>\n"
-			+ "    <repository>\n"
-			+ "      <id>JaGOSi</id>\n"
-			+ "      <name>JaGOSiRepository</name>\n"
-			+ "      <username>username</username>\n"
-			+ "      <password>Password</password>\n"
-			+ "      <fromRevision>1</fromRevision>\n"
-			+ "      <toRevision>1000</toRevision>\n"
-			+ "      <blockSize>10000</blockSize>\n"
-			+ "    </repository>\n"
-			+ "  </repositories>\n"
-			+ "  <scheduler>\n"
-			+ "    <scheduledRepository>\n"
-			+ "      <repositoryId>SupoSE</repositoryId>\n"
-			+ "      <schedulerTrigger>0 0 0 00 </schedulerTrigger>\n"
-			+ "    </scheduledRepository>\n"
-			+ "  </scheduler>\n"
-			+ "  <baseDirectory>/home/test</baseDirectory>\n"
-			+ "</repositoryConfiguration>\n";
+    @Test
+    public void createTest() throws IOException {
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<repositoryConfiguration>\n"
+                + "  <repositories>\n"
+                + "    <repository>\n"
+                + "      <id>SupoSE</id>\n"
+                + "      <name>SupoSE Repository</name>\n"
+                + "      <username>username</username>\n"
+                + "      <password>Password</password>\n"
+                + "      <fromRevision>1</fromRevision>\n"
+                + "      <toRevision>1000</toRevision>\n"
+                + "      <blockSize>10000</blockSize>\n"
+                + "    </repository>\n"
+                + "    <repository>\n"
+                + "      <id>JaGOSi</id>\n"
+                + "      <name>JaGOSiRepository</name>\n"
+                + "      <username>username</username>\n"
+                + "      <password>Password</password>\n"
+                + "      <fromRevision>1</fromRevision>\n"
+                + "      <toRevision>1000</toRevision>\n"
+                + "      <blockSize>10000</blockSize>\n"
+                + "    </repository>\n"
+                + "  </repositories>\n"
+                + "  <scheduler>\n"
+                + "    <scheduledRepository>\n"
+                + "      <repositoryId>SupoSE</repositoryId>\n"
+                + "      <schedulerTrigger>0 0 0 00 </schedulerTrigger>\n"
+                + "    </scheduledRepository>\n"
+                + "  </scheduler>\n"
+                + "  <baseDirectory>/home/test</baseDirectory>\n"
+                + "</repositoryConfiguration>\n";
 
-		Configuration config = new Configuration();
+        Configuration config = new Configuration();
 
-		RepositoryItem ri1 = new RepositoryItem();
-		ri1.setBlockSize(10000);
-		ri1.setFromRevision("1");
-		ri1.setToRevision("1000");
-		ri1.setId("SupoSE");
-		ri1.setName("SupoSE Repository");
-		ri1.setUsername("username");
-		ri1.setPassword("Password");
-		
-		config.getRepositories().addRepository(ri1);
-		
-		RepositoryItem ri2 = new RepositoryItem();
-		ri2.setBlockSize(10000);
-		ri2.setFromRevision("1");
-		ri2.setToRevision("1000");
-		ri2.setId("JaGOSi");
-		ri2.setName("JaGOSiRepository");
-		ri2.setUsername("username");
-		ri2.setPassword("Password");
-		
-		config.getRepositories().addRepository(ri2);
-		
-		ScheduledRepositoryItem sri = new ScheduledRepositoryItem();
-		sri.setRepositoryId("SupoSE");
-		sri.setSchedulerTrigger("0 0 0 00 ");
+        RepositoryItem ri1 = new RepositoryItem();
+        ri1.setBlockSize(10000);
+        ri1.setFromRevision("1");
+        ri1.setToRevision("1000");
+        ri1.setId("SupoSE");
+        ri1.setName("SupoSE Repository");
+        ri1.setUsername("username");
+        ri1.setPassword("Password");
 
-		config.getScheduler().addScheduledRepository(sri);
+        config.getRepositories().addRepository(ri1);
 
-		config.setBaseDirectory("/home/test");
+        RepositoryItem ri2 = new RepositoryItem();
+        ri2.setBlockSize(10000);
+        ri2.setFromRevision("1");
+        ri2.setToRevision("1000");
+        ri2.setId("JaGOSi");
+        ri2.setName("JaGOSiRepository");
+        ri2.setUsername("username");
+        ri2.setPassword("Password");
 
-		Assert.assertEquals(config.toString(), expected);
-	}
+        config.getRepositories().addRepository(ri2);
 
-	@Test
-	public void createWriteSingleReposTest() throws IOException {
-		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-			+ "<repositoryConfiguration>\n"
-			+ "  <repositories>\n"
-			+ "    <repository>\n"
-			+ "      <id>SupoSE</id>\n"
-			+ "      <name>SupoSE Repository</name>\n"
-			+ "      <username>username</username>\n"
-			+ "      <password>Password</password>\n"
-			+ "      <fromRevision>1</fromRevision>\n"
-			+ "      <toRevision>1000</toRevision>\n"
-			+ "      <blockSize>10000</blockSize>\n"
-			+ "    </repository>\n"
-			+ "  </repositories>\n"
-			+ "  <baseDirectory>/home/test</baseDirectory>\n"
-			+ "</repositoryConfiguration>\n";
+        ScheduledRepositoryItem sri = new ScheduledRepositoryItem();
+        sri.setRepositoryId("SupoSE");
+        sri.setSchedulerTrigger("0 0 0 00 ");
 
-		Configuration config = new Configuration();
+        config.getScheduler().addScheduledRepository(sri);
 
-		RepositoryItem ri1 = new RepositoryItem();
-		ri1.setBlockSize(10000);
-		ri1.setFromRevision("1");
-		ri1.setToRevision("1000");
-		ri1.setId("SupoSE");
-		ri1.setName("SupoSE Repository");
-		ri1.setUsername("username");
-		ri1.setPassword("Password");
+        config.setBaseDirectory("/home/test");
 
-		config.getRepositories().addRepository(ri1);
-		config.setBaseDirectory("/home/test");
-		Assert.assertEquals(config.toString(), expected);
-	}
+        Assert.assertEquals(config.toString(), expected);
+    }
+
+    @Test
+    public void createWriteSingleReposTest() throws IOException {
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<repositoryConfiguration>\n"
+                + "  <repositories>\n"
+                + "    <repository>\n"
+                + "      <id>SupoSE</id>\n"
+                + "      <name>SupoSE Repository</name>\n"
+                + "      <username>username</username>\n"
+                + "      <password>Password</password>\n"
+                + "      <fromRevision>1</fromRevision>\n"
+                + "      <toRevision>1000</toRevision>\n"
+                + "      <blockSize>10000</blockSize>\n"
+                + "    </repository>\n"
+                + "  </repositories>\n"
+                + "  <baseDirectory>/home/test</baseDirectory>\n"
+                + "</repositoryConfiguration>\n";
+
+        Configuration config = new Configuration();
+
+        RepositoryItem ri1 = new RepositoryItem();
+        ri1.setBlockSize(10000);
+        ri1.setFromRevision("1");
+        ri1.setToRevision("1000");
+        ri1.setId("SupoSE");
+        ri1.setName("SupoSE Repository");
+        ri1.setUsername("username");
+        ri1.setPassword("Password");
+
+        config.getRepositories().addRepository(ri1);
+        config.setBaseDirectory("/home/test");
+        Assert.assertEquals(config.toString(), expected);
+    }
 }
