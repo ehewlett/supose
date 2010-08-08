@@ -146,18 +146,18 @@ public class SuposeCLI {
 		LOGGER.info("Start with scanning of revisions.");
 		
 		
-		ScanRepository scanRepository = new ScanRepository();
-
-		CLIInterceptor interceptor = new CLIInterceptor();
-		scanRepository.registerScanInterceptor(interceptor);
+//		ScanRepository scanRepository = new ScanRepository();
+//
+//		CLIInterceptor interceptor = new CLIInterceptor();
+//		scanRepository.registerScanInterceptor(interceptor);
+//		
+//		CLILogEntryInterceptor logEntryInterceptor = new CLILogEntryInterceptor();
+//		scanRepository.registerLogEntryInterceptor(logEntryInterceptor);
+//
+//		CLIChangeSetInterceptor changeSetInterceptor = new CLIChangeSetInterceptor();
+//		scanRepository.registerChangeSetInterceptor(changeSetInterceptor);
 		
-		CLILogEntryInterceptor logEntryInterceptor = new CLILogEntryInterceptor();
-		scanRepository.registerLogEntryInterceptor(logEntryInterceptor);
-
-		CLIChangeSetInterceptor changeSetInterceptor = new CLIChangeSetInterceptor();
-		scanRepository.registerChangeSetInterceptor(changeSetInterceptor);
-		
-		long blockNumber = ScanSingleRepository.scanFullRepository(scanRepository, url, fromRev, indexDirectory, create, authManager);
+		long blockNumber = ScanSingleRepository.scanFullRepository(url, fromRev, indexDirectory, create, authManager);
 
 		LOGGER.info("Scanning of revisions done");
 

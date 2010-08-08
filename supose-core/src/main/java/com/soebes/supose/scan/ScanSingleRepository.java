@@ -46,9 +46,31 @@ import com.soebes.supose.utility.AnalyzerFactory;
 public class ScanSingleRepository {
 	private static Logger LOGGER = Logger.getLogger(ScanSingleRepository.class);
 
+	private static int MAX_NUMBER_OF_THREADS = 3;
+	
+	private static ArrayList<ScanThread> runnings = new ArrayList<ScanThread>();
+
+	public static boolean areAlive() {
+		boolean result = false;
+		for (ScanThread scanThread : runnings) {
+			if (scanThread.isAlive()) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	public static int numberOfRunningScanThreads() {
+		int result = 0;
+		for (ScanThread scanThread : runnings) {
+			if (scanThread.isAlive()) {
+				result ++;
+			}
+		}
+		return result;
+	}
 
 	public static long scanFullRepository(
-		ScanRepository scanRepository,
 		String url, 
 		long fromRev, 
 		String indexDirectory, 
@@ -56,7 +78,7 @@ public class ScanSingleRepository {
 		ISVNAuthenticationManager authManager
 	) throws SVNException {
 		Repository repository = new Repository(url, authManager);
-
+		
 		boolean firstTime = true;
 
 		// Assuming we have fromRev: 1
@@ -76,7 +98,6 @@ public class ScanSingleRepository {
 
 			blockNumber = revisions / deltaRevisions;
 
-			//BLOCK BEGIN
 			if (create) {
 				if (firstTime) {
 					firstTime = false;
@@ -85,17 +106,54 @@ public class ScanSingleRepository {
 				}
 			}
 
+			ScanRepository scanRepository = new ScanRepository();
+
+			CLIInterceptor interceptor = new CLIInterceptor();
+			scanRepository.registerScanInterceptor(interceptor);
+			
+			CLILogEntryInterceptor logEntryInterceptor = new CLILogEntryInterceptor();
+			scanRepository.registerLogEntryInterceptor(logEntryInterceptor);
+
+			CLIChangeSetInterceptor changeSetInterceptor = new CLIChangeSetInterceptor();
+			scanRepository.registerChangeSetInterceptor(changeSetInterceptor);
+
+			
 			scanRepository.setLogEntries(new ArrayList<SVNLogEntry>());
-			scanRepository.setRepository(repository);
+			
+			Repository threadRepository = new Repository(url, authManager);
+
+			scanRepository.setRepository(threadRepository);
 	
 			//We start with the revision which is given on the command line.
 			//If it is not given we will start with revision 1.
 			scanRepository.setStartRevision(startRevision); 
 			//We will scan the repository to the current HEAD of the repository.
 			scanRepository.setEndRevision(endRevision);
-	
-			ScanSingleRepository.scanSingleRepos(scanRepository, indexDirectory + blockNumber, create);
-			//BLOCK END
+
+			//We have to limit the number of running threads...
+			if (numberOfRunningScanThreads() >= MAX_NUMBER_OF_THREADS) {
+				// We have to wait till one other thread is ready...
+				while (areAlive()) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						//Intentially left blank
+					}
+				}
+			}
+
+			ScanThread scanThread = new ScanThread(scanRepository, indexDirectory + blockNumber, create);
+			scanThread.start();
+
+			runnings.add(scanThread);
+		}
+		//Wait if threads are already running...
+		while (areAlive()) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				//Intentially left blank
+			}
 		}
 		return blockNumber;
 	}
