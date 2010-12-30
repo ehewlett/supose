@@ -1,26 +1,79 @@
 package com.soebes.subversion.pbac;
 
+import java.util.ArrayList;
+
 public class AccessRule {
+
+	private ArrayList<Access> accessList;
 
 	private String repositoryName;
 	private String path;
 
 	public AccessRule(String repositoryName, String path) {
 		super();
-		this.repositoryName = repositoryName;
-		this.path = path;
+		if (!path.endsWith("/")) {
+			path += "/";
+		}
+		setRepositoryName(repositoryName);
+		setPath(path);
+		setAccessList(new ArrayList<Access>());
 	}
+
 	public String getRepositoryName() {
 		return repositoryName;
 	}
+	
 	public void setRepositoryName(String repositoryName) {
 		this.repositoryName = repositoryName;
 	}
+	
 	public String getPath() {
 		return path;
 	}
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
+	public void setAccessList(ArrayList<Access> accessList) {
+		this.accessList = accessList;
+	}
+
+	public ArrayList<Access> getAccessList() {
+		return accessList;
+	}
+
+	public void add(User user, AccessLevel readWrite) {
+		getAccessList().add(new Access(user, readWrite));
+	}
+
+	public AccessLevel getAccess(User user, String repository, String path) {
+		return getAccess(user.getName(), repository, path);
+	}
+
+	public AccessLevel getAccess(String user, String repository, String path) {
+		AccessLevel result = AccessLevel.NOTHING;
+		if (getRepositoryName().equalsIgnoreCase(repository)) {
+			Path p = new Path(getPath());
+			if (p.contains(path)) {
+				result = getAccessForUser(user);
+			}
+		}
+		
+		return result;
+	}
+
+	public AccessLevel getAccessForUser(User user) {
+		return getAccessForUser(user.getName());
+	}
+
+	public AccessLevel getAccessForUser(String user) {
+		AccessLevel result = AccessLevel.NOTHING;
+		for (Access item : getAccessList()) {
+			if (item.getUser().getName().equalsIgnoreCase(user)) {
+				result = item.getLevel();
+			}
+		}
+		return result;
+	}
+
 }

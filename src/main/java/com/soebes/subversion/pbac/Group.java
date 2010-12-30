@@ -1,12 +1,24 @@
 package com.soebes.subversion.pbac;
 
+import java.util.ArrayList;
+
 public class Group {
+
+	private ArrayList<User> userList;
 
 	private String name;
 
-	
+	private void init() {
+		setUserList(new ArrayList<User>());
+	}
+
+	public Group() {
+		init();
+	}
+
 	public Group(String name) {
-		this.name = name;
+		setName(name);
+		init();
 	}
 
 	public String getName() {
@@ -15,6 +27,34 @@ public class Group {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void add(User user) {
+		if (!getUserList().contains(user)) {
+			getUserList().add(user);
+		}
+	}
+
+	public void setUserList(ArrayList<User> userList) {
+		this.userList = userList;
+	}
+
+	public ArrayList<User> getUserList() {
+		return userList;
+	}
+
+	public boolean contains(User user) {
+		return contains(user.getName());
+	}
+
+	public boolean contains(String user) {
+		boolean result = false;
+		for (User item : getUserList()) {
+			if (item.getName().equalsIgnoreCase(user)) {
+				result = true;
+			}
+		}
+		return result;
 	}
 
 }
