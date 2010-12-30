@@ -7,7 +7,7 @@ public class AccessRule {
 	private ArrayList<Access> accessList;
 
 	private String repositoryName;
-	private String path;
+	private String repositoryPath;
 
 	public AccessRule(String repositoryName, String path) {
 		super();
@@ -15,7 +15,7 @@ public class AccessRule {
 			path += "/";
 		}
 		setRepositoryName(repositoryName);
-		setPath(path);
+		setRepositoryPath(path);
 		setAccessList(new ArrayList<Access>());
 	}
 
@@ -27,11 +27,11 @@ public class AccessRule {
 		this.repositoryName = repositoryName;
 	}
 	
-	public String getPath() {
-		return path;
+	public String getRepositoryPath() {
+		return repositoryPath;
 	}
-	public void setPath(String path) {
-		this.path = path;
+	public void setRepositoryPath(String path) {
+		this.repositoryPath = path;
 	}
 
 	public void setAccessList(ArrayList<Access> accessList) {
@@ -53,8 +53,8 @@ public class AccessRule {
 	public AccessLevel getAccess(String user, String repository, String path) {
 		AccessLevel result = AccessLevel.NOTHING;
 		if (getRepositoryName().equalsIgnoreCase(repository)) {
-			Path p = new Path(getPath());
-			if (p.contains(path)) {
+			Path repositoryPath = new Path(getRepositoryPath());
+			if (repositoryPath.contains(path)) {
 				result = getAccessForUser(user);
 			}
 		}
