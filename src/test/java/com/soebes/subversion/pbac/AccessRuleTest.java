@@ -6,6 +6,21 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+/**
+ * This test will create an AccessRule as follows:
+ * <pre>
+ * [repository:/test/trunk]
+ * harry = rw
+ * brian = r
+ * michael = rw
+ * </pre>
+ * The tests will check if the AccessLevel will be extracted correctly
+ * and furthermore if the access to different directories inside this
+ * repository will work well. 
+ *   
+ * @author Karl Heinz Marbaise
+ * 
+ */
 public class AccessRuleTest {
 
 	private AccessRule accessRule;
@@ -16,6 +31,7 @@ public class AccessRuleTest {
 	 * [repository:/test/trunk]
 	 * harry = rw
 	 * brian = r
+	 * michael = rw
 	 * </pre>
 	 */
 	@BeforeMethod
