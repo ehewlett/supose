@@ -2,26 +2,26 @@ package com.soebes.subversion.pbac;
 
 public class Access {
 
-	private User user;
+	private IPrincipal principal;
 	private AccessLevel level;
 
 	public Access() {
-		setUser(null);
+		setPrincipal(null);
 		setLevel(AccessLevel.NOTHING);
 	}
 
-	public Access(User user, AccessLevel level) {
+	public Access(IPrincipal principal, AccessLevel level) {
 		super();
-		setUser(user);
+		setPrincipal(principal);
 		setLevel(level);
 	}
 
-	public User getUser() {
-		return user;
+	public IPrincipal getPrincipal() {
+		return principal;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setPrincipal(IPrincipal principal) {
+		this.principal = principal;
 	}
 
 	public AccessLevel getLevel() {

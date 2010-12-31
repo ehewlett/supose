@@ -1,6 +1,6 @@
 package com.soebes.subversion.pbac;
 
-public class User {
+public class User implements IPrincipal {
 
 	private String name;
 
@@ -16,4 +16,9 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public boolean isEqual(String user) {
+		return getName().equals(user);
+	}
+	
 }

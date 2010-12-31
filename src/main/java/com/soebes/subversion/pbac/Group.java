@@ -2,7 +2,7 @@ package com.soebes.subversion.pbac;
 
 import java.util.ArrayList;
 
-public class Group {
+public class Group implements IPrincipal {
 
 	private ArrayList<User> userList;
 
@@ -51,6 +51,20 @@ public class Group {
 		boolean result = false;
 		for (User item : getUserList()) {
 			if (item.getName().equalsIgnoreCase(user)) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	public boolean isEqual(User user) {
+		return isEqual(user.getName());
+	}
+
+	public boolean isEqual(String user) {
+		boolean result = false;
+		for (User item : getUserList()) {
+			if (item.isEqual(user)) {
 				result = true;
 			}
 		}

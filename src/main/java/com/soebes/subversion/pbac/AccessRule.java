@@ -2,6 +2,15 @@ package com.soebes.subversion.pbac;
 
 import java.util.ArrayList;
 
+/**
+ * <pre>
+ * [repository:/trunk]
+ * @group = rw
+ * user = r
+ * </pre>
+ * @author Karl Heinz Marbaise
+ *
+ */
 public class AccessRule {
 
 	private ArrayList<Access> accessList;
@@ -60,6 +69,10 @@ public class AccessRule {
 		getAccessList().add(new Access(user, readWrite));
 	}
 
+	public void add(Group group, AccessLevel readWrite) {
+		getAccessList().add(new Access(group, readWrite));
+	}
+
 	public AccessLevel getAccess(User user, String repository, String path) {
 		return getAccess(user.getName(), repository, path);
 	}
@@ -73,18 +86,18 @@ public class AccessRule {
 	 */
 	public AccessLevel getAccess(String user, String repository, String path) {
 		AccessLevel result = AccessLevel.NOTHING;
-		if (getRepositoryName().equalsIgnoreCase(repository)) {
+		if (getRepositoryName().equals(repository)) {
 			Path repositoryPath = new Path(getRepositoryPath());
 			if (repositoryPath.contains(path)) {
-				result = getAccessForUser(user);
+				result = getAccessForPrincipal(user);
 			}
 		}
 		
 		return result;
 	}
 
-	public AccessLevel getAccessForUser(User user) {
-		return getAccessForUser(user.getName());
+	public AccessLevel getAccessForPrincipal(User user) {
+		return getAccessForPrincipal(user.getName());
 	}
 
 	/**
@@ -93,10 +106,10 @@ public class AccessRule {
 	 * @return The AccessLevel of the given user @{link AccessLevel.NOTHING}
 	 *   if the user will not be found.
 	 */
-	public AccessLevel getAccessForUser(String user) {
+	public AccessLevel getAccessForPrincipal(String user) {
 		AccessLevel result = AccessLevel.NOTHING;
 		for (Access item : getAccessList()) {
-			if (item.getUser().getName().equalsIgnoreCase(user)) {
+			if (item.getPrincipal().isEqual(user)) {
 				result = item.getLevel();
 			}
 		}

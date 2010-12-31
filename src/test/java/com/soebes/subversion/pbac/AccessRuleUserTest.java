@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
  * @author Karl Heinz Marbaise
  * 
  */
-public class AccessRuleTest {
+public class AccessRuleUserTest {
 
 	private AccessRule accessRule;
 
@@ -50,16 +50,16 @@ public class AccessRuleTest {
 
 	@Test
 	public void accessTest() {
-		AccessLevel al_harry = accessRule.getAccessForUser("harry");
+		AccessLevel al_harry = accessRule.getAccessForPrincipal("harry");
 		Assert.assertEquals(AccessLevel.READ_WRITE, al_harry);
 
-		AccessLevel al_brian = accessRule.getAccessForUser("brian");
+		AccessLevel al_brian = accessRule.getAccessForPrincipal("brian");
 		Assert.assertEquals(AccessLevel.READ, al_brian);
 
-		AccessLevel al_hugo = accessRule.getAccessForUser("hugo");
+		AccessLevel al_hugo = accessRule.getAccessForPrincipal("hugo");
 		Assert.assertEquals(AccessLevel.NOTHING, al_hugo);
 		
-		AccessLevel al_micheal = accessRule.getAccessForUser("michael");
+		AccessLevel al_micheal = accessRule.getAccessForPrincipal("michael");
 		Assert.assertEquals(AccessLevel.READ_WRITE, al_micheal);
 	}
 	
