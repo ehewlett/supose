@@ -22,13 +22,16 @@ public class AccessRuleTest {
 	public void beforeMethod() {
 		User userHarry = new User("harry");
 		User userBrian = new User("brian");
+		User userMicheal = new User("michael");
 
 		accessRule = new AccessRule("repository", "/test/trunk");
 
 		accessRule.add(userHarry, AccessLevel.READ_WRITE);
 		accessRule.add(userBrian, AccessLevel.READ);
+		accessRule.add(userMicheal, AccessLevel.READ_WRITE);
 
 	}
+
 	@Test
 	public void accessTest() {
 		AccessLevel al_harry = accessRule.getAccessForUser("harry");
@@ -39,6 +42,9 @@ public class AccessRuleTest {
 
 		AccessLevel al_hugo = accessRule.getAccessForUser("hugo");
 		Assert.assertEquals(AccessLevel.NOTHING, al_hugo);
+		
+		AccessLevel al_micheal = accessRule.getAccessForUser("michael");
+		Assert.assertEquals(AccessLevel.READ_WRITE, al_micheal);
 	}
 	
     @DataProvider(name = "createAccessSet")
@@ -60,7 +66,7 @@ public class AccessRuleTest {
 
     @Test(dataProvider = "createAccessSet")
 	public void accessRuleCheck(String user, String repository, String accessPath, AccessLevel expectedLevel) {
-		//Check the permission of the current user in the path /test/trunk 
+		//Check the permission of the current user in the repository within the given accessPath  
 		AccessLevel al_user = accessRule.getAccess(user, repository, accessPath);
 		Assert.assertEquals(expectedLevel, al_user);
 	}

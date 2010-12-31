@@ -6,7 +6,15 @@ public class AccessRule {
 
 	private ArrayList<Access> accessList;
 
+	/**
+	 * The name of the repository which this 
+	 * AccessRule represents.
+	 */
 	private String repositoryName;
+	/**
+	 * The path inside the repository which is represented
+	 * by this AccessRule.
+	 */
 	private String repositoryPath;
 
 	public AccessRule(String repositoryName, String path) {
@@ -42,6 +50,12 @@ public class AccessRule {
 		return accessList;
 	}
 
+	/**
+	 * Add the user to the user list with it's appropriate 
+	 * {@link AccessLevel}.
+	 * @param user
+	 * @param readWrite
+	 */
 	public void add(User user, AccessLevel readWrite) {
 		getAccessList().add(new Access(user, readWrite));
 	}
@@ -50,6 +64,13 @@ public class AccessRule {
 		return getAccess(user.getName(), repository, path);
 	}
 
+	/**
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param path
+	 * @return
+	 */
 	public AccessLevel getAccess(String user, String repository, String path) {
 		AccessLevel result = AccessLevel.NOTHING;
 		if (getRepositoryName().equalsIgnoreCase(repository)) {
@@ -66,6 +87,12 @@ public class AccessRule {
 		return getAccessForUser(user.getName());
 	}
 
+	/**
+	 * Will get the {@link AccessLevel} for the given user.
+	 * @param user The user which will be searched for.
+	 * @return The AccessLevel of the given user @{link AccessLevel.NOTHING}
+	 *   if the user will not be found.
+	 */
 	public AccessLevel getAccessForUser(String user) {
 		AccessLevel result = AccessLevel.NOTHING;
 		for (Access item : getAccessList()) {
