@@ -50,6 +50,7 @@ public class Group implements IPrincipal {
 	public boolean contains(String user) {
 		boolean result = false;
 		for (User item : getUserList()) {
+//TODO: Check if the equalsIgnoreCase() is correct? 
 			if (item.getName().equalsIgnoreCase(user)) {
 				result = true;
 			}

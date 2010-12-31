@@ -8,16 +8,20 @@ import org.testng.annotations.Test;
 
 /**
  * This test will create an AccessRule as follows:
+ * 
  * <pre>
+ * [groups]
+ * developer = harry, brian
+ * admin = micheal
  * [repository:/test/trunk]
- * harry = rw
- * brian = r
- * michael = rw
+ * @developer = r
+ * @admin = rw
  * </pre>
- * The tests will check if the AccessLevel will be extracted correctly
- * and furthermore if the access to different directories inside this
- * repository will work well. 
- *   
+ * 
+ * The tests will check if the AccessLevel will be extracted correctly and
+ * furthermore if the access to different directories inside this repository
+ * will work well.
+ * 
  * @author Karl Heinz Marbaise
  * 
  */

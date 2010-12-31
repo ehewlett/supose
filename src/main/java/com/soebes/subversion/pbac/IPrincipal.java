@@ -4,5 +4,5 @@ public interface IPrincipal {
 
 	String getName();
 	void setName(String name);
-	boolean isEqual(String name); //??
+	boolean isEqual(String name);
 }

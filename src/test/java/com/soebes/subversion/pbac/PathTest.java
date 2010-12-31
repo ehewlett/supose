@@ -7,23 +7,14 @@ import org.testng.annotations.Test;
 
 public class PathTest extends TestBase {
 
-//	@Test
-//	public void folderTest() {
-//		Path f = new Path("/test/trunk/");
-//		if (f.contains("/test/trunk/xyz.pas")) {
-//			System.out.println("Ok.");
-//		}
-//	}
-//	
-	
     @DataProvider(name = "createRepositoryPaths")
     public Object[][] createRepositoryPaths() {
-            return new Object[][] {
-            		{ "/test/trunk/", "/test/trunk/xyz.pas", 		true },
-            		{ "/test/trunk/", "/test/trunk/src/main/java/", true },
-            		{ "/test/trunk/", "/test/trunk/",				true },
-            		{ "/test/trunk/", "/test/", 					false },
-            };
+        return new Object[][] {
+    		{ "/test/trunk/", "/test/trunk/xyz.pas", 		true },
+    		{ "/test/trunk/", "/test/trunk/src/main/java/", true },
+    		{ "/test/trunk/", "/test/trunk/",				true },
+    		{ "/test/trunk/", "/test/", 					false },
+        };
     }
 
     @Test(dataProvider = "createRepositoryPaths")
